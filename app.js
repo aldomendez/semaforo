@@ -55,9 +55,9 @@
         var _ref;
         switch (false) {
           case !(target.diff <= target.CICLETIME):
-            return 'working correctly';
+            return 'green';
           case !((target.diff > (_ref = target.CICLETIME) && _ref > target.diff * 2)):
-            return 'some delay';
+            return 'yellow';
           default:
             return 'red';
         }
@@ -66,9 +66,9 @@
         var _ref;
         switch (false) {
           case !(target.diff <= target.CICLETIME):
-            return 'green';
+            return 'working correctly';
           case !((target.diff > (_ref = target.CICLETIME) && _ref > target.diff * 2)):
-            return 'yellow';
+            return 'some delay';
           default:
             return "" + (Math.round(target.diff / target.CICLETIME)) + " devices missing";
         }
@@ -98,9 +98,7 @@
     }
   });
 
-  r.observe('filter', function(query) {
-    return console.log(machines.fuse.search(query));
-  });
+  r.observe('filter', function(query) {});
 
   window.r = r;
 

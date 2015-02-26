@@ -31,12 +31,12 @@ class Machines
     target.humanized = mmnt.fromNow()
     target.diff = Math.round((@now.diff mmnt)/1000)
     target.status = switch
-      when target.diff <= target.CICLETIME then 'working correctly'
-      when target.diff > target.CICLETIME > target.diff *2 then 'some delay'
-      else 'red'
-    target.desc = switch
       when target.diff <= target.CICLETIME then 'green'
       when target.diff > target.CICLETIME > target.diff *2 then 'yellow'
+      else 'red'
+    target.desc = switch
+      when target.diff <= target.CICLETIME then 'working correctly'
+      when target.diff > target.CICLETIME > target.diff *2 then 'some delay'
       else "#{Math.round( target.diff/target.CICLETIME)} devices missing"
 
   startFetching:()->
@@ -54,7 +54,7 @@ r = new Ractive
 
 
 r.observe 'filter', (query)->
-  console.log machines.fuse.search query
+  # console.log machines.fuse.search query
 
 
 

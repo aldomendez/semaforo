@@ -34,11 +34,12 @@ function updateMachinesMxOptix()
 	$DB = new MxApps();
 	$DB->setQuery($query . " where dbconnection = 'MxOptix'");
 	$DB->exec();
-	foreach ($DB->rows as $key => $value) {
-		
+	foreach ($DB->results as $key => $value) {
+		print_r($value);
 	}
-	// $DB->rows
 
+	// $DB->rows
+	echo "string";
 	// if ($DB->json() == "[]") {
 	// 	throw new Exception("No arrojo datos la base de datos", 1);
 	// } else {

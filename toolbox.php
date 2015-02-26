@@ -26,3 +26,33 @@ function getMachines()
 		echo $DB->json();
 	}	
 }
+
+function updateMachinesMxOptix()
+{
+	// Obtengo la lista de las maquinas dadas de alta en el sistema
+	$query = file_get_contents('machines.sql');
+	$DB = new MxApps();
+	$DB->setQuery($query . " where dbconnection = 'MxOptix'");
+	$DB->exec();
+	foreach ($DB->rows as $key => $value) {
+		
+	}
+	// $DB->rows
+
+	// if ($DB->json() == "[]") {
+	// 	throw new Exception("No arrojo datos la base de datos", 1);
+	// } else {
+	// 	echo $DB->json();
+	// }	
+
+	// $query = file_get_contents('machines.sql');
+	// $DB = new MxApps();
+	// $DB->setQuery($query);
+	// $DB->bind_vars(':item',$_GET['item']);
+	// $DB->exec();
+	// if ($DB->json() == "[]") {
+	// 	throw new Exception("No arrojo datos la base de datos", 1);
+	// } else {
+	// 	echo $DB->json();
+	// }	
+}

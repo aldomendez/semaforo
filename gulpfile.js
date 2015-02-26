@@ -15,7 +15,7 @@ function serverPath (path) {
 gulp.task('watch', function () {
   livereload.listen();
   
-  gulp.watch(['**/**.php','**/**.map','**/**.sql','**/**.json','**/**.js','**/**.html'], function (event) {
+  gulp.watch(['**/**.coffee','**/**.php','**/**.map','**/**.sql','**/**.json','**/**.js','**/**.html'], function (event) {
     // console.log("Copiar php iniciado");
   }).on('change', function (event) {
     // Copia el archivo que cambio a el compartido 

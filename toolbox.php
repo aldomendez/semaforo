@@ -26,39 +26,3 @@ function getMachines()
 		echo $DB->json();
 	}	
 }
-
-
-/* 
-function getResults()
-{
-	$query = file_get_contents('query.sql');
-	$DB = new MxOptix();
-	$DB->setQuery($query);
-	$DB->bind_vars(':serial_num',$_GET['serial_num']);
-	// echo $DB->query;
-	$DB->exec();
-	if ($DB->json() == "[]") {
-		echo '[{"JOB":"' . $_GET['serial_num'] . '"}]';
-	} else {
-		echo $DB->json();
-	}
-}
-
-function getLPN()
-{
-	if (file_exists($_GET['lpn'])) {
-		echo file_get_contents($_GET['lpn']);
-	} else {
-		$query = file_get_contents('selectByLPN.sql');
-		$DB = new MxOptix();
-		$DB->setQuery($query);
-		$DB->bind_vars(':lpn',$_GET['lpn']);
-		$DB->exec();
-		if ($DB->json() == "[]") {
-			echo '[{"LPN":"' . $_GET['lpn'] . '"}]';
-		} else {
-			file_put_contents($_GET['lpn'], $DB->json());
-			echo $DB->json();
-		}
-	}
-} */

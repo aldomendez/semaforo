@@ -1,8 +1,11 @@
 (function() {
-  var Machines, r;
+  var Machines, r,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   Machines = (function() {
     function Machines() {
+      this.updateModelData = __bind(this.updateModelData, this);
+      this.queryCount = 0;
       this.getMachines();
     }
 
@@ -15,9 +18,8 @@
           if (data.error) {
             throw data.desc;
           }
-          return data.forEach(function(d, i) {
-            return console.log(d);
-          });
+          _this.data = data;
+          return _this.data.map(_this.updateModelData);
         };
       })(this)).fail((function(_this) {
         return function(err) {
@@ -25,10 +27,19 @@
         };
       })(this)).always((function(_this) {
         return function(data) {
+          _this.queryCount++;
           _this.loadingIcon = false;
           return r.update();
         };
       })(this));
+    };
+
+    Machines.prototype.updateModelData = function(srvr) {
+      var target;
+      target = _.find(this.data, function(el) {
+        return el.ID === srvr.ID;
+      });
+      return console.log(target);
     };
 
     return Machines;

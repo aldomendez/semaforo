@@ -12,6 +12,7 @@
   <script src="../jsLib/jquery/jquery-2.1.1.min.js"></script>
   <script src="../jsLib/underscore/1.6.0/underscore.js"></script>
   <script src="../jsLib/ractivejs/0.6.1/ractive.min.js"></script>
+  <script src="../jsLib/moment/2.9.0/moment.min.js"></script>
   <script type="text/javascript" src="app.js"></script>
 </body>
 </html>

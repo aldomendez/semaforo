@@ -1,47 +1,38 @@
-<div class="padded column">
+<div class="column">
   <div class="ui menu">
     <a href="" class="item"><i class="home icon"></i>home</a>
+
+    <div class="right menu">
+      <div class="item">
+        <div class="ui transparent icon input">
+          <input type="text" placeholder="filtrar">
+          <i class="search link icon"></i>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
-<div class="column">
-  <div class="ui three cards">
-    <div class="green card">
-      <div class="content">
-      <i class="right floated star icon"></i>
-        <div class="header">CyBond54</div>
-        <div class="meta">
-          <a href="#graph">Ultima pieza: hace 4 min</a>
+<div class="row">
+  
+  <div class="column">
+  <h2 class="header">Maquinas</h2>
+    <div class="ui four cards">
+    {{#machines.data :i}}
+      <div class="green card">
+        <div class="content">
+        <i class="right floated star icon"></i>
+          <div class="header">{{NAME}}</div>
+          <div class="meta">
+            <a href="#filter">{{AREA}}</a>
+            <a href="#graph">Ultima pieza: hace 4 min</a>
+          </div>
+        </div>
+        <div class="ui bottom attached button green">
+          working correctly
         </div>
       </div>
-      <div class="ui bottom attached button green">
-        working correctly
-      </div>
-    </div>
-    <div class="card yellow">
-      <div class="content">
-        <div class="header"><i class="icon warning yellow"></i>CyBond45</div>
-        <div class="meta">
-          <a href="#graph">Ultima pieza: hace 8 min</a>
-        </div>
-      </div>
-      <div class="ui bottom attached button yellow">
-        Some delay
-      </div>
-    </div>
-    <div class="red card">
-      <div class="content">
-        <div class="header">CyBond63</div>
-        <div class="meta">
-          <a href="#graph">Ultima pieza: hace 9 horas</a>
-        </div>
-      </div>
-      <div class="ui bottom button red">
-        13 pieces missed
-      </div>
-      <!-- <div class="extra content">
-        working well since
-      </div> -->
+    {{/machines.data}}
     </div>
   </div>
+
 </div>

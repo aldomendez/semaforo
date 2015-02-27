@@ -1,6 +1,23 @@
 (function() {
-  var Machines, m, r,
+  var Local, Machines, m, r,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  Local = (function() {
+    function Local() {
+      if (typeof localStorege !== "undefined" && localStorege !== null) {
+        throw "No se cuenta con localStorege";
+      }
+    }
+
+    Local.prototype.set = function() {};
+
+    Local.prototype.get = function() {};
+
+    Local.prototype.remove = function() {};
+
+    return Local;
+
+  })();
 
   Machines = (function() {
     function Machines() {
@@ -21,6 +38,11 @@
       this.startFetching();
       this.refreshModel();
       this.grouped = {};
+      setTimeout((function(_this) {
+        return function() {
+          return _this.setPopup();
+        };
+      })(this), 1600);
     }
 
     Machines.prototype.getMachines = function() {
@@ -36,8 +58,7 @@
           if (_this.data == null) {
             _this.data = data;
           }
-          data.map(_this.updateModelData);
-          return console.table(data);
+          return data.map(_this.updateModelData);
         };
       })(this)).fail((function(_this) {
         return function(err) {
@@ -49,7 +70,7 @@
           _this.grouped = _.groupBy(_this.data, 'AREA');
           r.set('machines.loadingMachines', false);
           if (typeof r === "undefined" || r === null) {
-            return r.update();
+            return r.update('machines');
           }
         };
       })(this));
@@ -72,18 +93,31 @@
         };
       })(this)).always((function(_this) {
         return function(data) {
-          console.log('updating table');
+          console.log("'" + data + "'");
           r.set('machines.loadingMachines', true);
           _this.getMachines();
-          return r.set('lastUpdate', "Last Updated: " + (moment(data.trim()).fromNow()));
+          _this.setPopup();
+          return r.set('lastUpdate', "Last Update: " + (moment(data.trim()).fromNow()));
         };
       })(this));
     };
 
+    Machines.prototype.setPopup = function() {
+      return $(".label").popup({
+        inline: false,
+        hoverable: true,
+        position: 'top center'
+      });
+    };
+
     Machines.prototype.justUpdateModel = function() {
-      this.data.map(this.updateModelData);
-      this.queryCount++;
-      return r.update();
+      if (this.data != null) {
+        this.data.map(this.updateModelData);
+        this.queryCount++;
+        return r.update();
+      } else {
+        return console.warn("Called before time");
+      }
     };
 
     Machines.prototype.updateModelData = function(srvr) {

@@ -1,6 +1,6 @@
 <div class="column">
   <div class="ui menu">
-    <a href="" class="item"><i class="home icon"></i>home {{machines.queryCount}}</a>
+    <a href="" class="item"><i class="home icon"></i>home</a>
     <a href="" class="item">{{lastUpdate}} {{#if machines.loadingMachines}} <i class="asterisk loading icon"></i> {{/if}}</a>
     <div class="right menu">
       <div class="item">
@@ -24,9 +24,11 @@
   <h2 class="header">Maquinas de {{groupNum}}</h2>
     <div class="">
     {{#this :i}}
-      <div class="label tiny ui {{status}}">
-        {{NAME}}
+      <div class="label horizontal circular tiny ui {{status}}
+      {{#if status!='red'}}empty{{/if}}"
+      data-content="{{NAME}}: {{humanized}}" >
         {{#if status=='red'}}
+        {{NAME}}
         <div class="detail"><i class="icon warning sign"></i>{{desc}}</div>
         {{/if}}
       </div>

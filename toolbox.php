@@ -30,10 +30,18 @@ function getMachines()
 
 function updateTables()
 {
-	$date = date("d-m-Y H:i");
-	updateMachinesMxOptix();
-	file_put_contents('lastUpdate.txt', $date);
-	echo "$date";
+
+	$pastDateString = file_get_contents('lastUpdate.txt');
+	$past = strtotime($pastDateString);
+	logToFile($past);
+	$date = date("d-M-Y H:i");
+	$actual = strtotime('now');
+	logToFile($actual-$past);
+	if (($actual - $past) > 300) {
+		updateMachinesMxOptix();
+		file_put_contents('lastUpdate.txt', $date);
+	}
+	echo "$pastDateString";
 }
 
 function updateMachinesMxOptix()
@@ -76,7 +84,7 @@ function updateMachinesMxOptix()
 				$DB->bind_vars(':id',$value['ID']);
 				// logToFile($DB->query);
 				$DB->exec();
-				logToFile($value['ID'] . ',' .$value['DB_ID'] . ',' .'Num of fields '.$DB->affected());
+				// logToFile($value['ID'] . ',' .$value['DB_ID'] . ',' .'Num of fields '.$DB->affected());
 
 				// $query = file_get_contents('machines.sql');
 				// $MO->setQuery($query);

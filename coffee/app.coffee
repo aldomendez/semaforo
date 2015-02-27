@@ -1,3 +1,14 @@
+class Local
+  constructor: () ->
+    if localStorege? then throw "No se cuenta con localStorege"
+  set:()->
+
+  get:()->
+
+  remove:()->
+  
+
+
 class Machines
   constructor: () ->
     @queryCount = 0
@@ -11,6 +22,9 @@ class Machines
     @startFetching()
     @refreshModel()
     @grouped = {}
+    setTimeout ()=>
+      @setPopup()
+    ,1600
 
   getMachines: ()=>
     @now = moment()
@@ -20,14 +34,14 @@ class Machines
       if data.error then throw data.desc
       if !@data? then @data = data
       data.map @updateModelData
-      console.table data
+      # console.table data
     .fail (err) =>
       console.log 'todo ok'
     .always (data) =>
       @queryCount = 0
       @grouped = _.groupBy @data, 'AREA'
       r.set 'machines.loadingMachines', false
-      if !r? then r.update()
+      if !r? then r.update('machines')
 
   askToUpdateTable:()=>
     @now = moment()
@@ -38,16 +52,26 @@ class Machines
     .fail (err) =>
       console.log err
     .always (data) =>
-      console.log 'updating table'
+      console.log "'#{data}'"
       r.set 'machines.loadingMachines', true
       @getMachines()
-      r.set 'lastUpdate',"Last Updated: #{moment(data.trim()).fromNow()}"
+      @setPopup()
+      r.set 'lastUpdate',"Last Update: #{moment(data.trim()).fromNow()}"
 
+  setPopup:()->
+    $(".label").popup({
+      inline:false
+      hoverable:true
+      position:'top center'
+      })
 
   justUpdateModel:()=>
-    @data.map @updateModelData
-    @queryCount++
-    r.update()
+    if @data?
+      @data.map @updateModelData
+      @queryCount++
+      r.update()
+    else
+      console.warn "Called before time"
 
   updateModelData:(srvr)=>
     # console.log srvr

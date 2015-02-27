@@ -5,7 +5,9 @@
   Machines = (function() {
     function Machines() {
       this.updateModelData = __bind(this.updateModelData, this);
+      this.justUpdateModel = __bind(this.justUpdateModel, this);
       this.askToUpdateTable = __bind(this.askToUpdateTable, this);
+      this.getMachines = __bind(this.getMachines, this);
       this.queryCount = 0;
       this.loadingMachines = true;
       this.fuse = {
@@ -18,6 +20,7 @@
       this.askToUpdateTable();
       this.startFetching();
       this.refreshModel();
+      this.grouped = {};
     }
 
     Machines.prototype.getMachines = function() {
@@ -43,8 +46,11 @@
       })(this)).always((function(_this) {
         return function(data) {
           _this.queryCount = 0;
-          _this.loadingMachines = false;
-          return r.update();
+          _this.grouped = _.groupBy(_this.data, 'AREA');
+          r.set('machines.loadingMachines', false);
+          if (typeof r === "undefined" || r === null) {
+            return r.update();
+          }
         };
       })(this));
     };
@@ -66,7 +72,9 @@
         };
       })(this)).always((function(_this) {
         return function(data) {
-          _this.getMachines;
+          console.log('updating table');
+          r.set('machines.loadingMachines', true);
+          _this.getMachines();
           return r.set('lastUpdate', "Last Updated: " + (moment(data.trim()).fromNow()));
         };
       })(this));
@@ -83,7 +91,7 @@
       target = _.find(this.data, function(el) {
         return el.ID === srvr.ID;
       });
-      mmnt = moment(target.LASTTICK);
+      mmnt = moment(srvr.LASTTICK);
       target.humanized = mmnt.fromNow();
       target.CICLETIME = 1 * target.CICLETIME;
       target.diff = Math.round((this.now.diff(mmnt)) / 1000);
@@ -112,7 +120,7 @@
         return function() {
           return _this.askToUpdateTable();
         };
-      })(this), 6000);
+      })(this), 20000);
     };
 
     return Machines;
@@ -126,7 +134,8 @@
     template: '#template',
     data: {
       filter: '',
-      machines: m
+      machines: m,
+      filtered: true
     }
   });
 

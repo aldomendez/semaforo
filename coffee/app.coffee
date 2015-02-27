@@ -10,8 +10,9 @@ class Machines
     @askToUpdateTable()
     @startFetching()
     @refreshModel()
+    @grouped = {}
 
-  getMachines: ()->
+  getMachines: ()=>
     @now = moment()
     coneccion = $.getJSON "toolbox.php",
       action: "getMachines"
@@ -21,11 +22,12 @@ class Machines
       data.map @updateModelData
       console.table data
     .fail (err) =>
-        console.log 'todo ok'
+      console.log 'todo ok'
     .always (data) =>
-        @queryCount = 0
-        @loadingMachines = false
-        r.update()
+      @queryCount = 0
+      @grouped = _.groupBy @data, 'AREA'
+      r.set 'machines.loadingMachines', false
+      if !r? then r.update()
 
   askToUpdateTable:()=>
     @now = moment()
@@ -36,11 +38,13 @@ class Machines
     .fail (err) =>
       console.log err
     .always (data) =>
-      @getMachines
+      console.log 'updating table'
+      r.set 'machines.loadingMachines', true
+      @getMachines()
       r.set 'lastUpdate',"Last Updated: #{moment(data.trim()).fromNow()}"
 
 
-  justUpdateModel:()->
+  justUpdateModel:()=>
     @data.map @updateModelData
     @queryCount++
     r.update()
@@ -48,13 +52,13 @@ class Machines
   updateModelData:(srvr)=>
     # console.log srvr
     target = _.find @data, (el)-> el.ID is srvr.ID
-    mmnt = moment(target.LASTTICK)
+    mmnt = moment(srvr.LASTTICK)
     target.humanized = mmnt.fromNow()
     target.CICLETIME = 1*target.CICLETIME
     target.diff = Math.round((@now.diff mmnt)/1000)
     [target.status,target.desc] = switch
       when target.diff <= target.CICLETIME then ['green','working correctly']
-      when target.diff > target.CICLETIME && target.diff < (target.CICLETIME * 2)then ['yellow','some delay']
+      when target.diff > target.CICLETIME && target.diff < (target.CICLETIME * 2) then ['yellow','some delay']
       else ['red',"#{Math.round( target.diff/target.CICLETIME)} devices missing"]
 
   refreshModel:()->
@@ -65,7 +69,7 @@ class Machines
   startFetching:()->
     setInterval ()=>
       @askToUpdateTable()
-    ,6000
+    ,20000
 
 m = new Machines
 r = new Ractive
@@ -74,6 +78,7 @@ r = new Ractive
   data:
     filter:''
     machines:m
+    filtered:true
 
 
 r.observe 'filter', (query)->

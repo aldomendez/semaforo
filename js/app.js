@@ -92,6 +92,7 @@
         return el.ID === srvr.ID;
       });
       mmnt = moment(srvr.LASTTICK);
+      target.LASTTICK = srvr.LASTTICK;
       target.humanized = mmnt.fromNow();
       target.CICLETIME = 1 * target.CICLETIME;
       target.diff = Math.round((this.now.diff(mmnt)) / 1000);
@@ -102,7 +103,7 @@
           case !(target.diff > target.CICLETIME && target.diff < (target.CICLETIME * 2)):
             return ['yellow', 'some delay'];
           default:
-            return ['red', "" + (Math.round(target.diff / target.CICLETIME)) + " devices missing"];
+            return ['red', "" + (Math.round(target.diff / target.CICLETIME))];
         }
       })(), target.status = _ref[0], target.desc = _ref[1], _ref;
     };

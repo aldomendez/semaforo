@@ -13,8 +13,34 @@
   </div>
 </div>
 <div class="row">
+
+
+
+
+
   
   <div class="column">
+  {{#each machines.grouped :groupNum}}
+  <h2 class="header">Maquinas de {{groupNum}}</h2>
+    <div class="">
+    {{#this :i}}
+      <div class="label tiny ui {{status}}">
+        {{NAME}}
+        {{#if status=='red'}}
+        <div class="detail"><i class="icon warning sign"></i>{{desc}}</div>
+        {{/if}}
+      </div>
+    {{/this}}
+    </div>
+  {{/each}}
+  </div>
+
+
+
+
+
+  
+<!--   <div class="column">
   {{#each machines.grouped :groupNum}}
   <h2 class="header">Maquinas de {{groupNum}}</h2>
     <div class="ui five cards">
@@ -22,11 +48,9 @@
       <div class="{{status}} card">
         <div class="content">
           <i class="right floated star icon"></i>
-          <!-- <i class="right floated hide icon"></i> -->
+          <i class="right floated hide icon"></i>
           <div class="header">{{NAME}}</div>
           <div class="meta">
-            <a href="#id/{{ID}}">{{ID}}</a>
-            <a href="#filter">{{AREA}}</a>
             <a href="#graph">Last seen: {{humanized}}</a>
           </div>
         </div>
@@ -38,5 +62,5 @@
     </div>
   {{/each}}
   </div>
-
+ -->
 </div>

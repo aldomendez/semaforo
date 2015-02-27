@@ -53,13 +53,14 @@ class Machines
     # console.log srvr
     target = _.find @data, (el)-> el.ID is srvr.ID
     mmnt = moment(srvr.LASTTICK)
+    target.LASTTICK = srvr.LASTTICK
     target.humanized = mmnt.fromNow()
     target.CICLETIME = 1*target.CICLETIME
     target.diff = Math.round((@now.diff mmnt)/1000)
     [target.status,target.desc] = switch
       when target.diff <= target.CICLETIME then ['green','working correctly']
       when target.diff > target.CICLETIME && target.diff < (target.CICLETIME * 2) then ['yellow','some delay']
-      else ['red',"#{Math.round( target.diff/target.CICLETIME)} devices missing"]
+      else ['red',"#{Math.round( target.diff/target.CICLETIME)}"]
 
   refreshModel:()->
     setInterval ()=>

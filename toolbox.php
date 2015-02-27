@@ -16,7 +16,8 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
 
 function getMachines()
 {
-	$query = file_get_contents('machines.sql');
+	// updateMachinesMxOptix();
+	$query = file_get_contents('sql/machines.sql');
 	$DB = new MxApps();
 	$DB->setQuery($query);
 	$DB->exec();
@@ -27,33 +28,67 @@ function getMachines()
 	}	
 }
 
+function updateTables()
+{
+	$date = date("d-m-Y H:i");
+	updateMachinesMxOptix();
+	file_put_contents('lastUpdate.txt', $date);
+	echo "$date";
+}
+
 function updateMachinesMxOptix()
 {
 	// Obtengo la lista de las maquinas dadas de alta en el sistema
-	$query = file_get_contents('machines.sql');
+	$query = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
-	$DB->setQuery($query . " where dbconnection = 'MxOptix'");
+	$DB->setQuery($query . " where dbconnection = 'mxoptix'");
 	$DB->exec();
-	foreach ($DB->results as $key => $value) {
-		print_r($value);
+	// echo($DB->rows);
+	if ($DB->rows > 0){
+		// Sabiendo que tengo elementos para iterar puedo crear la conexion
+		$MO = new MxOptix();
+
+		// Ahora si ya puedo ir sacando los datos de cada una de las maquinas
+		// para sacar la informacion de la base de datp
+		foreach ($DB->results as $key => $value) {
+			// genero el query para la busqueda de datos
+			$query = file_get_contents('sql/getInfoFromMxOptix.sql');
+			$MO->setQuery($query);
+			$MO->bind_vars(':db_id',$value['DB_ID']);
+			$MO->bind_vars(':facility',$value['DBMACHINE']);
+			$MO->bind_vars(':device',$value['DBDEVICE']);
+			$MO->bind_vars(':test_dt',$value['DBDATE']);
+			$MO->bind_vars(':table',$value['DBTABLE']);
+			// echo($MO->query);
+			$MO->exec();
+
+			// Actualizo la informacion en la tabla nueva
+			// Solo si tengo datos nuevos
+
+			// TODO:
+			// buscar la manera de encontrar unicamente datos nuevos
+
+			if ( sizeof($MO->results) > 0 ) {
+				// genero el query para la busqueda de datos
+				$query = file_get_contents('sql/updateMachinesInSemaforo.sql');
+				$DB->setQuery($query);
+				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);
+				$DB->bind_vars(':id',$value['ID']);
+				// logToFile($DB->query);
+				$DB->exec();
+				logToFile($value['ID'] . ',' .$value['DB_ID'] . ',' .'Num of fields '.$DB->affected());
+
+				// $query = file_get_contents('machines.sql');
+				// $MO->setQuery($query);
+				// $MO->bind_vars(':item',$_GET['item']);
+				// $MO->exec();
+			}
+		}
 	}
 
-	// $DB->rows
-	echo "string";
-	// if ($DB->json() == "[]") {
-	// 	throw new Exception("No arrojo datos la base de datos", 1);
-	// } else {
-	// 	echo $DB->json();
-	// }	
+}
 
-	// $query = file_get_contents('machines.sql');
-	// $DB = new MxApps();
-	// $DB->setQuery($query);
-	// $DB->bind_vars(':item',$_GET['item']);
-	// $DB->exec();
-	// if ($DB->json() == "[]") {
-	// 	throw new Exception("No arrojo datos la base de datos", 1);
-	// } else {
-	// 	echo $DB->json();
-	// }	
+function logToFile($content)
+{
+	file_put_contents('logs.txt', $content.PHP_EOL , FILE_APPEND);
 }

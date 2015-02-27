@@ -1,7 +1,7 @@
 <div class="column">
   <div class="ui menu">
     <a href="" class="item"><i class="home icon"></i>home {{machines.queryCount}}</a>
-
+    <a href="" class="item">{{lastUpdate}} {{#if loadingMachines}} <i class="asterisk loading icon"></i> {{/if}}</a>
     <div class="right menu">
       <div class="item">
         <div class="ui transparent icon input">
@@ -16,14 +16,15 @@
   
   <div class="column">
   <h2 class="header">Maquinas{{filter.length>0?': ':''}}{{filter}}</h2>
-    <div class="ui four cards">
+    <div class="ui six cards">
     {{#machines.data :i}}
       <div class="{{status}} card">
         <div class="content">
-        <i class="right floated star icon"></i>
+          <i class="right floated star icon"></i>
+          <!-- <i class="right floated hide icon"></i> -->
           <div class="header">{{NAME}}</div>
           <div class="meta">
-            <a href="#id/{{i}}">{{i}}</a>
+            <a href="#id/{{ID}}">{{ID}}</a>
             <a href="#filter">{{AREA}}</a>
             <a href="#graph">Last seen: {{humanized}}</a>
           </div>

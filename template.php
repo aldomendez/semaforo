@@ -41,8 +41,8 @@
 
 
 
-  
-<!--   <div class="column">
+<!--   
+  <div class="column">
   {{#each machines.grouped :groupNum}}
   <h2 class="header">Maquinas de {{groupNum}}</h2>
     <div class="ui five cards">
@@ -63,6 +63,6 @@
     {{/this}}
     </div>
   {{/each}}
-  </div>
- -->
+  </div> -->
+
 </div>

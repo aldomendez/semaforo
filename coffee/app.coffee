@@ -31,7 +31,7 @@ class Machines
       if data.error then throw data.desc
       if !@data? then @data = data
       data.map @updateModelData
-      # console.table data
+      console.table data
     .fail (err) =>
       console.log 'todo ok'
     .always (data) =>

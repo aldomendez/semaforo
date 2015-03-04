@@ -95,6 +95,8 @@ INSERT INTO semaforo
 ;
 
 
+apogee.pkg_ther_sweep@mxappsro
+
 
 SELECT * FROM dare_mrc.purge_norm@prod
 ;

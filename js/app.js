@@ -53,7 +53,8 @@
           if (_this.data == null) {
             _this.data = data;
           }
-          return data.map(_this.updateModelData);
+          data.map(_this.updateModelData);
+          return console.table(data);
         };
       })(this)).fail((function(_this) {
         return function(err) {

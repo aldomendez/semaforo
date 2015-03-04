@@ -53,8 +53,7 @@
           if (_this.data == null) {
             _this.data = data;
           }
-          data.map(_this.updateModelData);
-          return console.table(data);
+          return data.map(_this.updateModelData);
         };
       })(this)).fail((function(_this) {
         return function(err) {
@@ -90,10 +89,10 @@
         };
       })(this)).always((function(_this) {
         return function(data) {
+          r.set('lastUpdate', data);
           console.log("'" + data + "'");
           r.set('machines.loadingMachines', true);
           _this.getMachines();
-          r.set('lastUpdate', "Last Update: " + (moment(data.trim()).fromNow()));
           return setTimeout(function() {
             return _this.askToUpdateTable();
           }, 20000);
@@ -163,7 +162,10 @@
     data: {
       filter: '',
       machines: m,
-      filtered: true
+      filtered: true,
+      humanizeDiff: function(date) {
+        return moment(date.trim()).fromNow();
+      }
     }
   });
 

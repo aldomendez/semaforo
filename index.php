@@ -16,6 +16,6 @@
   <script src="../jsLib/ractivejs/0.6.1/ractive.min.js"></script>
   <script src="../jsLib/moment/2.9.0/moment.min.js"></script>
   <script src="../jsLib/fuse.js/fuse.min.js"></script>
-  <script type="text/javascript" src="js/app.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
 </body>
 </html>

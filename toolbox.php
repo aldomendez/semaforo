@@ -31,15 +31,16 @@ function getMachines()
 function updateTables()
 {
 
+	logToFile("==========================================================");
 	// Obtenemos la ultima fecha de actualizacion
 	$pastDateString = file_get_contents('lastUpdate.txt');
 	// Obtenemos una hora que pueda ser leida por el sistema
 	$past = strtotime($pastDateString);
 	// Guardamos la hora en el log (para poder ver los accesos que hemos estado teniendo)
-	logToFile($past);
+	// logToFile($past);
 
 	$actual = strtotime('now');
-	logToFile($actual-$past);
+	// logToFile(date("d-M-Y H:i"));
 	
 	if (($actual - $past) > 300) {
 		// Si y solo si ha pasado mas de los segundos configurados
@@ -48,6 +49,7 @@ function updateTables()
 		// Guardamos la fecha de la ultima actualizacion para que no se vuelva a pedir 
 		// otra actualizacion antes de que termine esta.
 		file_put_contents('lastUpdate.txt', $date);
+		// En esta parte es donde se hace la actualizacion en si
 		updateMachinesMxOptix();
 	}
 	// Resolvemos para el navegador
@@ -57,6 +59,7 @@ function updateTables()
 function updateMachinesMxOptix()
 {
 	// Obtengo la lista de las maquinas dadas de alta en el sistema
+	logToFile(sprintf("Inicio, %s, %s, %s,",date("d-M-Y H:i")));
 	$query = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
 	$DB->setQuery($query . " where dbconnection = 'mxoptix'");
@@ -77,7 +80,8 @@ function updateMachinesMxOptix()
 			$MO->bind_vars(':device',$value['DBDEVICE']);
 			$MO->bind_vars(':test_dt',$value['DBDATE']);
 			$MO->bind_vars(':table',$value['DBTABLE']);
-			logToFile($MO->query);
+			// logToFile($MO->query);
+			logToFile(sprintf("Before, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
 			$MO->exec();
 
 			// Actualizo la informacion en la tabla nueva
@@ -88,12 +92,14 @@ function updateMachinesMxOptix()
 
 			if ( sizeof($MO->results) > 0 ) {
 				// genero el query para la busqueda de datos
+				logToFile(date("d-M-Y H:i"));
 				$query = file_get_contents('sql/updateMachinesInSemaforo.sql');
 				$DB->setQuery($query);
 				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);
 				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
 				$DB->bind_vars(':id',$value['ID']);
-				logToFile($DB->query);
+				logToFile(sprintf("After, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
+				// logToFile($DB->query);
 				$DB->exec();
 				// logToFile($value['ID'] . ',' .$value['DB_ID'] . ',' .'Num of fields '.$DB->affected());
 

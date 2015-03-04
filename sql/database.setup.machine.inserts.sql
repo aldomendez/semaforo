@@ -95,6 +95,25 @@ INSERT INTO semaforo
 ;
 
 
+INSERT INTO semaforo
+(id,db_id,name,area,process,dbConnection,dbTable,dbMachine,dbDevice,dbDate,cicleTime)
+  SELECT ROWNUM+(SELECT Max(id)+1 id FROM semaforo) id, a.* FROM (
+    SELECT
+      DISTINCT system_id db_id,
+      system_id name,
+      'OSA-LIV' area,
+      '["LIV"]' process,
+      'mxoptix' dbConnection,
+      'liv_test_35' dbTable,
+      'system_id' dbMachine,
+      'serial_num' dbDevice,
+      'process_date' dbDate,
+      '350' cicleTime
+    FROM phase2.liv_test_35@mxoptix WHERE process_date > SYSDATE - 100
+    AND system_id IS NOT NULL
+  )a
+;
+
 apogee.pkg_ther_sweep@mxappsro
 
 

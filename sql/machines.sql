@@ -7,7 +7,10 @@ SELECT id,
        to_char(setup_date, 'dd-mon-yyyy hh24:mi') setup_date,
        dbconnection,
        dbtable,
+       dbmachine,
+       dbdevice,
        to_char(lasttick, 'dd-mon-yyyy hh24:mi') lasttick,
        to_char(lastrun, 'dd-mon-yyyy hh24:mi') lastrun,
-       cicletime
+       cicletime,
+       bu
 FROM semaforo

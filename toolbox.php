@@ -31,16 +31,26 @@ function getMachines()
 function updateTables()
 {
 
+	// Obtenemos la ultima fecha de actualizacion
 	$pastDateString = file_get_contents('lastUpdate.txt');
+	// Obtenemos una hora que pueda ser leida por el sistema
 	$past = strtotime($pastDateString);
+	// Guardamos la hora en el log (para poder ver los accesos que hemos estado teniendo)
 	logToFile($past);
-	$date = date("d-M-Y H:i");
+
 	$actual = strtotime('now');
 	logToFile($actual-$past);
+	
 	if (($actual - $past) > 300) {
-		updateMachinesMxOptix();
+		// Si y solo si ha pasado mas de los segundos configurados
+		// Empezamos a actualizar los datos de mi tabla.
+		$date = date("d-M-Y H:i");
+		// Guardamos la fecha de la ultima actualizacion para que no se vuelva a pedir 
+		// otra actualizacion antes de que termine esta.
 		file_put_contents('lastUpdate.txt', $date);
+		updateMachinesMxOptix();
 	}
+	// Resolvemos para el navegador
 	echo "$pastDateString";
 }
 
@@ -67,7 +77,7 @@ function updateMachinesMxOptix()
 			$MO->bind_vars(':device',$value['DBDEVICE']);
 			$MO->bind_vars(':test_dt',$value['DBDATE']);
 			$MO->bind_vars(':table',$value['DBTABLE']);
-			// echo($MO->query);
+			logToFile($MO->query);
 			$MO->exec();
 
 			// Actualizo la informacion en la tabla nueva

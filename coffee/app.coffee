@@ -22,9 +22,6 @@ class Machines
     @startFetching()
     @refreshModel()
     @grouped = {}
-    setTimeout ()=>
-      @setPopup()
-    ,1600
 
   getMachines: ()=>
     @now = moment()
@@ -41,7 +38,11 @@ class Machines
       @queryCount = 0
       @grouped = _.groupBy @data, 'AREA'
       r.set 'machines.loadingMachines', false
-      if !r? then r.update('machines')
+      if r?
+        r.update('machines')
+        @setPopup()
+        
+
 
   askToUpdateTable:()=>
     @now = moment()
@@ -55,7 +56,6 @@ class Machines
       console.log "'#{data}'"
       r.set 'machines.loadingMachines', true
       @getMachines()
-      # @setPopup()
       r.set 'lastUpdate',"Last Update: #{moment(data.trim()).fromNow()}"
 
   setPopup:()->

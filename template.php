@@ -34,7 +34,7 @@
       </div>
       <div class="ui special popup">
         <div class="header">{{NAME}}</div>
-        {{humanized}} {{machines.queryCount}}
+        {{humanized}}
       </div>
     {{/this}}
     </div>

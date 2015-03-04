@@ -38,11 +38,6 @@
       this.startFetching();
       this.refreshModel();
       this.grouped = {};
-      setTimeout((function(_this) {
-        return function() {
-          return _this.setPopup();
-        };
-      })(this), 1600);
     }
 
     Machines.prototype.getMachines = function() {
@@ -69,8 +64,9 @@
           _this.queryCount = 0;
           _this.grouped = _.groupBy(_this.data, 'AREA');
           r.set('machines.loadingMachines', false);
-          if (typeof r === "undefined" || r === null) {
-            return r.update('machines');
+          if (typeof r !== "undefined" && r !== null) {
+            r.update('machines');
+            return _this.setPopup();
           }
         };
       })(this));
@@ -96,7 +92,6 @@
           console.log("'" + data + "'");
           r.set('machines.loadingMachines', true);
           _this.getMachines();
-          _this.setPopup();
           return r.set('lastUpdate', "Last Update: " + (moment(data.trim()).fromNow()));
         };
       })(this));

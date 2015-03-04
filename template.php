@@ -34,7 +34,11 @@
       </div>
       <div class="ui special popup">
         <div class="header">{{NAME}}</div>
-        {{humanized}}
+        last seen: {{humanized}}
+        {{#if status=='red'}}
+        <br>
+        Piezas perdidas: {{desc}}
+        {{/if}}
       </div>
     {{/this}}
     </div>

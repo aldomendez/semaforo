@@ -76,11 +76,17 @@ class Machines
   updateModelData:(srvr)=>
     # console.log srvr
     target = _.find @data, (el)-> el.ID is srvr.ID
+    # Genera le fecha actual directamente con el framework de manejo de fechas
     mmnt = moment(srvr.LASTTICK)
+    # Se guarda localmente la fecha de la ultima pieza que vio en la base de datos.
     target.LASTTICK = srvr.LASTTICK
+    # Obtiene el numero de minutos 
     target.humanized = mmnt.fromNow()
+    # Convierte a numero el tiempo de ciclo
     target.CICLETIME = 1*target.CICLETIME
+    # Calculo de segundos sin que termine una pieza
     target.diff = Math.round((@now.diff mmnt)/1000)
+    # Calculo de estatus y de las piezas que lleva sin hacer
     [target.status,target.desc] = switch
       when target.diff <= target.CICLETIME then ['green','working correctly']
       when target.diff > target.CICLETIME && target.diff < (target.CICLETIME * 2) then ['yellow','some delay']

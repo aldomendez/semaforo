@@ -2,7 +2,7 @@
 
 INSERT INTO semaforo
 (id,db_id,name,area,process,dbConnection,dbTable,dbMachine,dbDevice,dbDate,cicleTime)
-SELECT ROWNUM id, a.* FROM (
+SELECT ROWNUM+(SELECT Max(id)+1 id, a.* FROM (
   SELECT
     DISTINCT system_id db_id,
     system_id name,
@@ -20,7 +20,7 @@ SELECT ROWNUM id, a.* FROM (
 ;
 INSERT INTO semaforo
 (id,db_id,name,area,process,dbConnection,dbTable,dbMachine,dbDevice,dbDate,cicleTime)
-  SELECT ROWNUM+23 id, a.* FROM (
+  SELECT ROWNUM+(SELECT Max(id)+1 id, a.* FROM (
     SELECT
       DISTINCT system_id db_id,
       system_id name,
@@ -39,7 +39,7 @@ INSERT INTO semaforo
 
 INSERT INTO semaforo
 (id,db_id,name,area,process,dbConnection,dbTable,dbMachine,dbDevice,dbDate,cicleTime)
-  SELECT ROWNUM+43 id, a.* FROM (
+  SELECT ROWNUM+(SELECT Max(id)+1 id, a.* FROM (
     SELECT
       DISTINCT system_id db_id,
       system_id name,
@@ -55,6 +55,45 @@ INSERT INTO semaforo
     AND system_id IS NOT NULL
   )a
 ;
+
+INSERT INTO semaforo
+(id,db_id,name,area,process,dbConnection,dbTable,dbMachine,dbDevice,dbDate,cicleTime)
+  SELECT ROWNUM+(SELECT Max(id)+1 id FROM semaforo) id, a.* FROM (
+    SELECT
+      DISTINCT system_id db_id,
+      system_id name,
+      'OSA-Functional' area,
+      '["Functional"]' process,
+      'mxoptix' dbConnection,
+      'osa_functional_test_25g' dbTable,
+      'system_id' dbMachine,
+      'serial_num' dbDevice,
+      'process_date' dbDate,
+      '350' cicleTime
+    FROM phase2.osa_functional_test_25g@mxoptix WHERE process_date > SYSDATE - 100
+    AND system_id IS NOT NULL
+  )a
+;
+
+INSERT INTO semaforo
+(id,db_id,name,area,process,dbConnection,dbTable,dbMachine,dbDevice,dbDate,cicleTime)
+  SELECT ROWNUM+(SELECT Max(id)+1 id FROM semaforo) id, a.* FROM (
+    SELECT
+      DISTINCT system_id db_id,
+      system_id name,
+      'OSA-LIV' area,
+      '["LIV"]' process,
+      'mxoptix' dbConnection,
+      'liv_test_35' dbTable,
+      'system_id' dbMachine,
+      'serial_num' dbDevice,
+      'process_date' dbDate,
+      '350' cicleTime
+    FROM phase2.liv_test_35@mxoptix WHERE process_date > SYSDATE - 100
+    AND system_id IS NOT NULL
+  )a
+;
+
 
 
 SELECT * FROM dare_mrc.purge_norm@prod

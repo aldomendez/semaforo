@@ -93,7 +93,10 @@
           console.log("'" + data + "'");
           r.set('machines.loadingMachines', true);
           _this.getMachines();
-          return r.set('lastUpdate', "Last Update: " + (moment(data.trim()).fromNow()));
+          r.set('lastUpdate', "Last Update: " + (moment(data.trim()).fromNow()));
+          return setTimeout(function() {
+            return _this.askToUpdateTable();
+          }, 20000);
         };
       })(this));
     };
@@ -146,13 +149,7 @@
       })(this), 1000);
     };
 
-    Machines.prototype.startFetching = function() {
-      return setInterval((function(_this) {
-        return function() {
-          return _this.askToUpdateTable();
-        };
-      })(this), 20000);
-    };
+    Machines.prototype.startFetching = function() {};
 
     return Machines;
 

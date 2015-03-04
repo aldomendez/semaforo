@@ -57,6 +57,9 @@ class Machines
       r.set 'machines.loadingMachines', true
       @getMachines()
       r.set 'lastUpdate',"Last Update: #{moment(data.trim()).fromNow()}"
+      setTimeout ()=>
+        @askToUpdateTable()
+      ,20000
 
   setPopup:()->
     $(".label").popup({
@@ -98,9 +101,7 @@ class Machines
     ,1000
 
   startFetching:()->
-    setInterval ()=>
-      @askToUpdateTable()
-    ,20000
+    
 
 m = new Machines
 r = new Ractive

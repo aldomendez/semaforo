@@ -55,7 +55,7 @@ class Machines
       console.log "'#{data}'"
       r.set 'machines.loadingMachines', true
       @getMachines()
-      @setPopup()
+      # @setPopup()
       r.set 'lastUpdate',"Last Update: #{moment(data.trim()).fromNow()}"
 
   setPopup:()->

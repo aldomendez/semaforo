@@ -62,6 +62,14 @@ Machines = (function() {
       return function(data) {
         _this.queryCount = 0;
         _this.grouped = _.groupBy(_this.data, 'AREA');
+        _this.grouped = _.map(_this.grouped, function(el, key) {
+          var _g;
+          _g = _.groupBy(el, 'PROCESS');
+          return {
+            key: key,
+            data: _g
+          };
+        });
         r.set('machines.loadingMachines', false);
         setTimeout(function() {
           return _this.getMachines();

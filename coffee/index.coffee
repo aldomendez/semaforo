@@ -38,6 +38,9 @@ class Machines
       @queryCount = 0
       # Utilizo underscore para agrupar los datos por area
       @grouped = _.groupBy @data, 'AREA'
+      @grouped = _.map @grouped,(el,key)->
+        _g = _.groupBy el, 'PROCESS'
+        return {key:key, data:_g}
       r.set 'machines.loadingMachines', false
       setTimeout ()=>
         @getMachines()

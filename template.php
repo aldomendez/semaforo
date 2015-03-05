@@ -21,28 +21,45 @@
 
 
   
-  <div class="column ui segment">
-  {{#each machines.grouped :groupNum}}
-  <h2 class="header"><small>Equipos de </small>{{groupNum}}</h2>
-    <div class="">
-    {{#this :i}}
-      <div class="label horizontal tiny ui {{status}}">
-        {{NAME}}
-        {{#if status=='red'}}
-        <div class="detail"><i class="icon warning sign"></i>{{desc}}</div>
-        {{/if}}
+  <div class="column">
+    <div class="ui two cards">
+    {{#each machines.grouped :groupNum}}
+      <div class="card">
+        <div class="content">
+          <div class="header"><small>Equipos de </small>{{key}}</div>
+          <div class="ui list">
+          {{#data :i}}
+            <div class="item">
+              <div class="content">{{i}}</div>
+              <div class="description">
+                {{#each this}}
+                
+                <div class="label horizontal tiny ui {{status}}">
+                  {{NAME}}
+                  {{#if status=='red'}}
+                  <div class="detail"><i class="icon warning sign"></i>{{desc}}</div>
+                  {{/if}}
+                </div>
+                <div class="ui special popup">
+                  <div class="header">{{NAME}}</div>
+                  last seen: {{humanized}}
+                  <br>
+                  Process:{{PROCESS}}
+                  {{#if status=='red'}}
+                  <br>
+                  Devices not : {{desc}}
+                  {{/if}}
+                </div>
+                {{/each}}
+              </div>
+                
+            </div>
+          {{/data}}
+          </div>
+        </div>
       </div>
-      <div class="ui special popup">
-        <div class="header">{{NAME}}</div>
-        last seen: {{humanized}}
-        {{#if status=='red'}}
-        <br>
-        Piezas perdidas: {{desc}}
-        {{/if}}
-      </div>
-    {{/this}}
+    {{/each}}
     </div>
-  {{/each}}
   </div>
 
 

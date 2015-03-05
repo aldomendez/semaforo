@@ -36,6 +36,11 @@ Machines = (function() {
     this.startFetching();
     this.refreshModel();
     this.grouped = {};
+    setTimeout((function(_this) {
+      return function() {
+        return location.href = "http://cymautocert/osaapp/semaforo/";
+      };
+    })(this), 1800000);
   }
 
   Machines.prototype.getMachines = function() {

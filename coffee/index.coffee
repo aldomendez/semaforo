@@ -21,6 +21,9 @@ class Machines
     @startFetching()
     @refreshModel()
     @grouped = {}
+    setTimeout ()=>
+      location.href = "http://cymautocert/osaapp/semaforo/"
+    ,1800000 # 30 min
 
   getMachines: ()=>
     @now = moment()

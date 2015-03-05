@@ -124,3 +124,71 @@ SELECT * FROM semaforo ORDER BY id;
 
 SELECT system_id, serial_num, process_date  FROM phase2.pd_assembly@mxoptix;
 
+ALTER TABLE semaforo ADD BU VARCHAR(25);
+
+
+UPDATE semaforo SET BU = '1' ;
+
+
+
+INSERT INTO semaforo
+(id,db_id,name,area,process,dbConnection,dbTable,dbMachine,dbDevice,dbDate,cicleTime)
+SELECT 
+  (SELECT Max(id)+1 id FROM semaforo) id,
+  'CYBOND50',
+  'CYBOND50',
+  'LR4-Shim',
+  'Rosa-Shim',
+  'mxoptix',
+  'lr4_shim_assembly',
+  'system_id',
+  'serial_num',
+  'process_date',
+  '1'
+ FROM dual
+;
+  SELECT ROWNUM+(SELECT Max(id)+1 id FROM semaforo) id, a.* FROM (
+    SELECT
+      DISTINCT testset_id db_id,
+      testset_id name,
+      'OSA-LIV' area,
+      '["LIV"]' process,
+      'mxoptix' dbconnection,
+      'liv_test_40' dbtable,
+      'testset_id' dbmachine,
+      'serial_num' dbdevice,
+      'test_date' dbdate,
+      '350' cicletime
+    FROM phase2.liv_test_40@mxoptix WHERE test_date > SYSDATE - 10
+    AND testset_id IS NOT NULL
+  )a
+;
+
+
+SELECT * FROM semaforo
+WHERE db_id IN (
+  SELECT DISTINCT system_id 
+  FROM
+    phase2.lr4_shim_assembly@mxoptix
+  WHERE
+    step_name LIKE 'ROSA SUBASSEM2%'
+  ) ;
+
+
+UPDATE semaforo 
+SET
+  cicletime = 720,
+  process = 'Rosa-Shim'
+WHERE db_id IN (
+  SELECT DISTINCT system_id 
+  FROM
+    phase2.lr4_shim_assembly@mxoptix
+  WHERE
+    step_name LIKE 'ROSA SUBASSEM2%' AND
+    process_date > SYSDATE -10
+  ) 
+;                                                                                      
+SELECT DISTINCT system_id, step_name FROM phase2.lr4_shim_assembly@mxoptix WHERE process_date > SYSDATE - .1 AND step_name LIKE 'LR4 GLA%' 
+
+
+

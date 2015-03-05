@@ -98,9 +98,9 @@ function updateMachinesMxOptix()
 				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);
 				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
 				$DB->bind_vars(':id',$value['ID']);
-				logToFile(sprintf("After, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
 				// logToFile($DB->query);
 				$DB->exec();
+				logToFile(sprintf("After, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
 				// logToFile($value['ID'] . ',' .$value['DB_ID'] . ',' .'Num of fields '.$DB->affected());
 
 				// $query = file_get_contents('machines.sql');

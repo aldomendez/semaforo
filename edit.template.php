@@ -5,16 +5,11 @@
         <i class="home icon"></i> AvagoTech
       </a>
       <a class="item">
-        <b>Edicion de equipos</b>
+        <b>Equipment manager</b>
       </a>
       <a class="item" on-click="addNew">
-        <i class="add icon"></i> Nuevo
+        <i class="add icon"></i> New
       </a>
-      {{#edited === true}}
-      <a class="item orange active" on-click="save">
-        <i class="save icon"></i> Guardar
-      </a>
-      {{/edited === true}}
       {{#edit === true}}
       <a class="item" on-click="backward">
         <i class="backward icon"></i> 
@@ -47,7 +42,7 @@
             <tr>
               <th>Tools</th>
               <th>Name</th>
-              <th>Business Unit Head</th>
+              <th>BU Head</th>
               <th>Area</th>
               <th>Process</th>
               <th>Cicle time</th>
@@ -58,7 +53,7 @@
             </tr>
           </thead>
           <tbody>
-          {{#each part_num.data: i}}
+          {{#each machines.data: i}}
             <tr>
               <td><a href="#{{i}}" class="ui button mini basic" on-click="edit:{{i}}">edit</a></td>
               <td>{{NAME}}</td>
@@ -89,11 +84,11 @@
           <div class="bar" style="width: {{queue.percent}}%;"></div>
         </div>
         {{/if}}
-      {{#with part_num.data[editing]}}
+      {{#with machines.data[editing]}}
       <form class="ui form">
         <h5 class="ui dividing header">
           <a href="" class="ui button" on-click="returnToList">
-          <i class="left arrow icon"></i>regresar</a> Editor de equipos</h5>
+          <i class="left arrow icon"></i>regresar</a> Equipment editor</h5>
         <div class="ui segment">
           <div class="ui error message">
             <div class="header">Action Forbidden</div>
@@ -102,7 +97,7 @@
           <div class="two fields">
             <div class="field">
               <label>Name <i class="icon info"></i></label>
-              <input class="mousetrap" placeholder="" type="text" value="{{NAME}}" id="part_num">
+              <input class="mousetrap" placeholder="" type="text" value="{{NAME}}" id="machines">
             </div>
             <div class="field">
               <label>db_id</label>
@@ -120,17 +115,17 @@
             </div>
             <div class="field">
               <label>Cycle time <small>(en Minutos)</small></label>
-              <input class="mousetrap" placeholder="" type="text" value="{{min}}" id="description">
+              <input class="mousetrap" on-mousewheel="setTime:{{editing}}" type="text" value="{{min}}" id="description">
             </div>
             <div class="field">
               <label>Cycle time <small>(en segundos)</small> {{duration(min,seg)}}seg</label>
-              <input class="mousetrap" placeholder="" type="text" value="{{seg}}" id="description">
+              <input class="mousetrap" on-mousewheel="setTime:{{editing}}" type="text" value="{{seg}}" id="description">
             </div>
           </div>
           <div class="four fields">
             <div class="field">
               <label>Coneccion</label>
-              <input class="mousetrap" placeholder="" type="text" value="{{DBCONNECTION}}" id="part_num">
+              <input class="mousetrap" placeholder="" type="text" value="{{DBCONNECTION}}" id="machines">
             </div>
             <div class="field">
               <label>Table</label>
@@ -145,9 +140,14 @@
               <input class="mousetrap" placeholder="" type="text" value="{{DBDEVICE}}" id="status">
             </div>
           </div>
-          <div class="field">
-            {{^deleting}}<button class="ui button" type="button" on-click="askToDelete">Borrar</button>{{/deleting}}
-            {{#deleting}}<button class="ui negative button" type="button" on-click="del:{{editing}}">Seguro?</button>{{/deleting}}
+          <div class="two fields">
+            <div class="field">
+              <a href="#" class="ui {{#edited === true}}positive{{/edited === true}} button" on-click="save:{{editing}}">Save</a>
+            </div>
+            <div class="field">
+              {{^deleting}}<button class="ui button" type="button" on-click="askToDelete">Delete</button>{{/deleting}}
+              {{#deleting}}<button class="ui negative button" type="button" on-click="del:{{editing}}">Sure?</button>{{/deleting}}
+            </div>
           </div>
         </div>
       </form>

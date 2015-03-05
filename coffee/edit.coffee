@@ -1,21 +1,28 @@
-class PartNum
+class Machines
   constructor: () ->
     @load()
     @placeHolder =
-      "id": 0
-      "used": ""
-      "desc": ""
-      "num": "-"
-      "SAP": false
-      "status": "Done"
-      "location":"-"
-      "udm":"unidad"
-      "rev":"-"
+      "DB_ID": "",
+      "NAME": "",
+      "DESCRIPTION": null,
+      "AREA": "",
+      "PROCESS": "",
+      "SETUP_DATE": "",
+      "DBCONNECTION": "",
+      "DBTABLE": "",
+      "DBMACHINE": "",
+      "DBDEVICE": "",
+      "LASTTICK": "",
+      "LASTRUN": "",
+      "CICLETIME": "",
+      "BU": "1"
   load:()->
     promise = $.getJSON 'toolbox.php',
       'action':'getMachines'
     promise.done (data)=>
+      data.map (el)-> el.min = (el.CICLETIME/60).toFixed(2)
       @data = data
+      @original = _.clone @data
       # console.table data
       r.update()
       r.set 'edited', false
@@ -30,20 +37,6 @@ class PartNum
       editing:@.data.length - 1
       edit: true
       deleting: false
-  getOsfmInfo:(item)->
-    promise = $.getJSON 'toolbox.php',
-      'action':'getMachines'
-      # 'action':'justWait'
-      'item':item.num
-    promise.done (data)=>
-      # console.log data
-      if item?
-        item.osfm = data
-      r.update()
-    promise.fail (a,b,c)->
-      console.log 'Falle al recojer datos de la base de datos'
-      console.log a,b,c
-    return promise
 
 
 # Datos que pueden servir mas adelante
@@ -51,13 +44,13 @@ util = {}
 util.numReg = /num$/
 util.indexMatch = /(\d*)\.num$/
 
-p = new PartNum()
+p = new Machines()
 
 r = new Ractive {
   el: 'container'
   template: '#template'
   data:{
-    part_num : p
+    machines : p
     edit: false
     editing: 0
     edited: false
@@ -72,8 +65,22 @@ r = new Ractive {
   }
 }
 
+r.on 'setMinutes',(e,id)->
+  console.log id
+  e.original.preventDefault()
+  branch = "machines.data.#{id}.min"
+  offset = if e.dy < 0 then -1 else 1
+  actual = parseInt(r.get(branch),10)
+  valToSet = actual + offset
+  if valToSet >=0
+    r.set branch, valToSet
+  else
+    r.set branch, 0
+
+
 r.on 'edit', (e, param)->
   e.original.preventDefault()
+  # console.log param
   r.set
     edit:true
     editing:param
@@ -88,26 +95,26 @@ r.on 'returnToList', (e)->
 
 r.on 'save', (e)->
   e.original.preventDefault()
-  r.data.part_num.save()
+  r.data.machines.save()
   r.set
     edited:false
 
 r.on 'del', (e, ind)->
   e.original.preventDefault()
-  r.data.part_num.data.splice(ind,1)
+  r.data.machines.data.splice(ind,1)
   console.log 'delete', ind
   r.fire 'backward', e
 
 r.on 'addNew', (e)->
   e.original.preventDefault()
-  r.data.part_num.add()
+  r.data.machines.add()
   r.set 
     'deleting': false
 
 r.on 'backward', (e)->
   if e?.original?.preventDefault? then e.original.preventDefault()
   actual = r.get('editing')
-  offset = if actual is 0  then r.get('part_num.data.length')-1 else actual-1
+  offset = if actual is 0  then r.get('machines.data.length')-1 else actual-1
   r.set
     editing: offset
     deleting: false
@@ -115,7 +122,7 @@ r.on 'backward', (e)->
 r.on 'forward', (e)->
   if e?.original?.preventDefault? then e.original.preventDefault()
   actual = r.get('editing')
-  offset = if actual is r.get('part_num.data.length')-1 then 0 else actual+1
+  offset = if actual is r.get('machines.data.length')-1 then 0 else actual+1
   r.set
     editing: offset
     deleting: false
@@ -131,14 +138,14 @@ r.on 'askToDelete', (e)->
 
 r.on 'fetchOSFMData', (e, index)->
   e.original.preventDefault()
-  r.data.part_num.pushToQueue(index)
+  r.data.machines.pushToQueue(index)
 
-r.observe 'part_num.data.*.*', (nval, oval, keypath)->
+r.observe 'machines.data.*.*', (nval, oval, keypath)->
   r.set 'edited', true
   r.set 'deleting', false
   if r.get('edit') and util.numReg.test keypath
     if nval.length is 7 
-      r.data.part_num.pushToQueue(keypath.match(/(\d*)\.num$/)[1])
+      r.data.machines.pushToQueue(keypath.match(/(\d*)\.num$/)[1])
 
 
 

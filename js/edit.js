@@ -1,36 +1,45 @@
-var PartNum, i, mapping, p, r, util, _fn, _i, _len;
+var Machines, i, mapping, p, r, util, _fn, _i, _len;
 
-PartNum = (function() {
-  function PartNum() {
+Machines = (function() {
+  function Machines() {
     this.load();
     this.placeHolder = {
-      "id": 0,
-      "used": "",
-      "desc": "",
-      "num": "-",
-      "SAP": false,
-      "status": "Done",
-      "location": "-",
-      "udm": "unidad",
-      "rev": "-"
+      "DB_ID": "",
+      "NAME": "",
+      "DESCRIPTION": null,
+      "AREA": "",
+      "PROCESS": "",
+      "SETUP_DATE": "",
+      "DBCONNECTION": "",
+      "DBTABLE": "",
+      "DBMACHINE": "",
+      "DBDEVICE": "",
+      "LASTTICK": "",
+      "LASTRUN": "",
+      "CICLETIME": "",
+      "BU": "1"
     };
   }
 
-  PartNum.prototype.load = function() {
+  Machines.prototype.load = function() {
     var promise;
     promise = $.getJSON('toolbox.php', {
       'action': 'getMachines'
     });
     return promise.done((function(_this) {
       return function(data) {
+        data.map(function(el) {
+          return el.min = (el.CICLETIME / 60).toFixed(2);
+        });
         _this.data = data;
+        _this.original = _.clone(_this.data);
         r.update();
         return r.set('edited', false);
       };
     })(this));
   };
 
-  PartNum.prototype.save = function() {
+  Machines.prototype.save = function() {
     var promise;
     if (this.data.length !== 0 && r.get('edited')) {
       return promise = $.post('utilities.php', {
@@ -39,7 +48,7 @@ PartNum = (function() {
     }
   };
 
-  PartNum.prototype.add = function() {
+  Machines.prototype.add = function() {
     this.placeHolder.id = this.data.length + 1;
     this.data.push(_.clone(this.placeHolder));
     return r.set({
@@ -49,28 +58,7 @@ PartNum = (function() {
     });
   };
 
-  PartNum.prototype.getOsfmInfo = function(item) {
-    var promise;
-    promise = $.getJSON('toolbox.php', {
-      'action': 'getMachines',
-      'item': item.num
-    });
-    promise.done((function(_this) {
-      return function(data) {
-        if (item != null) {
-          item.osfm = data;
-        }
-        return r.update();
-      };
-    })(this));
-    promise.fail(function(a, b, c) {
-      console.log('Falle al recojer datos de la base de datos');
-      return console.log(a, b, c);
-    });
-    return promise;
-  };
-
-  return PartNum;
+  return Machines;
 
 })();
 
@@ -80,13 +68,13 @@ util.numReg = /num$/;
 
 util.indexMatch = /(\d*)\.num$/;
 
-p = new PartNum();
+p = new Machines();
 
 r = new Ractive({
   el: 'container',
   template: '#template',
   data: {
-    part_num: p,
+    machines: p,
     edit: false,
     editing: 0,
     edited: false,
@@ -103,6 +91,21 @@ r = new Ractive({
       }
       return "" + (((min * 60) + seg).toFixed(0));
     }
+  }
+});
+
+r.on('setMinutes', function(e, id) {
+  var actual, branch, offset, valToSet;
+  console.log(id);
+  e.original.preventDefault();
+  branch = "machines.data." + id + ".min";
+  offset = e.dy < 0 ? -1 : 1;
+  actual = parseInt(r.get(branch), 10);
+  valToSet = actual + offset;
+  if (valToSet >= 0) {
+    return r.set(branch, valToSet);
+  } else {
+    return r.set(branch, 0);
   }
 });
 
@@ -126,7 +129,7 @@ r.on('returnToList', function(e) {
 
 r.on('save', function(e) {
   e.original.preventDefault();
-  r.data.part_num.save();
+  r.data.machines.save();
   return r.set({
     edited: false
   });
@@ -134,14 +137,14 @@ r.on('save', function(e) {
 
 r.on('del', function(e, ind) {
   e.original.preventDefault();
-  r.data.part_num.data.splice(ind, 1);
+  r.data.machines.data.splice(ind, 1);
   console.log('delete', ind);
   return r.fire('backward', e);
 });
 
 r.on('addNew', function(e) {
   e.original.preventDefault();
-  r.data.part_num.add();
+  r.data.machines.add();
   return r.set({
     'deleting': false
   });
@@ -153,7 +156,7 @@ r.on('backward', function(e) {
     e.original.preventDefault();
   }
   actual = r.get('editing');
-  offset = actual === 0 ? r.get('part_num.data.length') - 1 : actual - 1;
+  offset = actual === 0 ? r.get('machines.data.length') - 1 : actual - 1;
   return r.set({
     editing: offset,
     deleting: false
@@ -166,7 +169,7 @@ r.on('forward', function(e) {
     e.original.preventDefault();
   }
   actual = r.get('editing');
-  offset = actual === r.get('part_num.data.length') - 1 ? 0 : actual + 1;
+  offset = actual === r.get('machines.data.length') - 1 ? 0 : actual + 1;
   return r.set({
     editing: offset,
     deleting: false
@@ -187,15 +190,15 @@ r.on('askToDelete', function(e) {
 
 r.on('fetchOSFMData', function(e, index) {
   e.original.preventDefault();
-  return r.data.part_num.pushToQueue(index);
+  return r.data.machines.pushToQueue(index);
 });
 
-r.observe('part_num.data.*.*', function(nval, oval, keypath) {
+r.observe('machines.data.*.*', function(nval, oval, keypath) {
   r.set('edited', true);
   r.set('deleting', false);
   if (r.get('edit') && util.numReg.test(keypath)) {
     if (nval.length === 7) {
-      return r.data.part_num.pushToQueue(keypath.match(/(\d*)\.num$/)[1]);
+      return r.data.machines.pushToQueue(keypath.match(/(\d*)\.num$/)[1]);
     }
   }
 });

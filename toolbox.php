@@ -28,6 +28,20 @@ function getMachines()
 	}	
 }
 
+function getSpecificMachine()
+{
+	// updateMachinesMxOptix();
+	$query = file_get_contents('sql/machines.sql');
+	$DB = new MxApps();
+	$DB->setQuery($query. " where id = '" . $_GET['ID'] ."'");
+	$DB->exec();
+	if ($DB->json() == "[]") {
+		throw new Exception("No arrojo datos la base de datos", 1);
+	} else {
+		echo $DB->json();
+	}	
+}
+
 function updateTables()
 {
 

@@ -11,7 +11,7 @@
   "dependencies": {
     "gulp": "~3.8.7",
     "gulp-util": "~3.0.0",
-    "gulp-coffee": "~2.1.1",
-    "gulp-livereload": "~3.8.0"
+    "gulp-livereload": "~3.8.0",
+    "gulp-wait":"~0.0.4"
   }
 }

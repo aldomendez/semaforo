@@ -2,9 +2,10 @@ var gulp = require('gulp');
 // var coffee = require('gulp-coffee');
 // var gutil = require('gulp-util');
 var livereload = require('gulp-livereload');
+var wait = require('gulp-wait');
 
-var DEST = '\\\\cymautocert\\osaapp\\semaforo';
-var BASE = 'C:\\apps\\semaforo';
+var DEST = '\\\\cymautocert\\osaapp\\semaforo-dev';
+var BASE = 'C:\\apps\\semaforo-dev';
 
 function serverPath (path) {
   var rgx = /[a-zA-Z-_~\. ]*$/;
@@ -21,6 +22,7 @@ gulp.task('watch', function () {
     // Copia el archivo que cambio a el compartido 
      gulp.src(event.path)
        .pipe(gulp.dest(DEST + serverPath(event.path)))
+       .pipe(wait(1200))
        .pipe(livereload());
      
     console.log("Compilado y copiado :" + event.path);

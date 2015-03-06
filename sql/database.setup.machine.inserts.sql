@@ -114,6 +114,39 @@ INSERT INTO semaforo
   )a
 ;
 
+INSERT INTO semaforo
+(id,db_id,name,area,process,dbConnection,dbTable,dbMachine,dbDevice,dbDate,cicleTime)
+SELECT 
+  (SELECT Max(id)+1 id FROM semaforo) id,
+  'CYBOND62',
+  'CYBOND62',
+  '4x25',
+  'SiLens',
+  'mxoptix',
+  'four_x25_shim_assembly',
+  'system_id',
+  'serial_num',
+  'process_date',
+  '1200'
+ FROM dual
+;
+INSERT INTO semaforo
+(id,db_id,name,area,process,dbConnection,dbTable,dbMachine,dbDevice,dbDate,cicleTime)
+SELECT 
+  (SELECT Max(id)+1 id FROM semaforo) id,
+  'CYBOND41',
+  'CYBOND41',
+  '4x25',
+  'Shim Attach',
+  'mxoptix',
+  'four_x25_shim_assembly',
+  'system_id',
+  'serial_num',
+  'process_date',
+  '900'
+ FROM dual
+;
+
 apogee.pkg_ther_sweep@mxappsro
 
 
@@ -189,6 +222,5 @@ WHERE db_id IN (
   ) 
 ;                                                                                      
 SELECT DISTINCT system_id, step_name FROM phase2.lr4_shim_assembly@mxoptix WHERE process_date > SYSDATE - .1 AND step_name LIKE 'LR4 GLA%' 
-
 
 

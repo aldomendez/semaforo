@@ -40,7 +40,7 @@ Machines = (function() {
       return function() {
         return location.href = "http://cymautocert/osaapp/semaforo/";
       };
-    })(this), 1800000);
+    })(this), 450000);
   }
 
   Machines.prototype.getMachines = function() {

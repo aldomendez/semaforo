@@ -23,7 +23,7 @@ class Machines
     @grouped = {}
     setTimeout ()=>
       location.href = "http://cymautocert/osaapp/semaforo/"
-    ,1800000 # 30 min
+    ,450000 # 7.5 min
 
   getMachines: ()=>
     @now = moment()

@@ -46,7 +46,7 @@ function getSpecificMachine()
 function updateTables()
 {
 
-	logToFile("==========================================================");
+	logToFile(sprintf("Llamado: , %s1,",$inicio));
 	// Obtenemos la ultima fecha de actualizacion
 	$pastDateString = file_get_contents('lastUpdate.txt');
 	// Obtenemos una hora que pueda ser leida por el sistema
@@ -75,7 +75,7 @@ function updateMachinesMxOptix()
 {
 	// Obtengo la lista de las maquinas dadas de alta en el sistema
 	$inicio = date("d-M-Y H:i:s");
-	logToFile(sprintf("Inicio, %s, %s, %s,",$inicio));
+	logToFile(sprintf("Inicio, %s1 ",$inicio));
 	$query = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
 	$DB->setQuery($query . " where dbconnection = 'mxoptix'");
@@ -108,7 +108,7 @@ function updateMachinesMxOptix()
 
 			if ( sizeof($MO->results) > 0 ) {
 				// genero el query para la busqueda de datos
-				logToFile(date("d-M-Y H:i"));
+				logToFile(date("d-M-Y H:i:s"));
 				$query = file_get_contents('sql/updateMachinesInSemaforo.sql');
 				$DB->setQuery($query);
 				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);

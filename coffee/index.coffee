@@ -8,7 +8,6 @@ class Local
   remove:()->
   
 
-
 class Machines
   constructor: () ->
     @queryCount = 0
@@ -124,7 +123,24 @@ class Machines
     ,1000
 
   startFetching:()->
-    
+
+parseDate = (d) ->
+  new Date(d.substring(0,4),
+    d.substring(4, 6) - 1,
+    d.substring(6, 8),
+    d.substring(8, 10),
+    d.substring(10, 12),
+    d.substring(12,14))
+
+window.oc = $.get 'dateoffset.php'
+oc.done (data)->
+  serverDate = parseDate data
+  actualDate = new Date()
+  window.oc = Math.floor(((serverDate - actualDate)/1000)/60)
+oc.fail (data)->
+  console.warn data
+
+
 
 m = new Machines
 r = new Ractive

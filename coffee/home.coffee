@@ -10,7 +10,6 @@ Eq = Backbone.Model.extend
     DBTABLE: ""
     DB_ID: ""
     DESCRIPTION: ''
-    ID: "20"
     NAME: ""
     PROCESS: ""
   }

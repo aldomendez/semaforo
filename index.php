@@ -7,7 +7,9 @@
   <link rel="stylesheet" type="text/css"  href="../jsLib/SemanticUi/1.10.2/semantic.css">
 </head>
 <body>
-  <div class="ui one column grid" id="container"></div>
+  <div class="ui one column grid page"><div class="row">
+    <div class="column" id="container"></div>
+  </div></div>
   
   <script src="../jsLib/jquery/2.1.3/jquery.min.js"></script>
   <script src="../jsLib/easing/easing.js"></script>

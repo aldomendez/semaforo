@@ -22,7 +22,7 @@ class Machines
     @refreshModel()
     @grouped = {}
     setTimeout ()=>
-      location.href = "http://cymautocert/osaapp/semaforo/"
+      location.href = location.href
     ,450000 # 7.5 min
 
   getMachines: ()=>

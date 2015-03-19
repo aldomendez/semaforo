@@ -53,7 +53,7 @@
                     Process:{{PROCESS}}
                     {{#if status=='red'}}
                     <br>
-                    Devices not : {{desc}}
+                    Devices not made: {{desc}}
                     {{/if}}
                   </div>
                   {{/each}}

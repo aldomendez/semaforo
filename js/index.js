@@ -38,7 +38,7 @@ Machines = (function() {
     this.grouped = {};
     setTimeout((function(_this) {
       return function() {
-        return location.href = "http://cymautocert/osaapp/semaforo/";
+        return location.href = location.href;
       };
     })(this), 450000);
   }

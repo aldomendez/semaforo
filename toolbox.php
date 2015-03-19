@@ -24,6 +24,7 @@ function getMachines()
 	if ($DB->json() == "[]") {
 		throw new Exception("No arrojo datos la base de datos", 1);
 	} else {
+		file_put_contents('filecache.txt', $DB->json());
 		echo $DB->json();
 	}	
 }

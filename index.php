@@ -6,6 +6,11 @@
   <title>Semaforo</title>
   <link rel="stylesheet" type="text/css"  href="../jsLib/SemanticUi/1.10.2/semantic.css">
 </head>
+  <style>
+  .ui.tiny.labels .label, .ui.tiny.label {
+    margin-bottom: 3px;
+  }
+</style>
 <body>
   <div class="ui one column grid" id="container"></div>
   <script id="template" type="text/ractive"><?php include 'template.php' ?></script>
@@ -13,7 +18,7 @@
   <script src="../jsLib/easing/easing.js"></script>
   <script src="../jsLib/SemanticUi/1.10.2/components/popup.min.js"></script>
   <script src="../jsLib/underscore/1.6.0/underscore.js"></script>
-  <script src="../jsLib/ractivejs/0.6.1/ractive.min.js"></script>
+  <script src="../jsLib/ractivejs/0.7.1/ractive.js"></script>
   <script src="../jsLib/moment/2.9.0/moment.min.js"></script>
   <script src="../jsLib/fuse.js/fuse.min.js"></script>
   <script type="text/javascript" src="js/index.js"></script>

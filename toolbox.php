@@ -73,7 +73,8 @@ function updateTables()
 function updateMachinesMxOptix()
 {
 	// Obtengo la lista de las maquinas dadas de alta en el sistema
-	logToFile(sprintf("Inicio, %s, %s, %s,",date("d-M-Y H:i")));
+	$inicio = date("d-M-Y H:i:s");
+	logToFile(sprintf("Inicio, %s, %s, %s,",$inicio));
 	$query = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
 	$DB->setQuery($query . " where dbconnection = 'mxoptix'");
@@ -95,7 +96,7 @@ function updateMachinesMxOptix()
 			$MO->bind_vars(':test_dt',$value['DBDATE']);
 			$MO->bind_vars(':table',$value['DBTABLE']);
 			// logToFile($MO->query);
-			logToFile(sprintf("Before, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
+			// logToFile(sprintf("Before, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
 			$MO->exec();
 
 			// Actualizo la informacion en la tabla nueva
@@ -114,7 +115,7 @@ function updateMachinesMxOptix()
 				$DB->bind_vars(':id',$value['ID']);
 				// logToFile($DB->query);
 				$DB->exec();
-				logToFile(sprintf("After, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
+				// logToFile(sprintf("After, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
 				// logToFile($value['ID'] . ',' .$value['DB_ID'] . ',' .'Num of fields '.$DB->affected());
 
 				// $query = file_get_contents('machines.sql');
@@ -124,6 +125,9 @@ function updateMachinesMxOptix()
 			}
 		}
 	}
+
+	$final = date("d-M-Y H:i:s");
+	logToFile(sprintf("[x] Completado: inicio:%s1, final:%s2", $inicio, $final));
 
 }
 

@@ -1,104 +1,198 @@
-(function(jQuery) {
-  var $, Item, ItemView, List, ListView, listView;
-  $ = jQuery;
-  Backbone.sync = function(method, model, success, error) {
-    return success();
-  };
-  Item = Backbone.Model.extend({
-    defaults: {
-      part1: 'hello',
-      part2: 'world'
+var Local, Machines, m, r,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+Local = (function() {
+  function Local() {
+    if (typeof localStorege !== "undefined" && localStorege !== null) {
+      throw "No se cuenta con localStorege";
     }
-  });
-  List = Backbone.Collection.extend({
-    model: Item
-  });
-  ItemView = Backbone.View.extend({
-    tagName: 'li',
-    events: {
-      'click span.swap': 'swap',
-      'click span.delete': 'remove'
-    },
-    initialize: function() {
-      _.bindAll(this, 'render', 'unrender', 'swap', 'remove');
-      this.model.bind('change', this.render);
-      return this.model.bind('remove', this.unrender);
-    },
-    render: function() {
-      $(this.el).html("<span>" + (this.model.get('part1')) + " " + (this.model.get('part2')) + "</span> <span class='swap'>[swap]</span><span class='delete'>[remove]</span>");
-      return this;
-    },
-    unrender: function() {
-      return $(this.el).remove();
-    },
-    swap: function() {
-      var swapped;
-      swapped = {
-        part1: this.model.get('part2'),
-        part2: this.model.get('part1')
+  }
+
+  Local.prototype.set = function() {};
+
+  Local.prototype.get = function() {};
+
+  Local.prototype.remove = function() {};
+
+  return Local;
+
+})();
+
+Machines = (function() {
+  function Machines() {
+    this.updateModelData = __bind(this.updateModelData, this);
+    this.justUpdateModel = __bind(this.justUpdateModel, this);
+    this.askToUpdateTable = __bind(this.askToUpdateTable, this);
+    this.getMachines = __bind(this.getMachines, this);
+    this.queryCount = 0;
+    this.loadingMachines = true;
+    this.fuse = {
+      options: {
+        keys: ['AREA', 'PROCESS', 'NAME']
+      }
+    };
+    this.getMachines();
+    this.askToUpdateTable();
+    this.startFetching();
+    this.refreshModel();
+    this.grouped = {};
+    setTimeout((function(_this) {
+      return function() {
+        return location.href = "http://cymautocert/osaapp/semaforo/";
       };
-      return this.model.set(swapped);
-    },
-    remove: function() {
-      return this.model.destroy();
+    })(this), 450000);
+  }
+
+  Machines.prototype.getMachines = function() {
+    var coneccion;
+    this.now = moment();
+    return coneccion = $.getJSON("toolbox.php", {
+      action: "getMachines"
+    }).done((function(_this) {
+      return function(data) {
+        if (data.error) {
+          throw data.desc;
+        }
+        if (_this.data == null) {
+          _this.data = data;
+        }
+        data.map(_this.updateModelData);
+        return _this.grouped = _.map(_.groupBy(_this.data, 'BU'), function(el, key1) {
+          var group;
+          group = _.groupBy(el, "AREA");
+          group = _.map(group, function(el, key2) {
+            var _g;
+            _g = _.groupBy(el, 'PROCESS');
+            return {
+              key: key2,
+              data: _g
+            };
+          });
+          return {
+            key: key1,
+            data: group
+          };
+        });
+      };
+    })(this)).fail((function(_this) {
+      return function(err) {
+        return console.log('todo ok');
+      };
+    })(this)).always((function(_this) {
+      return function(data) {
+        _this.queryCount = 0;
+        r.set('machines.loadingMachines', false);
+        setTimeout(function() {
+          return _this.getMachines();
+        }, 20000);
+        if (typeof r !== "undefined" && r !== null) {
+          r.update();
+          return _this.setPopup();
+        }
+      };
+    })(this));
+  };
+
+  Machines.prototype.askToUpdateTable = function() {
+    var coneccion;
+    this.now = moment();
+    return coneccion = $.get("toolbox.php", {
+      action: "updateTables"
+    }).done((function(_this) {
+      return function(data) {
+        if (data.error) {
+          throw data.desc;
+        }
+      };
+    })(this)).fail((function(_this) {
+      return function(err) {
+        return console.log(err);
+      };
+    })(this)).always((function(_this) {
+      return function(data) {
+        r.set('lastUpdate', data);
+        console.log("'" + data + "'");
+        r.set('machines.loadingMachines', true);
+        _this.getMachines();
+        return setTimeout(function() {
+          return _this.askToUpdateTable();
+        }, 20000);
+      };
+    })(this));
+  };
+
+  Machines.prototype.setPopup = function() {
+    return $(".label").popup({
+      inline: false,
+      hoverable: true,
+      position: 'top center'
+    });
+  };
+
+  Machines.prototype.justUpdateModel = function() {
+    if (this.data != null) {
+      this.data.map(this.updateModelData);
+      this.queryCount++;
+      return r.update();
+    } else {
+      return console.warn("Called before time");
     }
-  });
-  ListView = Backbone.View.extend({
-    el: $('#container'),
-    events: {
-      'click button#add': 'addItem',
-      'click button#multiAdd': 'addLotsOfItems',
-      'click button#deleteAll': 'deleteAll'
-    },
-    initialize: function() {
-      _.bindAll(this, 'render', 'addItem', 'appendItem', 'addLotsOfItems', 'deleteAll');
-      this.collection = new List();
-      this.collection.bind('add', this.appendItem);
-      this.counter = 0;
-      return this.render();
-    },
-    render: function() {
-      var self;
-      self = this;
-      $(this.el).append("<button id='add'>Add list item</button> <button id='multiAdd'>Add 1000</button> <button id='deleteAll'>Delete All</button>");
-      $(this.el).append("<ul></ul>");
-      return _(this.collection.models).each(function(item) {
-        return self.appendItem(item);
-      }, this);
-    },
-    addLotsOfItems: function() {
-      var self, _i, _results;
-      self = this;
-      return _((function() {
-        _results = [];
-        for (_i = 0; _i <= 1000; _i++){ _results.push(_i); }
-        return _results;
-      }).apply(this)).each(function(item) {
-        return self.addItem();
-      }, this);
-    },
-    deleteAll: function() {
-      this.collection.reset();
-      this.$el.empty();
-      return this.render();
-    },
-    addItem: function() {
-      var item;
-      this.counter++;
-      item = new Item();
-      item.set({
-        part2: item.get('part2') + " " + this.counter
-      });
-      return this.collection.add(item);
-    },
-    appendItem: function(item) {
-      var itemView;
-      itemView = new ItemView({
-        model: item
-      });
-      return $('ul', this.el).append(itemView.render().el);
+  };
+
+  Machines.prototype.updateModelData = function(srvr) {
+    var mmnt, target, _ref;
+    target = _.find(this.data, function(el) {
+      return el.ID === srvr.ID;
+    });
+    mmnt = moment(srvr.LASTTICK);
+    target.LASTTICK = srvr.LASTTICK;
+    target.humanized = mmnt.fromNow();
+    target.CICLETIME = 1 * target.CICLETIME;
+    target.diff = Math.round((this.now.diff(mmnt)) / 1000);
+    return _ref = (function() {
+      switch (false) {
+        case !(target.diff <= target.CICLETIME):
+          return ['green', 'working correctly'];
+        case !(target.diff > target.CICLETIME && target.diff < (target.CICLETIME * 2)):
+          return ['yellow', 'some delay'];
+        default:
+          return ['red', "" + (Math.round(target.diff / target.CICLETIME))];
+      }
+    })(), target.status = _ref[0], target.desc = _ref[1], _ref;
+  };
+
+  Machines.prototype.refreshModel = function() {
+    return setInterval((function(_this) {
+      return function() {
+        return _this.justUpdateModel();
+      };
+    })(this), 1000);
+  };
+
+  Machines.prototype.startFetching = function() {};
+
+  return Machines;
+
+})();
+
+m = new Machines;
+
+r = new Ractive({
+  el: 'container',
+  template: '#template',
+  data: {
+    filter: '',
+    machines: m,
+    filtered: true,
+    humanizeDiff: function(date) {
+      return moment(date.trim()).fromNow();
     }
-  });
-  return listView = new ListView();
-})(jQuery);
+  }
+});
+
+r.observe('filter', function(query) {
+  return console.log(query);
+});
+
+window.r = r;
 //# sourceMappingURL=index.js.map

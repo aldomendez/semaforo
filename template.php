@@ -30,27 +30,39 @@
           <div class="ui list">
           {{#data :i}}
             <div class="item">
-              <div class="content">{{i}}</div>
+              <div class="content"><b>{{this.key}}</b></div>
               <div class="description">
-                {{#each this}}
                 
-                <div class="label horizontal tiny ui {{status}}">
-                  {{NAME}}
-                  {{#if status=='red'}}
-                  <div class="detail"><i class="icon warning sign"></i>{{desc}}</div>
-                  {{/if}}
+<div class="ui list">
+            {{#this.data :i}}
+              <div class="item">
+                <div class="content"><b>{{i}}</b></div>
+                 <div class="description">
+                  {{#each this}}
+                  
+                  <div class="label horizontal tiny ui {{status}}">
+                    {{NAME}}
+                    {{#if status=='red'}}
+                    <div class="detail"><i class="icon warning sign"></i>{{desc}}</div>
+                    {{/if}}
+                  </div>
+                  <div class="ui special popup">
+                    <div class="header">{{NAME}}</div>
+                    last seen: {{humanized}}
+                    <br>
+                    Process:{{PROCESS}}
+                    {{#if status=='red'}}
+                    <br>
+                    Devices not : {{desc}}
+                    {{/if}}
+                  </div>
+                  {{/each}}
                 </div>
-                <div class="ui special popup">
-                  <div class="header">{{NAME}}</div>
-                  last seen: {{humanized}}
-                  <br>
-                  Process:{{PROCESS}}
-                  {{#if status=='red'}}
-                  <br>
-                  Devices not : {{desc}}
-                  {{/if}}
-                </div>
-                {{/each}}
+                  
+              </div>
+            {{/data}}
+  </div>
+
               </div>
                 
             </div>

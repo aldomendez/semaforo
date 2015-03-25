@@ -113,7 +113,7 @@ function updateMachinesMxOptix()
 				$DB->setQuery($query);
 				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);
 				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
-				$DB->bind_vars(':id',$value['ID']);
+				$DB->bind_vars(':db_id',$value['DB_ID']);
 				// logToFile($DB->query);
 				$DB->exec();
 				// logToFile(sprintf("After, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));

@@ -41,6 +41,7 @@ Machines = (function() {
         return location.href = location.href;
       };
     })(this), 450000);
+    this.sizes = ['one', 'one', 'two', 'three', 'four', 'five', 'seven', 'eight', 'nine'];
   }
 
   Machines.prototype.getMachines = function() {
@@ -87,7 +88,8 @@ Machines = (function() {
         }, 20000);
         if (typeof r !== "undefined" && r !== null) {
           r.update();
-          return _this.setPopup();
+          _this.setPopup();
+          return r.set('size', _this.sizes[r.get('machines.grouped.length')]);
         }
       };
     })(this));
@@ -206,6 +208,8 @@ r = new Ractive({
     }
   }
 });
+
+r.set('size', 'two');
 
 r.observe('filter', function(query) {
   return console.log(query);

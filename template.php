@@ -22,7 +22,7 @@
 
   
   <div class="column">
-    <div class="ui two cards">
+    <div class="ui {{size}} cards">
     {{#each machines.grouped :groupNum}}
       <div class="card">
         <div class="content">

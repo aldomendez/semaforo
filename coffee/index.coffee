@@ -23,7 +23,7 @@ class Machines
     setTimeout ()=>
       location.href = location.href
     ,450000 # 7.5 min
-
+    @sizes=['one','one','two','three','four','five','seven','eight','nine']
   getMachines: ()=>
     @now = moment()
     coneccion = $.getJSON "toolbox.php",
@@ -62,6 +62,7 @@ class Machines
       if r?
         r.update()
         @setPopup()
+        r.set 'size', @sizes[r.get('machines.grouped.length')]
         
 
 
@@ -153,6 +154,7 @@ r = new Ractive
     humanizeDiff: (date)->
       moment(date.trim()).fromNow()
 
+r.set 'size', 'two'
 
 r.observe 'filter', (query)->
   console.log query

@@ -1,4 +1,4 @@
-var Machines, i, mapping, p, r, util, _fn, _i, _len;
+var Machines, p, r, util;
 
 Machines = (function() {
   function Machines() {
@@ -193,6 +193,12 @@ r.on('fetchOSFMData', function(e, index) {
   return r.data.machines.pushToQueue(index);
 });
 
+r.on('toogleSidebar', function(e) {
+  e.original.preventDefault();
+  r.set('sidebar', !r.get('sidebar'));
+  return console.log(r.get('sidebar'));
+});
+
 r.observe('machines.data.*.*', function(nval, oval, keypath) {
   r.set('edited', true);
   r.set('deleting', false);
@@ -203,33 +209,5 @@ r.observe('machines.data.*.*', function(nval, oval, keypath) {
   }
 });
 
-mapping = [['d', 'description'], ['u', 'part_num'], ['l', 'location'], ['a', 'area'], ['s', 'status'], ['r', 'revision']];
-
-_fn = function(i) {
-  return Mousetrap.bind("alt+" + i[0], (function(_this) {
-    return function(e) {
-      e.preventDefault();
-      return document.getElementById("" + i[1]).focus();
-    };
-  })(this));
-};
-for (_i = 0, _len = mapping.length; _i < _len; _i++) {
-  i = mapping[_i];
-  _fn(i);
-}
-
-Mousetrap.bind("alt+left", (function(_this) {
-  return function(e) {
-    e.preventDefault();
-    return r.fire('backward', null, e);
-  };
-})(this));
-
-Mousetrap.bind("alt+right", (function(_this) {
-  return function(e) {
-    e.preventDefault();
-    return r.fire('forward', null, e);
-  };
-})(this));
-
 window.r = r;
+//# sourceMappingURL=edit.js.map

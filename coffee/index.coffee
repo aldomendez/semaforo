@@ -55,13 +55,13 @@ class Machines
     .always (data) =>
       @queryCount = 0
       # Utilizo underscore para agrupar los datos por area
-      r.set 'machines.loadingMachines', false
       setTimeout ()=>
         @getMachines()
       ,20000
       if r?
         r.update()
         @setPopup()
+        r.set 'machines.loadingMachines', false
         r.set 'size', @sizes[r.get('machines.grouped.length')]
         
 
@@ -152,7 +152,10 @@ r = new Ractive
     machines:m
     filtered:true
     humanizeDiff: (date)->
-      moment(date.trim()).fromNow()
+      console.log moment(date.trim()).fromNow()
+      moment(date.trim()).fromNow() || 'unknow'
+    round:(num)->
+      Math.round num
 
 r.set 'size', 'two'
 

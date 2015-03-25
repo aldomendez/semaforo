@@ -82,13 +82,13 @@ Machines = (function() {
     })(this)).always((function(_this) {
       return function(data) {
         _this.queryCount = 0;
-        r.set('machines.loadingMachines', false);
         setTimeout(function() {
           return _this.getMachines();
         }, 20000);
         if (typeof r !== "undefined" && r !== null) {
           r.update();
           _this.setPopup();
+          r.set('machines.loadingMachines', false);
           return r.set('size', _this.sizes[r.get('machines.grouped.length')]);
         }
       };
@@ -204,7 +204,11 @@ r = new Ractive({
     machines: m,
     filtered: true,
     humanizeDiff: function(date) {
-      return moment(date.trim()).fromNow();
+      console.log(moment(date.trim()).fromNow());
+      return moment(date.trim()).fromNow() || 'unknow';
+    },
+    round: function(num) {
+      return Math.round(num);
     }
   }
 });

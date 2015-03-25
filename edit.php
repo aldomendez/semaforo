@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>Semaforo</title>
-  <link rel="stylesheet" type="text/css"  href="../jsLib/SemanticUi/1.10.2/semantic.css">
+  <link rel="stylesheet" type="text/css"  href="../jsLib/SemanticUi/1.11.5/semantic.css">
 </head>
 <body>
   <div class="ui one column grid page" id="container"></div>

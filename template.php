@@ -1,26 +1,23 @@
-<div class="column">
-  <div class="ui menu">
-    <a href="" class="item"><i class="home icon"></i>home</a>
-    <a href="" class="item"> Last update: {{humanizeDiff(lastUpdate)}} {{#if machines.loadingMachines}} <i class="asterisk loading icon"></i> {{/if}}</a>
-    
-    <!-- <div class="right menu">
-      <div class="item">
-        <div class="ui transparent icon input">
-          <input type="text" placeholder="filtrar" value="{{filter}}">
-          <i class="search link icon"></i>
+<div class="row">
+  <div class="column">
+    <div class="ui menu">
+      <a href="" class="item"><i class="home icon"></i>home</a>
+      <a href="" class="item"> Last update: {{humanizeDiff(lastUpdate)}} {{#if machines.loadingMachines}} <i class="asterisk loading icon"></i> {{/if}}</a>
+      
+      <!-- <div class="right menu">
+        <div class="item">
+          <div class="ui transparent icon input">
+            <input type="text" placeholder="filtrar" value="{{filter}}">
+            <i class="search link icon"></i>
+          </div>
         </div>
       </div>
-    </div>
-  </div> -->
-
-  </div>
-<div class="row">
-
-
-
-
-
+    </div> -->
   
+    </div>
+  </div>
+</div>
+<div class="row">
   <div class="column">
     <div class="ui {{size}} cards">
     {{#each machines.grouped :groupNum}}
@@ -55,6 +52,8 @@
                     <br>
                     Devices not made: {{desc}}
                     {{/if}}
+                    <br>
+                    CycleTime: {{round(CICLETIME/60)}}min
                   </div>
                   {{/each}}
                 </div>
@@ -73,7 +72,4 @@
     {{/each}}
     </div>
   </div>
-
-
-</div>
 </div>

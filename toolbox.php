@@ -46,7 +46,8 @@ function getSpecificMachine()
 function updateTables()
 {
 
-	logToFile(sprintf("Llamado: , %s1,",$inicio));
+	$inicio = date("d-M-Y H:i:s");
+	logToFile(sprintf("Llamado: , %s,",$inicio));
 	// Obtenemos la ultima fecha de actualizacion
 	$pastDateString = file_get_contents('lastUpdate.txt');
 	// Obtenemos una hora que pueda ser leida por el sistema
@@ -66,6 +67,8 @@ function updateTables()
 		file_put_contents('lastUpdate.txt', $date);
 		// En esta parte es donde se hace la actualizacion en si
 		updateMachinesMxOptix();
+		updateMachinesMxApps();
+		updateMachinesProdMX();
 	}
 	// Resolvemos para el navegador
 	echo "$pastDateString";
@@ -73,18 +76,39 @@ function updateTables()
 
 function updateMachinesMxOptix()
 {
+	upateMachines('mxoptix');
+}
+
+function updateMachinesMxApps()
+{
+	upateMachines('mxapps');
+}
+
+function updateMachinesProdMX()
+{
+	upateMachines('prodmx');
+}
+
+
+function upateMachines($connection){
 	// Obtengo la lista de las maquinas dadas de alta en el sistema
 	$inicio = date("d-M-Y H:i:s");
-	logToFile(sprintf("Inicio, %s1 ",$inicio));
+	// logToFile(sprintf("Inicio, %s ",$inicio));
 	$query = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
-	$DB->setQuery($query . " where dbconnection = 'mxoptix'");
+	$DB->setQuery($query . " where dbconnection = '".$connection."'");
 	$DB->exec();
 	// echo($DB->rows);
-	if ($DB->rows > 0){
-		// Sabiendo que tengo elementos para iterar puedo crear la conexion
-		$MO = new MxOptix();
+	$connections = array(
+		'mxoptix' => 'MxOptix',
+		'mxapps'  => 'MxApps',
+		'prodmx' => 'Dare'
+	);
 
+	if ($DB->rows > 0){
+		// la coneccion se hace a la tabla especifica en la que vamos a buscar
+		$MO = new $connections[$connection]();
+		logToFile($connections[$connection]);
 		// Ahora si ya puedo ir sacando los datos de cada una de las maquinas
 		// para sacar la informacion de la base de datp
 		foreach ($DB->results as $key => $value) {
@@ -96,7 +120,6 @@ function updateMachinesMxOptix()
 			$MO->bind_vars(':device',$value['DBDEVICE']);
 			$MO->bind_vars(':test_dt',$value['DBDATE']);
 			$MO->bind_vars(':table',$value['DBTABLE']);
-			// logToFile($MO->query);
 			// logToFile(sprintf("Before, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
 			$MO->exec();
 
@@ -107,8 +130,12 @@ function updateMachinesMxOptix()
 			// buscar la manera de encontrar unicamente datos nuevos
 
 			if ( sizeof($MO->results) > 0 ) {
+				// if($connection == 'prodmx'){
+				// 	logToFile($MO->query);
+				// 	logToFile(print_r($MO->results,true));
+				// }
 				// genero el query para la busqueda de datos
-				logToFile(date("d-M-Y H:i:s"));
+				// logToFile(date("d-M-Y H:i:s"));
 				$query = file_get_contents('sql/updateMachinesInSemaforo.sql');
 				$DB->setQuery($query);
 				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);
@@ -116,21 +143,14 @@ function updateMachinesMxOptix()
 				$DB->bind_vars(':db_id',$value['DB_ID']);
 				// logToFile($DB->query);
 				$DB->exec();
-				// logToFile(sprintf("After, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
-				// logToFile($value['ID'] . ',' .$value['DB_ID'] . ',' .'Num of fields '.$DB->affected());
-
-				// $query = file_get_contents('machines.sql');
-				// $MO->setQuery($query);
-				// $MO->bind_vars(':item',$_GET['item']);
-				// $MO->exec();
 			}
 		}
 	}
 
 	$final = date("d-M-Y H:i:s");
-	logToFile(sprintf("[x] Completado: inicio:%s1, final:%s2", $inicio, $final));
-
+	logToFile(sprintf("[x] Completado: inicio:%s, final:%s", $inicio, $final));
 }
+
 
 function logToFile($content)
 {

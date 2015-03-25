@@ -10,6 +10,9 @@
       <a class="item" on-click="addNew">
         <i class="add icon"></i> New
       </a>
+      <a class="item" on-click="toogleSidebar">
+        <i class="add icon"></i> sidebar
+      </a>
       {{#edit === true}}
       <a class="item" on-click="backward">
         <i class="backward icon"></i> 
@@ -18,11 +21,6 @@
         <i class="forward icon"></i> 
       </a>
       {{/edit === true}}
-      <!-- <a class="item" on-click="sidebar">
-        <div class="ui label">
-          <i class="mail icon"></i> 23
-        </div>
-      </a> -->
     </div>
   </div>
 </div>
@@ -159,7 +157,7 @@
   </div>
 </div>
 {{/edit === true}}
-<div class="ui styled sidebar {{sidebar == true ? 'active': ''}}">
+<div class="ui styled sidebar {{sidebar ? 'active': ''}}">
   <div class="ui grid">
     <div class="column">
       <div class="ui small feed">

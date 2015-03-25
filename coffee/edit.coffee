@@ -140,6 +140,11 @@ r.on 'fetchOSFMData', (e, index)->
   e.original.preventDefault()
   r.data.machines.pushToQueue(index)
 
+r.on 'toogleSidebar', (e)->
+  e.original.preventDefault()
+  r.set 'sidebar', !r.get 'sidebar'
+  console.log r.get('sidebar')
+
 r.observe 'machines.data.*.*', (nval, oval, keypath)->
   r.set 'edited', true
   r.set 'deleting', false
@@ -148,33 +153,32 @@ r.observe 'machines.data.*.*', (nval, oval, keypath)->
       r.data.machines.pushToQueue(keypath.match(/(\d*)\.num$/)[1])
 
 
-
-mapping = [
-    ['d','description']
-    ['u','part_num']
-    ['l','location']
-    ['a','area']
-    ['s','status']
-    ['r','revision']
-  ]
-# Toma el mapa de Shorcuts y los enlaza con su controlador
-# Sirve para que enfoque las cajas de texto dependiendo de
-# que combinacion de teclas presione.
-for i in mapping
-  do (i)->
-    Mousetrap.bind "alt+#{i[0]}",(e)=>
-      e.preventDefault()
-      document.getElementById("#{i[1]}").focus()
-# Crea el controlador de ALT + Flecha izquierda
-# para que me muestre el elemento anterior
-Mousetrap.bind "alt+left", (e)=>
-  e.preventDefault()
-  r.fire 'backward', null, e
-# Crea el controlador de ALT + Flecha derecha
-# para que me muestre el elemento siguiente
-Mousetrap.bind "alt+right", (e)=>
-  e.preventDefault()
-  r.fire 'forward', null, e
+# mapping = [
+#     ['d','description']
+#     ['u','part_num']
+#     ['l','location']
+#     ['a','area']
+#     ['s','status']
+#     ['r','revision']
+#   ]
+# # Toma el mapa de Shorcuts y los enlaza con su controlador
+# # Sirve para que enfoque las cajas de texto dependiendo de
+# # que combinacion de teclas presione.
+# for i in mapping
+#   do (i)->
+#     Mousetrap.bind "alt+#{i[0]}",(e)=>
+#       e.preventDefault()
+#       document.getElementById("#{i[1]}").focus()
+# # Crea el controlador de ALT + Flecha izquierda
+# # para que me muestre el elemento anterior
+# Mousetrap.bind "alt+left", (e)=>
+#   e.preventDefault()
+#   r.fire 'backward', null, e
+# # Crea el controlador de ALT + Flecha derecha
+# # para que me muestre el elemento siguiente
+# Mousetrap.bind "alt+right", (e)=>
+#   e.preventDefault()
+#   r.fire 'forward', null, e
 
 
 window.r = r

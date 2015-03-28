@@ -8,26 +8,55 @@ var DEST = '\\\\cymautocert\\osaapp\\semaforo-dev';
 var BASE = 'C:\\apps\\semaforo-dev';
 
 function serverPath (path) {
+  // Obtiene la direccion a la que se enviaran los datos
   var rgx = /[a-zA-Z-_~\. ]*$/;
   path = path.replace(rgx, '');
   return path.replace(BASE,'');
 }
 
-gulp.task('watch', function () {
-  livereload.listen();
-  
-  gulp.watch(['**/**.coffee','**/**.php','**/**.map','**/**.sql','**/**.json','**/**.js','**/**.html'], function (event) {
-    // console.log("Copiar php iniciado");
-  }).on('change', function (event) {
-    // Copia el archivo que cambio a el compartido 
-     gulp.src(event.path)
+copyAndReload = function copyAndReload (event) {
+  console.log('Sended to: ',serverPath(event.path));
+  gulp.src(event.path)
        .pipe(gulp.dest(DEST + serverPath(event.path)))
        .pipe(wait(1200))
        .pipe(livereload());
-     
-    console.log("Compilado y copiado :" + event.path);
-  });
+}
 
+gulp.task('watch', function () {
+  livereload.listen();
+  /*
+    La siguiente es la lista de todo lo que esta observando gulp, 
+    me gustaria que pudiera decirle cueles son las carpetas que 
+    tiene que omitir.
+  */
+  gulp.watch(['coffee/**.coffee'], function (event) {
+  }).on('change', function (event) {
+     copyAndReload(event);
+  });  
+  gulp.watch(['*.php'], function (event) {
+  }).on('change', function (event) {
+     copyAndReload(event);
+  });  
+  gulp.watch(['js/**.map'], function (event) {
+  }).on('change', function (event) {
+     copyAndReload(event);
+  });  
+  gulp.watch(['sql/**.sql'], function (event) {
+  }).on('change', function (event) {
+     copyAndReload(event);
+  });  
+  gulp.watch(['*.json'], function (event) {
+  }).on('change', function (event) {
+     copyAndReload(event);
+  });  
+  gulp.watch(['js/**.js','gulpfile.js'], function (event) {
+  }).on('change', function (event) {
+     copyAndReload(event);
+  });  
+  gulp.watch(['*.html'], function (event) {
+  }).on('change', function (event) {
+     copyAndReload(event);
+  });
 });
 
 gulp.task('default', ['watch']);

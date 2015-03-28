@@ -34,7 +34,7 @@ function getSpecificMachine()
 	// updateMachinesMxOptix();
 	$query = file_get_contents('sql/machines.sql');
 	$DB = new MxApps();
-	$DB->setQuery($query. " where id = '" . $_GET['ID'] ."'");
+	$DB->setQuery($query. " and id = '" . $_GET['ID'] ."'");
 	$DB->exec();
 	if ($DB->json() == "[]") {
 		throw new Exception("No arrojo datos la base de datos", 1);
@@ -94,9 +94,9 @@ function upateMachines($connection){
 	// Obtengo la lista de las maquinas dadas de alta en el sistema
 	$inicio = date("d-M-Y H:i:s");
 	// logToFile(sprintf("Inicio, %s ",$inicio));
-	$query = file_get_contents('sql/machines.pull.data.sql');
+	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
-	$DB->setQuery($query . " where dbconnection = '".$connection."'");
+	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."'");
 	$DB->exec();
 	// echo($DB->rows);
 	$connections = array(
@@ -113,8 +113,8 @@ function upateMachines($connection){
 		// para sacar la informacion de la base de datp
 		foreach ($DB->results as $key => $value) {
 			// genero el query para la busqueda de datos
-			$query = file_get_contents('sql/getInfoFromMxOptix.sql');
-			$MO->setQuery($query);
+			$infoQuery = file_get_contents('sql/getInfo.sql');
+			$MO->setQuery($infoQuery);
 			$MO->bind_vars(':db_id',$value['DB_ID']);
 			$MO->bind_vars(':facility',$value['DBMACHINE']);
 			$MO->bind_vars(':device',$value['DBDEVICE']);
@@ -122,6 +122,9 @@ function upateMachines($connection){
 			$MO->bind_vars(':table',$value['DBTABLE']);
 			// logToFile(sprintf("Before, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
 			$MO->exec();
+			if($value['DB_ID'] == 'BR-POD10-TEMP3'){
+				logToFile($MO->query);
+			}
 
 			// Actualizo la informacion en la tabla nueva
 			// Solo si tengo datos nuevos
@@ -136,12 +139,11 @@ function upateMachines($connection){
 				// }
 				// genero el query para la busqueda de datos
 				// logToFile(date("d-M-Y H:i:s"));
-				$query = file_get_contents('sql/updateMachinesInSemaforo.sql');
-				$DB->setQuery($query);
+				$updateQuery = file_get_contents('sql/updateMachinesInSemaforo.sql');
+				$DB->setQuery($updateQuery);
 				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);
 				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
 				$DB->bind_vars(':id',$value['ID']);
-				// logToFile($DB->query);
 				$DB->exec();
 			}
 		}
@@ -152,6 +154,34 @@ function upateMachines($connection){
 }
 
 
+
+function debugQuery(){
+	$DB_ID = $_GET['DB_ID'];
+	echo "$DB_ID".PHP_EOL;
+	$query = "select * from semaforo where db_id = '" . $DB_ID . "'";
+	$DB = new MxApps();
+	$DB->setQuery($query);
+	$DB->exec();
+	echo(print_r($DB->results,true).PHP_EOL);
+	$connections = array(
+		'mxoptix' => 'MxOptix',
+		'mxapps'  => 'MxApps',
+		'prodmx' => 'Dare'
+	);
+	foreach ($DB->results as $key => $value) {
+		// genero el query para la busqueda de datos
+		echo $value['DBCONNECTION'].PHP_EOL;
+		$MO = new $value['DBCONNECTION']();
+		$infoQuery = file_get_contents('sql/getInfo.sql');
+		$MO->setQuery($infoQuery);
+		$MO->bind_vars(':db_id',$value['DB_ID']);
+		$MO->bind_vars(':facility',$value['DBMACHINE']);
+		$MO->bind_vars(':device',$value['DBDEVICE']);
+		$MO->bind_vars(':test_dt',$value['DBDATE']);
+		$MO->bind_vars(':table',$value['DBTABLE']);
+		echo $MO->query . PHP_EOL;
+	}
+}
 function logToFile($content)
 {
 	file_put_contents('logs.txt', $content.PHP_EOL , FILE_APPEND);

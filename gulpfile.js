@@ -5,7 +5,7 @@ var livereload = require('gulp-livereload');
 var wait = require('gulp-wait');
 
 var DEST = '\\\\cymautocert\\osaapp\\semaforo-dev';
-var BASE = 'C:\\apps\\semaforo';
+var BASE = 'C:\\apps\\semaforo-dev';
 
 function serverPath (path) {
   // Obtiene la direccion a la que se enviaran los datos

@@ -23,7 +23,7 @@ class Machines
       data.map (el)-> el.min = (el.CICLETIME/60).toFixed(2)
       @data = data
       @original = _.clone @data
-      # console.table data
+      @filter = new Fuse(@data,{keys: ['NAME', 'BU']})
       r.update()
       r.set 'edited', false
   save:()->
@@ -56,6 +56,7 @@ r = new Ractive {
     edited: false
     sidebar: false
     deleting: false
+    filter:''
     duration:(min,seg)->
       min = parseFloat(min)
       seg = parseFloat(seg)

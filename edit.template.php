@@ -10,9 +10,6 @@
       <a class="item" on-click="addNew">
         <i class="add icon"></i> New
       </a>
-      <a class="item" on-click="toogleSidebar">
-        <i class="add icon"></i> sidebar
-      </a>
       {{#edit === true}}
       <a class="item" on-click="backward">
         <i class="backward icon"></i> 
@@ -21,6 +18,15 @@
         <i class="forward icon"></i> 
       </a>
       {{/edit === true}}
+
+      <div class="right menu">
+        <div class="item">
+          <div class="ui transparent icon input">
+            <input type="text" placeholder="Filter..." value="{{filter}}">
+            <i class="search link icon"></i>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -1,11 +1,11 @@
 var gulp = require('gulp');
-// var coffee = require('gulp-coffee');
-// var gutil = require('gulp-util');
+var coffee = require('gulp-coffee');
+var gutil = require('gulp-util');
 var livereload = require('gulp-livereload');
 var wait = require('gulp-wait');
 
 var DEST = '\\\\cymautocert\\osaapp\\semaforo-dev';
-var BASE = 'C:\\apps\\semaforo-dev';
+var BASE = __dirname;
 
 function serverPath (path) {
   // Obtiene la direccion a la que se enviaran los datos
@@ -22,6 +22,18 @@ copyAndReload = function copyAndReload (event) {
        .pipe(livereload());
 }
 
+compileAndPush = function compileAndPush (event) {
+  path = event.path.replace(BASE,'');
+  path = '.' + path.replace('\\','/');
+  console.log(path);
+  gulp.src(path)
+    .pipe(coffee()).on('error',gutil.log)
+    .pipe(gulp.dest('./js'))
+    .pipe(gulp.dest(DEST + serverPath(event.path)))
+    .pipe(wait(1000))
+    .pipe(livereload());
+}
+
 gulp.task('watch', function () {
   livereload.listen();
   /*
@@ -31,7 +43,7 @@ gulp.task('watch', function () {
   */
   gulp.watch(['coffee/**.coffee'], function (event) {
   }).on('change', function (event) {
-     copyAndReload(event);
+     compileAndPush(event);
   });  
   gulp.watch(['*.php'], function (event) {
   }).on('change', function (event) {

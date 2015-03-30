@@ -25,7 +25,7 @@ class Machines
       data.map (el)-> el.min = (el.CICLETIME/60).toFixed(2)
       @data = data
       @original = _.clone @data
-      @filter = new Fuse(@data,{keys: ['NAME', 'BU']})
+      @filter = new Fuse(@data,{keys: ['NAME', 'BU','AREA','PROCESS']})
       r.update()
       r.set 'edited', false
   search:(searchString)->
@@ -162,15 +162,11 @@ r.observe 'machines.data.*.*', (nval, oval, keypath)->
 
 #  Esta es la parte que informa para que se filtren los datos y editar sea mas facil
 r.observe 'filter', (nval, oval, keypath)->
-  console.log nval
   p.search nval
 
-
-Mousetrap.bind "esc", (e)=>
-  console.log 'esc'
+Mousetrap.bind "esc", (e)->
   e.preventDefault()
   r.set 'filter', ''
-
 
 window.r = r
 window.p = p

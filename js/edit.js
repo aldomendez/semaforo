@@ -37,7 +37,7 @@
           _this.data = data;
           _this.original = _.clone(_this.data);
           _this.filter = new Fuse(_this.data, {
-            keys: ['NAME', 'BU']
+            keys: ['NAME', 'BU', 'AREA', 'PROCESS']
           });
           r.update();
           return r.set('edited', false);
@@ -60,8 +60,11 @@
     Machines.prototype.save = function() {
       var promise;
       if (this.data.length !== 0 && r.get('edited')) {
-        return promise = $.post('utilities.php', {
+        promise = $.post('utilities.php', {
           datos: this.data
+        });
+        return promise.done(function() {
+          return r.set('machines.saved', 'successfull');
         });
       }
     };
@@ -170,8 +173,8 @@
   });
 
   r.on('backward', function(e) {
-    var actual, offset, _ref;
-    if ((e != null ? (_ref = e.original) != null ? _ref.preventDefault : void 0 : void 0) != null) {
+    var actual, offset, ref;
+    if ((e != null ? (ref = e.original) != null ? ref.preventDefault : void 0 : void 0) != null) {
       e.original.preventDefault();
     }
     actual = r.get('editing');
@@ -183,8 +186,8 @@
   });
 
   r.on('forward', function(e) {
-    var actual, offset, _ref;
-    if ((e != null ? (_ref = e.original) != null ? _ref.preventDefault : void 0 : void 0) != null) {
+    var actual, offset, ref;
+    if ((e != null ? (ref = e.original) != null ? ref.preventDefault : void 0 : void 0) != null) {
       e.original.preventDefault();
     }
     actual = r.get('editing');
@@ -207,17 +210,6 @@
     });
   });
 
-  r.on('fetchOSFMData', function(e, index) {
-    e.original.preventDefault();
-    return r.data.machines.pushToQueue(index);
-  });
-
-  r.on('toogleSidebar', function(e) {
-    e.original.preventDefault();
-    r.set('sidebar', !r.get('sidebar'));
-    return console.log(r.get('sidebar'));
-  });
-
   r.observe('machines.data.*.*', function(nval, oval, keypath) {
     r.set('edited', true);
     r.set('deleting', false);
@@ -229,17 +221,13 @@
   });
 
   r.observe('filter', function(nval, oval, keypath) {
-    console.log(nval);
     return p.search(nval);
   });
 
-  Mousetrap.bind("esc", (function(_this) {
-    return function(e) {
-      console.log('esc');
-      e.preventDefault();
-      return r.set('filter', '');
-    };
-  })(this));
+  Mousetrap.bind("esc", function(e) {
+    e.preventDefault();
+    return r.set('filter', '');
+  });
 
   window.r = r;
 

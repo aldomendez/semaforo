@@ -22,7 +22,7 @@
       <div class="right menu">
         <div class="item">
           <div class="ui transparent icon input">
-            <input type="text" placeholder="Filter..." value="{{filter}}">
+            <input type="text" placeholder="Filter..." value="{{filter}}" class='mousetrap'>
             <i class="search link icon"></i>
           </div>
         </div>
@@ -163,58 +163,3 @@
   </div>
 </div>
 {{/edit === true}}
-<div class="ui styled sidebar {{sidebar ? 'active': ''}}">
-  <div class="ui grid">
-    <div class="column">
-      <div class="ui small feed">
-        <h4 class="ui header">Centro de mensajes</h4>
-        <div class="event">
-          <div class="label">
-            <i class="circular warning icon"></i>
-          </div>
-          <div class="content">
-            <!-- <div class="date">
-              Just moments ago
-            </div> -->
-            <div class="summary">
-               <a>Sally Poodle</a> added you as a friend
-            </div>
-          </div>
-        </div>
-        <div class="event">
-          <div class="label">
-            <i class="circular pencil icon"></i>
-          </div>
-          <div class="content">
-            <!-- <div class="date">
-              3 days ago
-            </div> -->
-            <div class="summary">
-              You submitted a new post to the page
-            </div>
-            <div class="extra text">
-              I am a dog and I do not know how to make a post
-            </div>
-          </div>
-        </div>
-        <div class="event">
-          <div class="label">
-            <i class="circular photo icon"></i>
-          </div>
-          <div class="content">
-            <!-- <div class="date">
-              3 days ago
-            </div> -->
-            <div class="summary">
-              <a>Sally Poodle</a> added <a>2 new photos</a> of you
-            </div>
-            <!-- <div class="extra images">
-              <img src="/images/demo/item1.jpg">
-              <img src="/images/demo/item2.jpg">
-            </div> -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>

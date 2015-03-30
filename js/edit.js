@@ -19,7 +19,7 @@
         "LASTTICK": "",
         "LASTRUN": "",
         "CICLETIME": "",
-        "BU": "1"
+        "BU": "Undefined"
       };
     }
 
@@ -35,6 +35,8 @@
             return el.min = (el.CICLETIME / 60).toFixed(2);
           });
           _this.data = data;
+          r.set('managers', _.unique(_.pluck(_this.data, 'BU')));
+          r.set('process', _.unique(_.pluck(_this.data, 'PROCESS')));
           _this.original = _.clone(_this.data);
           _this.filter = new Fuse(_this.data, {
             keys: ['NAME', 'BU', 'AREA', 'PROCESS']
@@ -66,6 +68,8 @@
         return promise.done(function() {
           return r.set('machines.saved', 'successfull');
         });
+      } else {
+
       }
     };
 
@@ -208,6 +212,13 @@
     return r.set({
       deleting: true
     });
+  });
+
+  r.on('updateManager', function(e, val) {
+    var editing;
+    e.original.preventDefault();
+    editing = r.get('editing');
+    return r.set("machines.data." + editing + ".BU", val);
   });
 
   r.observe('machines.data.*.*', function(nval, oval, keypath) {

@@ -16,7 +16,7 @@ class Machines
       "LASTTICK": "",
       "LASTRUN": "",
       "CICLETIME": "",
-      "BU": "1"
+      "BU": "Undefined"
   load:()->
     promise = $.getJSON 'toolbox.php',
       'action':'getMachines'
@@ -24,6 +24,8 @@ class Machines
       @loaded = true
       data.map (el)-> el.min = (el.CICLETIME/60).toFixed(2)
       @data = data
+      r.set 'managers', _.unique(_.pluck(@data,'BU'))
+      r.set 'process', _.unique(_.pluck(@data,'PROCESS'))
       @original = _.clone @data
       @filter = new Fuse(@data,{keys: ['NAME', 'BU','AREA','PROCESS']})
       r.update()
@@ -45,6 +47,10 @@ class Machines
       promise.done ()->
 #        TODO: Buscar la manera de decir que todo se guardo correctamente
         r.set 'machines.saved','successfull'
+    else
+#      r.set {
+#
+#      }
   add: ()->
     @placeHolder.id = @data.length + 1
     @data.push _.clone @placeHolder
@@ -152,6 +158,12 @@ r.on 'askToDelete', (e)->
   e.original.preventDefault()
   r.set
     deleting:true
+
+r.on 'updateManager', (e,val)->
+  e.original.preventDefault()
+  editing = r.get 'editing'
+  r.set "machines.data.#{editing}.BU", val
+
 
 r.observe 'machines.data.*.*', (nval, oval, keypath)->
   r.set 'edited', true

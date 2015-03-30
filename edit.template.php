@@ -18,6 +18,7 @@
         <i class="forward icon"></i> 
       </a>
       {{/edit === true}}
+      {{#edit === false}}
 
       <div class="right menu">
         <div class="item">
@@ -27,6 +28,9 @@
           </div>
         </div>
       </div>
+
+      {{/edit === false}}
+
     </div>
   </div>
 </div>
@@ -89,23 +93,44 @@
         </div>
         {{/if}}
       {{#with machines.data[editing]}}
-      <form class="ui form">
+      <form class="ui small {{#if message}}{{/if}} form">
         <h5 class="ui dividing header">
           <a href="" class="ui button" on-click="returnToList">
           <i class="left arrow icon"></i>regresar</a> Equipment editor</h5>
         <div class="ui segment">
           <div class="ui error message">
             <div class="header">Action Forbidden</div>
-            <p>You can only sign up for an account once with a given e-mail address.</p>
+            <ul class="list">
+              <li></li>
+            </ul>
           </div>
-          <div class="two fields">
+          <div class="three fields">
             <div class="field">
               <label>Name <i class="icon info"></i></label>
               <input class="mousetrap" placeholder="" type="text" value="{{NAME}}" id="machines">
             </div>
             <div class="field">
-              <label>db_id</label>
-              <input class="mousetrap" placeholder="" type="text" value="{{DB_ID}}" id="location">
+              <label>Name <i class="icon info"></i></label>
+              <input class="mousetrap" placeholder="" type="text" value="{{NAME}}" id="machines">
+            </div>
+            <div class="field">
+              <label>Manager</label>
+
+                <div class="ui compact small menu">
+                    <div class="ui simple dropdown item">
+                      <i class="user icon"></i>
+                      {{BU}}
+                      <div class="menu">
+                        {{#each managers: manager}}
+                        <div class="item" on-click='updateManager:{{this}}'>{{this}}</div>
+                        {{/each}}
+                      </div>
+                    </div>
+                    <div class="item">
+                      <a href="#"><i class="plus icon"></i></a>
+                    </div>
+                  </div>
+
             </div>
           </div>
           <div class="four fields">

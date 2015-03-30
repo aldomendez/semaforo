@@ -42,6 +42,9 @@ class Machines
     if @data.length isnt 0 and r.get 'edited'
       promise = $.post 'utilities.php',
         datos: @data
+      promise.done ()->
+#        TODO: Buscar la manera de decir que todo se guardo correctamente
+        r.set 'machines.saved','successfull'
   add: ()->
     @placeHolder.id = @data.length + 1
     @data.push _.clone @placeHolder
@@ -140,6 +143,7 @@ r.on 'forward', (e)->
     editing: offset
     deleting: false
 
+# TODO: Si no voy a hacer funcionar la sidebar esto deberia de irse
 r.on 'sidebar', (e)->
   e.original.preventDefault()
   r.set 'sidebar', !r.get 'sidebar'
@@ -149,15 +153,6 @@ r.on 'askToDelete', (e)->
   r.set
     deleting:true
 
-r.on 'fetchOSFMData', (e, index)->
-  e.original.preventDefault()
-  r.data.machines.pushToQueue(index)
-
-r.on 'toogleSidebar', (e)->
-  e.original.preventDefault()
-  r.set 'sidebar', !r.get 'sidebar'
-  console.log r.get('sidebar')
-
 r.observe 'machines.data.*.*', (nval, oval, keypath)->
   r.set 'edited', true
   r.set 'deleting', false
@@ -165,37 +160,12 @@ r.observe 'machines.data.*.*', (nval, oval, keypath)->
     if nval.length is 7 
       r.data.machines.pushToQueue(keypath.match(/(\d*)\.num$/)[1])
 
+#  Esta es la parte que informa para que se filtren los datos y editar sea mas facil
 r.observe 'filter', (nval, oval, keypath)->
   console.log nval
   p.search nval
 
 
-# mapping = [
-#     ['d','description']
-#     ['u','part_num']
-#     ['l','location']
-#     ['a','area']
-#     ['s','status']
-#     ['r','revision']
-#   ]
-# # Toma el mapa de Shorcuts y los enlaza con su controlador
-# # Sirve para que enfoque las cajas de texto dependiendo de
-# # que combinacion de teclas presione.
-# for i in mapping
-#   do (i)->
-#     Mousetrap.bind "alt+#{i[0]}",(e)=>
-#       e.preventDefault()
-#       document.getElementById("#{i[1]}").focus()
-# # Crea el controlador de ALT + Flecha izquierda
-# # para que me muestre el elemento anterior
-# Mousetrap.bind "alt+left", (e)=>
-#   e.preventDefault()
-#   r.fire 'backward', null, e
-# # Crea el controlador de ALT + Flecha derecha
-# # para que me muestre el elemento siguiente
-# Mousetrap.bind "alt+right", (e)=>
-#   e.preventDefault()
-#   r.fire 'forward', null, e
 Mousetrap.bind "esc", (e)=>
   console.log 'esc'
   e.preventDefault()

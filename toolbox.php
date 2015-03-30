@@ -129,8 +129,7 @@ function upateMachines($connection){
 			// Actualizo la informacion en la tabla nueva
 			// Solo si tengo datos nuevos
 
-			// TODO:
-			// buscar la manera de encontrar unicamente datos nuevos
+			// TODO: buscar la manera de encontrar unicamente datos nuevos
 
 			if ( sizeof($MO->results) > 0 ) {
 				// if($connection == 'prodmx'){
@@ -156,6 +155,20 @@ function upateMachines($connection){
 
 
 function debugQuery(){
+/*
+    Basicamente lo que hace es buscar los datos desde la base de datos
+    y construye la cantidad de querys necesarios para poder hacer la
+    busqueda de datos, es con fines de revision UNICAMENTE, en caso de
+    que no encuentre nada de datos desde la aplicacion, entonces,
+    usare esto para revisar contra SQLTools y ver que es lo que esta pasando
+
+    El la peticion tiene que hacerse de la siguiente manera:
+
+    toolbox.php?action=debugQuery?DB_ID=NOMBRE DE LA MAQUINA
+
+    Return:
+        Todos los querys que esten registrados en la base de datos para esta maquina
+*/
 	$DB_ID = $_GET['DB_ID'];
 	echo "$DB_ID".PHP_EOL;
 	$query = "select * from semaforo where db_id = '" . $DB_ID . "'";

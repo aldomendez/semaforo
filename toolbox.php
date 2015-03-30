@@ -1,5 +1,11 @@
 <?php 
-include "../inc/database.php";
+//echo $_SERVER['REMOTE_ADDR'];
+if ( $_SERVER['REMOTE_ADDR'] != '192.168.1.147'){
+    $local = false;
+    include "../inc/database.php";
+} else {
+    $local = true;
+}
 
 if (isset($_GET['action']) && $_GET['action'] !== '') {
 	if (function_exists($_GET['action'])) {
@@ -17,15 +23,21 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
 function getMachines()
 {
 	// updateMachinesMxOptix();
+	global $local;
 	$query = file_get_contents('sql/machines.sql');
-	$DB = new MxApps();
-	$DB->setQuery($query);
-	$DB->exec();
-	if ($DB->json() == "[]") {
+	if($local){
+        $json = file_get_contents('filecache.txt');
+    } else {
+        $DB = new MxApps();
+        $DB->setQuery($query);
+        $DB->exec();
+        $json = $DB->json();
+    }
+	if ($json == "[]") {
 		throw new Exception("No arrojo datos la base de datos", 1);
 	} else {
-		file_put_contents('filecache.txt', $DB->json());
-		echo $DB->json();
+		file_put_contents('filecache.txt', $json);
+		echo $json;
 	}	
 }
 

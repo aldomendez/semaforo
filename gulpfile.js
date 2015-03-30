@@ -30,7 +30,7 @@ compileAndPush = function compileAndPush (event) {
     .pipe(coffee()).on('error',gutil.log)
     .pipe(gulp.dest('./js'))
     .pipe(gulp.dest(DEST + serverPath(event.path)))
-    .pipe(wait(1000))
+    .pipe(wait(1200))
     .pipe(livereload());
 }
 

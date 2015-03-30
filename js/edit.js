@@ -3,6 +3,7 @@
 
   Machines = (function() {
     function Machines() {
+      this.loaded = false;
       this.load();
       this.placeHolder = {
         "DB_ID": "",
@@ -29,6 +30,7 @@
       });
       return promise.done((function(_this) {
         return function(data) {
+          _this.loaded = true;
           data.map(function(el) {
             return el.min = (el.CICLETIME / 60).toFixed(2);
           });
@@ -41,6 +43,18 @@
           return r.set('edited', false);
         };
       })(this));
+    };
+
+    Machines.prototype.search = function(searchString) {
+      if (this.loaded) {
+        if (searchString !== '') {
+          this.data = this.filter.search(searchString);
+          return r.update();
+        } else {
+          this.data = _.clone(this.original);
+          return r.update();
+        }
+      }
     };
 
     Machines.prototype.save = function() {
@@ -156,8 +170,8 @@
   });
 
   r.on('backward', function(e) {
-    var actual, offset, ref;
-    if ((e != null ? (ref = e.original) != null ? ref.preventDefault : void 0 : void 0) != null) {
+    var actual, offset, _ref;
+    if ((e != null ? (_ref = e.original) != null ? _ref.preventDefault : void 0 : void 0) != null) {
       e.original.preventDefault();
     }
     actual = r.get('editing');
@@ -169,8 +183,8 @@
   });
 
   r.on('forward', function(e) {
-    var actual, offset, ref;
-    if ((e != null ? (ref = e.original) != null ? ref.preventDefault : void 0 : void 0) != null) {
+    var actual, offset, _ref;
+    if ((e != null ? (_ref = e.original) != null ? _ref.preventDefault : void 0 : void 0) != null) {
       e.original.preventDefault();
     }
     actual = r.get('editing');
@@ -214,6 +228,21 @@
     }
   });
 
+  r.observe('filter', function(nval, oval, keypath) {
+    console.log(nval);
+    return p.search(nval);
+  });
+
+  Mousetrap.bind("esc", (function(_this) {
+    return function(e) {
+      console.log('esc');
+      e.preventDefault();
+      return r.set('filter', '');
+    };
+  })(this));
+
   window.r = r;
+
+  window.p = p;
 
 }).call(this);

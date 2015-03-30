@@ -1,5 +1,6 @@
 class Machines
   constructor: () ->
+    @loaded = false
     @load()
     @placeHolder =
       "DB_ID": "",
@@ -20,12 +21,23 @@ class Machines
     promise = $.getJSON 'toolbox.php',
       'action':'getMachines'
     promise.done (data)=>
+      @loaded = true
       data.map (el)-> el.min = (el.CICLETIME/60).toFixed(2)
       @data = data
       @original = _.clone @data
       @filter = new Fuse(@data,{keys: ['NAME', 'BU']})
       r.update()
       r.set 'edited', false
+  search:(searchString)->
+    if @loaded
+      if searchString isnt ''
+        @data = @filter.search searchString
+        r.update()
+      else
+        @data = _.clone @original
+        r.update()
+      
+    
   save:()->
     if @data.length isnt 0 and r.get 'edited'
       promise = $.post 'utilities.php',
@@ -153,6 +165,10 @@ r.observe 'machines.data.*.*', (nval, oval, keypath)->
     if nval.length is 7 
       r.data.machines.pushToQueue(keypath.match(/(\d*)\.num$/)[1])
 
+r.observe 'filter', (nval, oval, keypath)->
+  console.log nval
+  p.search nval
+
 
 # mapping = [
 #     ['d','description']
@@ -180,6 +196,11 @@ r.observe 'machines.data.*.*', (nval, oval, keypath)->
 # Mousetrap.bind "alt+right", (e)=>
 #   e.preventDefault()
 #   r.fire 'forward', null, e
+Mousetrap.bind "esc", (e)=>
+  console.log 'esc'
+  e.preventDefault()
+  r.set 'filter', ''
 
 
 window.r = r
+window.p = p

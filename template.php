@@ -4,7 +4,7 @@
       <a href="" class="item"><i class="home icon"></i>home</a>
       <a href="" class="item"> Last update: {{humanizeDiff(lastUpdate)}} {{#if machines.loadingMachines}} <i class="asterisk loading icon"></i> {{/if}}</a>
       
-      <!-- <div class="right menu">
+      <div class="right menu">
         <div class="item">
           <div class="ui transparent icon input">
             <input type="text" placeholder="filtrar" value="{{filter}}">
@@ -12,7 +12,6 @@
           </div>
         </div>
       </div>
-    </div> -->
   
     </div>
   </div>
@@ -21,7 +20,7 @@
   <div class="column">
     <div class="ui {{size}} cards">
     {{#each machines.grouped :groupNum}}
-      <div class="card">
+      <div class="{{color[key]}} card">
         <div class="content">
           <div class="header"><small>Equipos de </small>{{key}}</div>
           <div class="ui list">

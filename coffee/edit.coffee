@@ -5,6 +5,7 @@ $(document).ajaxStop ()->
 
 class Machines
   constructor: () ->
+    @initial = true
     @loaded = false
     @load()
     @placeHolder =
@@ -35,10 +36,9 @@ class Machines
       @filter = new Fuse(@data,{keys: ['NAME', 'BU','AREA','PROCESS']})
       r.update()
       r.set 'edited', false
+      @initial = false
 
-      gapi.signin.render('googleLoginButton')
 
-      
   search:(searchString)->
     if @loaded
       if searchString isnt ''
@@ -106,6 +106,7 @@ duration = (min,seg)->
   if isNaN seg then seg = 0
   return "#{((min*60) + seg).toFixed(0)}"
 
+
 p = new Machines()
 r = new Ractive {
   el: 'container'
@@ -118,7 +119,7 @@ r = new Ractive {
     edited: false
     sidebar: false
     deleting: false
-    showSigninButton:true
+    showSigninButton:false
     filter:''
     duration:duration
   }
@@ -233,22 +234,4 @@ Mousetrap.bind "esc", (e)->
 
 window.r = r
 window.p = p
-
-window.signinCallback = (authResult)->
-  if authResult.status.signed_in
-    r.set 'showSigninButton', false
-  else
-    if authResult.error is 'user_signed_out'
-      r.set 
-        'showSigninButton':false
-        message:'user_signed_out'
-    else if authResult.error is 'access_denied'
-      r.set 
-        'showSigninButton':false
-        message:'access_denied'
-    else if authResult.error is 'immediate_failed'
-      r.set 
-        'showSigninButton':false
-        message:'immediate_failed'
-
 

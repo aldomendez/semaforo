@@ -161,6 +161,12 @@ r = new Ractive
       moment(date.trim()).fromNow() || 'unknow'
     round:(num)->
       Math.round num
+    color:{
+      Alfredo_Tongo:'yellow'
+      Tomas_Lugo:'blue'
+      Gerardo_Martinez:'green'
+      Luis_Bejar:'orange'
+    }
 
 r.set 'size', 'two'
 

@@ -11,7 +11,7 @@
         <i class="add icon"></i> New
       </a>
       <a class="item" on-click="addNew">
-        {{saved}}
+        {{message}}
       </a>
       {{#edit === true}}
       <a class="item" on-click="backward">

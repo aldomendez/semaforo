@@ -216,6 +216,12 @@
       },
       round: function(num) {
         return Math.round(num);
+      },
+      color: {
+        Alfredo_Tongo: 'yellow',
+        Tomas_Lugo: 'blue',
+        Gerardo_Martinez: 'green',
+        Luis_Bejar: 'orange'
       }
     }
   });

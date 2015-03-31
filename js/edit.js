@@ -11,6 +11,7 @@
 
   Machines = (function() {
     function Machines() {
+      this.initial = true;
       this.loaded = false;
       this.load();
       this.placeHolder = {
@@ -52,7 +53,7 @@
           });
           r.update();
           r.set('edited', false);
-          return gapi.signin.render('googleLoginButton');
+          return _this.initial = false;
         };
       })(this));
     };
@@ -157,7 +158,7 @@
       edited: false,
       sidebar: false,
       deleting: false,
-      showSigninButton: true,
+      showSigninButton: false,
       filter: '',
       duration: duration
     }
@@ -305,28 +306,5 @@
   window.r = r;
 
   window.p = p;
-
-  window.signinCallback = function(authResult) {
-    if (authResult.status.signed_in) {
-      return r.set('showSigninButton', false);
-    } else {
-      if (authResult.error === 'user_signed_out') {
-        return r.set({
-          'showSigninButton': false,
-          message: 'user_signed_out'
-        });
-      } else if (authResult.error === 'access_denied') {
-        return r.set({
-          'showSigninButton': false,
-          message: 'access_denied'
-        });
-      } else if (authResult.error === 'immediate_failed') {
-        return r.set({
-          'showSigninButton': false,
-          message: 'immediate_failed'
-        });
-      }
-    }
-  };
 
 }).call(this);

@@ -38,12 +38,21 @@ class Machines
         @data = _.clone @original
         r.update()
       
-    
+  clone:(index)->
+
+    newMachine = _.clone r.get "machines.data.#{index}"
+    newMachine.ID = undefined
+    delete newMachine.ID
+    @data.push newMachine
+    r.set
+      editing:@data.length - 1
+      edit:true
+      deleting:false
+
   save:()->
     if @data.length isnt 0 and r.get 'edited'
       index = r.get 'editing'
       datos = r.get "machines.data.#{index}"
-      console.log datos
       if datos.ID isnt undefined
         promise = $.ajax
           method:'put'
@@ -53,7 +62,13 @@ class Machines
   #        TODO: Buscar la manera de decir que todo se guardo correctamente
           r.set 'saved','successfull'
       else
-        console.log 'Ya existe en la base de datos'
+        promise = $.ajax
+          method:'post'
+          url:"machines.php/"
+          data: datos
+        promise.done ()->
+  #        TODO: Buscar la manera de decir que todo se guardo correctamente
+          r.set 'saved','successfull'
     else
 #      r.set {
 #
@@ -127,6 +142,10 @@ r.on 'save', (e)->
   e.original.preventDefault()
   if r.get 'edited'
     p.save()
+
+r.on 'clone', (e, index)->
+  e.original.preventDefault()
+  p.clone(index)
 
 r.on 'del', (e, ind)->
   e.original.preventDefault()

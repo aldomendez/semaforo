@@ -57,12 +57,24 @@
       }
     };
 
+    Machines.prototype.clone = function(index) {
+      var newMachine;
+      newMachine = _.clone(r.get("machines.data." + index));
+      newMachine.ID = void 0;
+      delete newMachine.ID;
+      this.data.push(newMachine);
+      return r.set({
+        editing: this.data.length - 1,
+        edit: true,
+        deleting: false
+      });
+    };
+
     Machines.prototype.save = function() {
       var datos, index, promise;
       if (this.data.length !== 0 && r.get('edited')) {
         index = r.get('editing');
         datos = r.get("machines.data." + index);
-        console.log(datos);
         if (datos.ID !== void 0) {
           promise = $.ajax({
             method: 'put',
@@ -73,7 +85,14 @@
             return r.set('saved', 'successfull');
           });
         } else {
-          return console.log('Ya existe en la base de datos');
+          promise = $.ajax({
+            method: 'post',
+            url: "machines.php/",
+            data: datos
+          });
+          return promise.done(function() {
+            return r.set('saved', 'successfull');
+          });
         }
       } else {
 
@@ -166,6 +185,11 @@
     if (r.get('edited')) {
       return p.save();
     }
+  });
+
+  r.on('clone', function(e, index) {
+    e.original.preventDefault();
+    return p.clone(index);
   });
 
   r.on('del', function(e, ind) {

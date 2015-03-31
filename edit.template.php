@@ -96,7 +96,7 @@
         </div>
         {{/if}}
       {{#with machines.data[editing]}}
-      <form class="ui small {{#if ~message}}info{{/if}} form">
+      <form class="ui small {{#if ~message}}{{/if}} form">
         <h5 class="ui dividing header">
           <a href="" class="ui button" on-click="returnToList">
           <i class="left arrow icon"></i>regresar</a> Equipment editor</h5>
@@ -178,10 +178,15 @@
               <input placeholder="" type="text" value="{{DBDEVICE}}" id="status">
             </div>
           </div>
-          <div class="two fields">
+          <div class="three fields">
             <div class="field">
               <a href="#" class="ui {{#edited === true}}positive{{/edited === true}} button" on-click="save:{{editing}}">
-              {{#if this.ID}}Update{{else}}Save{{/if}}
+              {{#if this.ID !== undefined}} <i class="icon write"></i> Update{{else}} <i class="icon save"></i> Save{{/if}}
+              </a>
+            </div>
+            <div class="field">
+              <a href="#" class="ui button" on-click="clone:{{editing}}">
+              <i class="icon copy"></i> Clone
               </a>
             </div>
             <div class="field">

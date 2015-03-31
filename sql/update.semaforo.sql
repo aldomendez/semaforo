@@ -1,4 +1,4 @@
-update semaforo_test
+update semaforo
 set
   db_id = ':DB_ID',
   name = ':NAME',

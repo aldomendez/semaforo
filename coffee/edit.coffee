@@ -22,6 +22,7 @@ class Machines
     promise.done (data)=>
       @loaded = true
       data.map (el)-> el.min = (el.CICLETIME/60).toFixed(2)
+      data.map (el)-> el.seg = 0
       @data = data
       r.set 'managers', _.unique(_.pluck(@data,'BU'))
       r.set 'process', _.unique(_.pluck(@data,'PROCESS'))
@@ -53,6 +54,7 @@ class Machines
     if @data.length isnt 0 and r.get 'edited'
       index = r.get 'editing'
       datos = r.get "machines.data.#{index}"
+      datos.CICLETIME = duration datos.min, datos.seg
       if datos.ID isnt undefined
         promise = $.ajax
           method:'put'
@@ -87,8 +89,15 @@ util = {}
 util.numReg = /num$/
 util.indexMatch = /(\d*)\.num$/
 
-p = new Machines()
 
+duration = (min,seg)->
+  min = parseFloat(min)
+  seg = parseFloat(seg)
+  if isNaN min then min = 0
+  if isNaN seg then seg = 0
+  return "#{((min*60) + seg).toFixed(0)}"
+
+p = new Machines()
 r = new Ractive {
   el: 'container'
   template: '#template'
@@ -101,12 +110,7 @@ r = new Ractive {
     sidebar: false
     deleting: false
     filter:''
-    duration:(min,seg)->
-      min = parseFloat(min)
-      seg = parseFloat(seg)
-      if isNaN min then min = 0
-      if isNaN seg then seg = 0
-      return "#{((min*60) + seg).toFixed(0)}"
+    duration:duration
   }
 }
 
@@ -142,6 +146,8 @@ r.on 'save', (e)->
   e.original.preventDefault()
   if r.get 'edited'
     p.save()
+  r.set
+    edited:false
 
 r.on 'clone', (e, index)->
   e.original.preventDefault()
@@ -166,6 +172,7 @@ r.on 'backward', (e)->
   r.set
     editing: offset
     deleting: false
+    edited:false
 
 r.on 'forward', (e)->
   if e?.original?.preventDefault? then e.original.preventDefault()
@@ -174,6 +181,7 @@ r.on 'forward', (e)->
   r.set
     editing: offset
     deleting: false
+    edited:false
 
 # TODO: Si no voy a hacer funcionar la sidebar esto deberia de irse
 r.on 'sidebar', (e)->
@@ -200,6 +208,10 @@ r.observe 'machines.data.*.*', (nval, oval, keypath)->
   if r.get('edit') and util.numReg.test keypath
     if nval.length is 7 
       r.data.machines.pushToQueue(keypath.match(/(\d*)\.num$/)[1])
+
+r.observe 'machines.data.*.min machines.data.*.seg', (nval, oval, keypath)->
+  id = keypath.match(/(\d+)..*$/)[1]
+  r.set "machines.data.#{id}.CICLETIME", duration(r.get("machines.data.#{id}.min"),r.get("machines.data.#{id}.seg"))
 
 #  Esta es la parte que informa para que se filtren los datos y editar sea mas facil
 r.observe 'filter', (nval, oval, keypath)->

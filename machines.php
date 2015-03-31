@@ -77,16 +77,30 @@ function retrieve($id)
 }
 
 function insert() {
-    if( file_exists('count.txt') ){
-        $lastId = file_get_contents('count.txt');
-    } else {
-        $lastId = 0;
-    }
-    $user = json_decode(file_get_contents("php://input"),true);
-    $user['id']= $lastId + 1;
-    // file_put_contents('count.txt', $lastId+1);
-    file_put_contents("user." . ($lastId+1) . ".txt", json_encode($user));
-    echo(json_encode($user));
+
+    global $app;
+    $body = $app->request()->getBody();
+    parse_str($body, $body);
+    print_r( $body );    
+
+    $MO = new MxApps();
+    $infoQuery = file_get_contents('sql/insert.semaforo.sql');
+    $MO->setQuery($infoQuery);
+    $MO->bind_vars(':DB_ID',$body['DB_ID']);
+    $MO->bind_vars(':NAME',$body['NAME']);
+    $MO->bind_vars(':DESCRIPTION',$body['DESCRIPTION']);
+    $MO->bind_vars(':AREA',$body['AREA']);
+    $MO->bind_vars(':PROCESS',$body['PROCESS']);
+    $MO->bind_vars(':DBCONNECTION',$body['DBCONNECTION']);
+    $MO->bind_vars(':DBTABLE',$body['DBTABLE']);
+    $MO->bind_vars(':DBMACHINE',$body['DBMACHINE']);
+    $MO->bind_vars(':DBDEVICE',$body['DBDEVICE']);
+    $MO->bind_vars(':DBDATE',$body['DBDATE']);
+    $MO->bind_vars(':CICLETIME',$body['CICLETIME']);
+    $MO->bind_vars(':BU',$body['BU']);
+    echo $MO->query;
+    $MO->exec();
+
 }
 
 function update ($id) {

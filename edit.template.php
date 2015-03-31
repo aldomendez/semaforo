@@ -71,7 +71,7 @@
               <td>{{BU}}</td>
               <td>{{AREA}}</td>
               <td>{{PROCESS}}</td>
-              <td>{{CICLETIME}}</td>
+              <td>{{min}}min</td>
               <td>{{DBCONNECTION}}</td>
               <td>{{DBTABLE}}</td>
               <td>{{DBMACHINE}}</td>
@@ -102,12 +102,6 @@
           <i class="left arrow icon"></i>regresar</a> Equipment editor</h5>
         <div class="ui segment">
           <div class="ui warning message">
-            <div class="header">Action Forbidden</div>
-            <ul class="list">
-              <li></li>
-            </ul>
-          </div>
-          <div class="ui info message">
             <div class="header">Action Forbidden</div>
             <ul class="list">
               <li></li>
@@ -156,7 +150,7 @@
               <input on-mousewheel="setTime:{{editing}}" type="text" value="{{min}}" id="description">
             </div>
             <div class="field">
-              <label>Cycle time <small>(en segundos)</small> {{duration(min,seg)}}seg</label>
+              <label>Cycle time <small>(en segundos)</small> {{CICLETIME}}seg</label>
               <input on-mousewheel="setTime:{{editing}}" type="text" value="{{seg}}" id="description">
             </div>
           </div>

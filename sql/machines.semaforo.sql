@@ -13,6 +13,6 @@ SELECT id,
        to_char(lastrun, 'dd-mon-yyyy hh24:mi') lastrun,
        cicletime,
        bu
-FROM semaforo_test a
-WHERE lasttick = (SELECT Max(lasttick) FROM semaforo_test 
+FROM semaforo a
+WHERE lasttick = (SELECT Max(lasttick) FROM semaforo 
   WHERE db_id=a.db_id)

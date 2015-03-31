@@ -1,5 +1,5 @@
 (function() {
-  var Machines, p, r, util;
+  var Machines, duration, p, r, util;
 
   Machines = (function() {
     function Machines() {
@@ -31,6 +31,9 @@
           _this.loaded = true;
           data.map(function(el) {
             return el.min = (el.CICLETIME / 60).toFixed(2);
+          });
+          data.map(function(el) {
+            return el.seg = 0;
           });
           _this.data = data;
           r.set('managers', _.unique(_.pluck(_this.data, 'BU')));
@@ -75,6 +78,7 @@
       if (this.data.length !== 0 && r.get('edited')) {
         index = r.get('editing');
         datos = r.get("machines.data." + index);
+        datos.CICLETIME = duration(datos.min, datos.seg);
         if (datos.ID !== void 0) {
           promise = $.ajax({
             method: 'put',
@@ -119,6 +123,18 @@
 
   util.indexMatch = /(\d*)\.num$/;
 
+  duration = function(min, seg) {
+    min = parseFloat(min);
+    seg = parseFloat(seg);
+    if (isNaN(min)) {
+      min = 0;
+    }
+    if (isNaN(seg)) {
+      seg = 0;
+    }
+    return "" + (((min * 60) + seg).toFixed(0));
+  };
+
   p = new Machines();
 
   r = new Ractive({
@@ -133,17 +149,7 @@
       sidebar: false,
       deleting: false,
       filter: '',
-      duration: function(min, seg) {
-        min = parseFloat(min);
-        seg = parseFloat(seg);
-        if (isNaN(min)) {
-          min = 0;
-        }
-        if (isNaN(seg)) {
-          seg = 0;
-        }
-        return "" + (((min * 60) + seg).toFixed(0));
-      }
+      duration: duration
     }
   });
 
@@ -183,8 +189,11 @@
   r.on('save', function(e) {
     e.original.preventDefault();
     if (r.get('edited')) {
-      return p.save();
+      p.save();
     }
+    return r.set({
+      edited: false
+    });
   });
 
   r.on('clone', function(e, index) {
@@ -208,28 +217,30 @@
   });
 
   r.on('backward', function(e) {
-    var actual, offset, ref;
-    if ((e != null ? (ref = e.original) != null ? ref.preventDefault : void 0 : void 0) != null) {
+    var actual, offset, _ref;
+    if ((e != null ? (_ref = e.original) != null ? _ref.preventDefault : void 0 : void 0) != null) {
       e.original.preventDefault();
     }
     actual = r.get('editing');
     offset = actual === 0 ? r.get('machines.data.length') - 1 : actual - 1;
     return r.set({
       editing: offset,
-      deleting: false
+      deleting: false,
+      edited: false
     });
   });
 
   r.on('forward', function(e) {
-    var actual, offset, ref;
-    if ((e != null ? (ref = e.original) != null ? ref.preventDefault : void 0 : void 0) != null) {
+    var actual, offset, _ref;
+    if ((e != null ? (_ref = e.original) != null ? _ref.preventDefault : void 0 : void 0) != null) {
       e.original.preventDefault();
     }
     actual = r.get('editing');
     offset = actual === r.get('machines.data.length') - 1 ? 0 : actual + 1;
     return r.set({
       editing: offset,
-      deleting: false
+      deleting: false,
+      edited: false
     });
   });
 
@@ -264,6 +275,12 @@
         return r.data.machines.pushToQueue(keypath.match(/(\d*)\.num$/)[1]);
       }
     }
+  });
+
+  r.observe('machines.data.*.min machines.data.*.seg', function(nval, oval, keypath) {
+    var id;
+    id = keypath.match(/(\d+)..*$/)[1];
+    return r.set("machines.data." + id + ".CICLETIME", duration(r.get("machines.data." + id + ".min"), r.get("machines.data." + id + ".seg")));
   });
 
   r.observe('filter', function(nval, oval, keypath) {

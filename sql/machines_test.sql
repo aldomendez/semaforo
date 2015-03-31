@@ -1,1 +1,1 @@
-SELECT * from semaforo_test
+SELECT * from semaforo

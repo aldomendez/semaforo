@@ -1,6 +1,14 @@
 (function() {
   var Local, Machines, m, parseDate, r,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  $(document).ajaxStart(function() {
+    return NProgress.start();
+  });
+
+  $(document).ajaxStop(function() {
+    return NProgress.done();
+  });
 
   Local = (function() {
     function Local() {
@@ -21,10 +29,10 @@
 
   Machines = (function() {
     function Machines() {
-      this.updateModelData = bind(this.updateModelData, this);
-      this.justUpdateModel = bind(this.justUpdateModel, this);
-      this.askToUpdateTable = bind(this.askToUpdateTable, this);
-      this.getMachines = bind(this.getMachines, this);
+      this.updateModelData = __bind(this.updateModelData, this);
+      this.justUpdateModel = __bind(this.justUpdateModel, this);
+      this.askToUpdateTable = __bind(this.askToUpdateTable, this);
+      this.getMachines = __bind(this.getMachines, this);
       this.queryCount = 0;
       this.loadingMachines = true;
       this.fuse = {
@@ -141,7 +149,7 @@
     };
 
     Machines.prototype.updateModelData = function(srvr) {
-      var mmnt, ref, target;
+      var mmnt, target, _ref;
       target = _.find(this.data, function(el) {
         return el.ID === srvr.ID;
       });
@@ -150,7 +158,7 @@
       target.humanized = mmnt.fromNow();
       target.CICLETIME = 1 * target.CICLETIME;
       target.diff = Math.round((this.now.diff(mmnt)) / 1000);
-      return ref = (function() {
+      return _ref = (function() {
         switch (false) {
           case !(target.diff <= target.CICLETIME):
             return ['green', 'working correctly'];
@@ -159,7 +167,7 @@
           default:
             return ['red', "" + (Math.round(target.diff / target.CICLETIME))];
         }
-      })(), target.status = ref[0], target.desc = ref[1], ref;
+      })(), target.status = _ref[0], target.desc = _ref[1], _ref;
     };
 
     Machines.prototype.refreshModel = function() {

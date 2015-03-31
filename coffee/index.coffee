@@ -1,3 +1,9 @@
+$(document).ajaxStart ()->
+  NProgress.start()
+$(document).ajaxStop ()->
+  NProgress.done()
+
+
 class Local
   constructor: () ->
     if localStorege? then throw "No se cuenta con localStorege"

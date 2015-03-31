@@ -19,15 +19,13 @@
         "LASTTICK": "",
         "LASTRUN": "",
         "CICLETIME": "",
-        "BU": "Undefined"
+        "BU": "undefined"
       };
     }
 
     Machines.prototype.load = function() {
       var promise;
-      promise = $.getJSON('toolbox.php', {
-        'action': 'getMachines'
-      });
+      promise = $.getJSON('machines.php/all');
       return promise.done((function(_this) {
         return function(data) {
           _this.loaded = true;
@@ -60,14 +58,23 @@
     };
 
     Machines.prototype.save = function() {
-      var promise;
+      var datos, index, promise;
       if (this.data.length !== 0 && r.get('edited')) {
-        promise = $.post('utilities.php', {
-          datos: this.data
-        });
-        return promise.done(function() {
-          return r.set('machines.saved', 'successfull');
-        });
+        index = r.get('editing');
+        datos = r.get("machines.data." + index);
+        console.log(datos);
+        if (datos.ID !== void 0) {
+          promise = $.ajax({
+            method: 'put',
+            url: "machines.php/" + datos.ID,
+            data: datos
+          });
+          return promise.done(function() {
+            return r.set('saved', 'successfull');
+          });
+        } else {
+          return console.log('Ya existe en la base de datos');
+        }
       } else {
 
       }
@@ -100,8 +107,9 @@
     template: '#template',
     data: {
       machines: p,
+      saved: '0',
       edit: false,
-      editing: 0,
+      editing: false,
       edited: false,
       sidebar: false,
       deleting: false,
@@ -155,10 +163,9 @@
 
   r.on('save', function(e) {
     e.original.preventDefault();
-    r.data.machines.save();
-    return r.set({
-      edited: false
-    });
+    if (r.get('edited')) {
+      return p.save();
+    }
   });
 
   r.on('del', function(e, ind) {
@@ -219,6 +226,10 @@
     e.original.preventDefault();
     editing = r.get('editing');
     return r.set("machines.data." + editing + ".BU", val);
+  });
+
+  r.on('addNewManager', function(e) {
+    return e.original.preventDefault();
   });
 
   r.observe('machines.data.*.*', function(nval, oval, keypath) {

@@ -10,6 +10,9 @@
       <a class="item" on-click="addNew">
         <i class="add icon"></i> New
       </a>
+      <a class="item" on-click="addNew">
+        {{saved}}
+      </a>
       {{#edit === true}}
       <a class="item" on-click="backward">
         <i class="backward icon"></i> 
@@ -93,12 +96,18 @@
         </div>
         {{/if}}
       {{#with machines.data[editing]}}
-      <form class="ui small {{#if message}}{{/if}} form">
+      <form class="ui small {{#if ~message}}info{{/if}} form">
         <h5 class="ui dividing header">
           <a href="" class="ui button" on-click="returnToList">
           <i class="left arrow icon"></i>regresar</a> Equipment editor</h5>
         <div class="ui segment">
-          <div class="ui error message">
+          <div class="ui warning message">
+            <div class="header">Action Forbidden</div>
+            <ul class="list">
+              <li></li>
+            </ul>
+          </div>
+          <div class="ui info message">
             <div class="header">Action Forbidden</div>
             <ul class="list">
               <li></li>
@@ -106,12 +115,12 @@
           </div>
           <div class="three fields">
             <div class="field">
-              <label>Name <i class="icon info"></i></label>
-              <input class="mousetrap" placeholder="" type="text" value="{{NAME}}" id="machines">
+              <label>Name in database <i class="icon info"></i></label>
+              <input placeholder="" type="text" value="{{DB_ID}}" id="machines">
             </div>
             <div class="field">
-              <label>Name <i class="icon info"></i></label>
-              <input class="mousetrap" placeholder="" type="text" value="{{NAME}}" id="machines">
+              <label>Name to show <i class="icon info"></i></label>
+              <input placeholder="" type="text" value="{{NAME}}" id="machines">
             </div>
             <div class="field">
               <label>Manager</label>
@@ -127,7 +136,7 @@
                       </div>
                     </div>
                     <div class="item">
-                      <a href="#"><i class="plus icon"></i></a>
+                      <a href="#" on-click="addNewManager"><i class="plus icon"></i></a>
                     </div>
                   </div>
 
@@ -136,42 +145,44 @@
           <div class="four fields">
             <div class="field">
               <label>Description</label>
-              <input class="mousetrap" placeholder="" type="text" value="{{DESCRIPTION}}" id="description">
+              <input placeholder="" type="text" value="{{DESCRIPTION}}" id="description">
             </div>
             <div class="field">
               <label>Proceso</label>
-              <input class="mousetrap" placeholder="" type="text" value="{{PROCESS}}" id="description">
+              <input placeholder="" type="text" value="{{PROCESS}}" id="description">
             </div>
             <div class="field">
               <label>Cycle time <small>(en Minutos)</small></label>
-              <input class="mousetrap" on-mousewheel="setTime:{{editing}}" type="text" value="{{min}}" id="description">
+              <input on-mousewheel="setTime:{{editing}}" type="text" value="{{min}}" id="description">
             </div>
             <div class="field">
               <label>Cycle time <small>(en segundos)</small> {{duration(min,seg)}}seg</label>
-              <input class="mousetrap" on-mousewheel="setTime:{{editing}}" type="text" value="{{seg}}" id="description">
+              <input on-mousewheel="setTime:{{editing}}" type="text" value="{{seg}}" id="description">
             </div>
           </div>
           <div class="four fields">
             <div class="field">
               <label>Coneccion</label>
-              <input class="mousetrap" placeholder="" type="text" value="{{DBCONNECTION}}" id="machines">
+              <input placeholder="" type="text" value="{{DBCONNECTION}}" id="machines">
             </div>
             <div class="field">
               <label>Table</label>
-              <input class="mousetrap" placeholder="" type="text" value="{{DBTABLE}}" id="location">
+              <input placeholder="" type="text" value="{{DBTABLE}}" id="location">
             </div>
             <div class="field">
               <label>Machine</label>
-              <input class="mousetrap" placeholder="" type="text" value="{{DBMACHINE}}" id="area">
+              <input placeholder="" type="text" value="{{DBMACHINE}}" id="area">
             </div>
             <div class="field">
               <label>Device</label>
-              <input class="mousetrap" placeholder="" type="text" value="{{DBDEVICE}}" id="status">
+              <input placeholder="" type="text" value="{{DBDEVICE}}" id="status">
             </div>
           </div>
           <div class="two fields">
             <div class="field">
-              <a href="#" class="ui {{#edited === true}}positive{{/edited === true}} button" on-click="save:{{editing}}">Save</a>
+              <a href="#" class="ui {{#edited === true}}positive{{/edited === true}} button" on-click="save:{{editing}}">
+              {{#if this.ID}}Update{{else}}Save{{/if}}
+              </a>
             </div>
             <div class="field">
               {{^deleting}}<button class="ui button" type="button" on-click="askToDelete">Delete</button>{{/deleting}}

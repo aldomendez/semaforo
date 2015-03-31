@@ -26,8 +26,7 @@ class Machines
     @sizes=['one','one','two','three','four','five','seven','eight','nine']
   getMachines: ()=>
     @now = moment()
-    coneccion = $.getJSON "toolbox.php",
-      action: "getMachines"
+    coneccion = $.getJSON "machines.php"
     .done (data) =>
       # Envia un error si hay problemas con los datos obtenidos
       if data.error then throw data.desc

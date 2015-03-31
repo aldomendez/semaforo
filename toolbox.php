@@ -1,5 +1,5 @@
 <?php 
-//echo $_SERVER['REMOTE_ADDR'];
+
 if ( $_SERVER['REMOTE_ADDR'] != '192.168.1.147'){
     $local = false;
     include "../inc/database.php";

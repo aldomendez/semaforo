@@ -16,10 +16,9 @@ class Machines
       "LASTTICK": "",
       "LASTRUN": "",
       "CICLETIME": "",
-      "BU": "Undefined"
+      "BU": "undefined"
   load:()->
-    promise = $.getJSON 'toolbox.php',
-      'action':'getMachines'
+    promise = $.getJSON 'machines.php/all'
     promise.done (data)=>
       @loaded = true
       data.map (el)-> el.min = (el.CICLETIME/60).toFixed(2)
@@ -42,11 +41,19 @@ class Machines
     
   save:()->
     if @data.length isnt 0 and r.get 'edited'
-      promise = $.post 'utilities.php',
-        datos: @data
-      promise.done ()->
-#        TODO: Buscar la manera de decir que todo se guardo correctamente
-        r.set 'machines.saved','successfull'
+      index = r.get 'editing'
+      datos = r.get "machines.data.#{index}"
+      console.log datos
+      if datos.ID isnt undefined
+        promise = $.ajax
+          method:'put'
+          url:"machines.php/#{datos.ID}"
+          data: datos
+        promise.done ()->
+  #        TODO: Buscar la manera de decir que todo se guardo correctamente
+          r.set 'saved','successfull'
+      else
+        console.log 'Ya existe en la base de datos'
     else
 #      r.set {
 #
@@ -72,8 +79,9 @@ r = new Ractive {
   template: '#template'
   data:{
     machines : p
+    saved:'0'
     edit: false
-    editing: 0
+    editing: false
     edited: false
     sidebar: false
     deleting: false
@@ -117,9 +125,8 @@ r.on 'returnToList', (e)->
 
 r.on 'save', (e)->
   e.original.preventDefault()
-  r.data.machines.save()
-  r.set
-    edited:false
+  if r.get 'edited'
+    p.save()
 
 r.on 'del', (e, ind)->
   e.original.preventDefault()
@@ -163,6 +170,9 @@ r.on 'updateManager', (e,val)->
   e.original.preventDefault()
   editing = r.get 'editing'
   r.set "machines.data.#{editing}.BU", val
+
+r.on 'addNewManager', (e)->
+  e.original.preventDefault()
 
 
 r.observe 'machines.data.*.*', (nval, oval, keypath)->

@@ -24,6 +24,11 @@
       {{#edit === false}}
 
       <div class="right menu">
+        {{#showSigninButton === true}}
+        <div class="item">
+          <a class="ui button red" href="#" id="googleLoginButton">Log-in with Google</a>
+        </div>
+        {{/showSigninButton === true}}
         <div class="item">
           <div class="ui transparent icon input">
             <input type="text" placeholder="Filter..." value="{{filter}}" class='mousetrap'>

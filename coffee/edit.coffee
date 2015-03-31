@@ -35,6 +35,10 @@ class Machines
       @filter = new Fuse(@data,{keys: ['NAME', 'BU','AREA','PROCESS']})
       r.update()
       r.set 'edited', false
+
+      gapi.signin.render('googleLoginButton')
+
+      
   search:(searchString)->
     if @loaded
       if searchString isnt ''
@@ -114,6 +118,7 @@ r = new Ractive {
     edited: false
     sidebar: false
     deleting: false
+    showSigninButton:true
     filter:''
     duration:duration
   }
@@ -228,3 +233,22 @@ Mousetrap.bind "esc", (e)->
 
 window.r = r
 window.p = p
+
+window.signinCallback = (authResult)->
+  if authResult.status.signed_in
+    r.set 'showSigninButton', false
+  else
+    if authResult.error is 'user_signed_out'
+      r.set 
+        'showSigninButton':false
+        message:'user_signed_out'
+    else if authResult.error is 'access_denied'
+      r.set 
+        'showSigninButton':false
+        message:'access_denied'
+    else if authResult.error is 'immediate_failed'
+      r.set 
+        'showSigninButton':false
+        message:'immediate_failed'
+
+

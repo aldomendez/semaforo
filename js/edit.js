@@ -51,7 +51,8 @@
             keys: ['NAME', 'BU', 'AREA', 'PROCESS']
           });
           r.update();
-          return r.set('edited', false);
+          r.set('edited', false);
+          return gapi.signin.render('googleLoginButton');
         };
       })(this));
     };
@@ -156,6 +157,7 @@
       edited: false,
       sidebar: false,
       deleting: false,
+      showSigninButton: true,
       filter: '',
       duration: duration
     }
@@ -303,5 +305,28 @@
   window.r = r;
 
   window.p = p;
+
+  window.signinCallback = function(authResult) {
+    if (authResult.status.signed_in) {
+      return r.set('showSigninButton', false);
+    } else {
+      if (authResult.error === 'user_signed_out') {
+        return r.set({
+          'showSigninButton': false,
+          message: 'user_signed_out'
+        });
+      } else if (authResult.error === 'access_denied') {
+        return r.set({
+          'showSigninButton': false,
+          message: 'access_denied'
+        });
+      } else if (authResult.error === 'immediate_failed') {
+        return r.set({
+          'showSigninButton': false,
+          message: 'immediate_failed'
+        });
+      }
+    }
+  };
 
 }).call(this);

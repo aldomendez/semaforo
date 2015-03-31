@@ -1,6 +1,14 @@
 (function() {
   var Machines, duration, p, r, util;
 
+  $(document).ajaxStart(function() {
+    return NProgress.start();
+  });
+
+  $(document).ajaxStop(function() {
+    return NProgress.done();
+  });
+
   Machines = (function() {
     function Machines() {
       this.loaded = false;

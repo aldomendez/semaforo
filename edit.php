@@ -5,11 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>Semaforo</title>
   <link rel="stylesheet" type="text/css"  href="../jsLib/SemanticUi/1.11.6/semantic.css">
+  <link rel="stylesheet" type="text/css"  href="../jsLib/nprogress/1.1.6/nprogress.css">
 </head>
 <body>
   <div class="ui one column grid page" id="container"></div>
   <script id="template" type="text/ractive"><?php include 'edit.template.php' ?></script>
   <script src="../jsLib/jquery/2.1.3/jquery.min.js"></script>
+  <script src="../jsLib/nprogress/1.1.6/nprogress.js"></script>
   <!-- // <script src="../jsLib/easing/easing.js"></script> -->
   <!-- // <script src="../jsLib/SemanticUi/1.10.2/components/popup.min.js"></script> -->
   <script src="../jsLib/underscore/1.6.0/underscore.js"></script>

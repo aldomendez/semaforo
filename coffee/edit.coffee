@@ -1,3 +1,8 @@
+$(document).ajaxStart ()->
+  NProgress.start()
+$(document).ajaxStop ()->
+  NProgress.done()
+
 class Machines
   constructor: () ->
     @loaded = false

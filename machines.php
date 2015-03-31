@@ -27,6 +27,7 @@ $app = new Slim();
  */
 $app->get('/', 'semaforo' );
 $app->get('/all', 'index' );
+$app->get('/debug/:id', 'debug');
 $app->get('/:id', 'retrieve' );
 $app->put('/:id', 'update');
 $app->delete('/:id', 'del');
@@ -129,6 +130,36 @@ function update ($id) {
     echo $MO->query;
     $MO->exec();
 
+}
+
+function debug($id){
+    $DB_ID = $id;
+    echo "DB_ID: $DB_ID".PHP_EOL;
+    $query = "select * from semaforo where db_id = '" . $DB_ID . "'";
+    $DB = new MxApps();
+    $DB->setQuery($query);
+    $DB->exec();
+    echo(print_r($DB->results,true).PHP_EOL);
+    $connections = array(
+        'mxoptix' => 'MxOptix',
+        'mxapps'  => 'MxApps',
+        'prodmx' => 'Dare',
+        'dare_mrc'=>'MRC'
+    );
+    foreach ($DB->results as $key => $value) {
+        // genero el query para la busqueda de datos
+        $MO = new $connections[$value['DBCONNECTION']]();
+        $infoQuery = file_get_contents('sql/getInfo.sql');
+        echo "conexion: " . $value['DBCONNECTION'].PHP_EOL;
+        $MO->setQuery($infoQuery);
+        $MO->bind_vars(':db_id',$value['DB_ID']);
+        $MO->bind_vars(':facility',$value['DBMACHINE']);
+        $MO->bind_vars(':device',$value['DBDEVICE']);
+        $MO->bind_vars(':test_dt',$value['DBDATE']);
+        $MO->bind_vars(':table',$value['DBTABLE']);
+        echo "Query:" . PHP_EOL;
+        echo $MO->query . PHP_EOL;
+    }
 }
 
 function del ($id) {

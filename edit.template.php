@@ -136,7 +136,7 @@
 
             </div>
           </div>
-          <div class="four fields">
+          <div class="five fields">
             <div class="field">
               <label>Description</label>
               <input placeholder="" type="text" value="{{DESCRIPTION}}" id="description">
@@ -144,6 +144,10 @@
             <div class="field">
               <label>Proceso</label>
               <input placeholder="" type="text" value="{{PROCESS}}" id="description">
+            </div>
+            <div class="field">
+              <label>Area</label>
+              <input placeholder="" type="text" value="{{AREA}}" id="description">
             </div>
             <div class="field">
               <label>Cycle time <small>(en Minutos)</small></label>
@@ -154,7 +158,7 @@
               <input on-mousewheel="setTime:{{editing}}" type="text" value="{{seg}}" id="description">
             </div>
           </div>
-          <div class="four fields">
+          <div class="five fields">
             <div class="field">
               <label>Coneccion</label>
               <input placeholder="" type="text" value="{{DBCONNECTION}}" id="machines">
@@ -164,12 +168,16 @@
               <input placeholder="" type="text" value="{{DBTABLE}}" id="location">
             </div>
             <div class="field">
-              <label>Machine</label>
+              <label>Machine field name</label>
               <input placeholder="" type="text" value="{{DBMACHINE}}" id="area">
             </div>
             <div class="field">
-              <label>Device</label>
+              <label>Device field name</label>
               <input placeholder="" type="text" value="{{DBDEVICE}}" id="status">
+            </div>
+            <div class="field">
+              <label>Date field name</label>
+              <input placeholder="" type="text" value="{{DBDATE}}" id="status">
             </div>
           </div>
           <div class="three fields">

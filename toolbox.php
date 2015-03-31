@@ -114,7 +114,8 @@ function upateMachines($connection){
 	$connections = array(
 		'mxoptix' => 'MxOptix',
 		'mxapps'  => 'MxApps',
-		'prodmx' => 'Dare'
+		'prodmx' => 'Prod',
+		'dare_mrc'=>'MRC'
 	);
 
 	if ($DB->rows > 0){
@@ -132,11 +133,10 @@ function upateMachines($connection){
 			$MO->bind_vars(':device',$value['DBDEVICE']);
 			$MO->bind_vars(':test_dt',$value['DBDATE']);
 			$MO->bind_vars(':table',$value['DBTABLE']);
+			
+
 			// logToFile(sprintf("Before, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
 			$MO->exec();
-			if($value['DB_ID'] == 'BR-POD10-TEMP3'){
-				logToFile($MO->query);
-			}
 
 			// Actualizo la informacion en la tabla nueva
 			// Solo si tengo datos nuevos
@@ -182,7 +182,7 @@ function debugQuery(){
         Todos los querys que esten registrados en la base de datos para esta maquina
 */
 	$DB_ID = $_GET['DB_ID'];
-	echo "$DB_ID".PHP_EOL;
+	echo "DB_ID: $DB_ID".PHP_EOL;
 	$query = "select * from semaforo where db_id = '" . $DB_ID . "'";
 	$DB = new MxApps();
 	$DB->setQuery($query);
@@ -191,22 +191,25 @@ function debugQuery(){
 	$connections = array(
 		'mxoptix' => 'MxOptix',
 		'mxapps'  => 'MxApps',
-		'prodmx' => 'Dare'
+		'prodmx' => 'Dare',
+		'dare_mrc'=>'MRC'
 	);
 	foreach ($DB->results as $key => $value) {
 		// genero el query para la busqueda de datos
-		echo $value['DBCONNECTION'].PHP_EOL;
-		$MO = new $value['DBCONNECTION']();
+		$MO = new $connections[$value['DBCONNECTION']]();
 		$infoQuery = file_get_contents('sql/getInfo.sql');
+		echo "conexion: " . $value['DBCONNECTION'].PHP_EOL;
 		$MO->setQuery($infoQuery);
 		$MO->bind_vars(':db_id',$value['DB_ID']);
 		$MO->bind_vars(':facility',$value['DBMACHINE']);
 		$MO->bind_vars(':device',$value['DBDEVICE']);
 		$MO->bind_vars(':test_dt',$value['DBDATE']);
 		$MO->bind_vars(':table',$value['DBTABLE']);
+		echo "Query:" . PHP_EOL;
 		echo $MO->query . PHP_EOL;
 	}
 }
+
 function logToFile($content)
 {
 	file_put_contents('logs.txt', $content.PHP_EOL , FILE_APPEND);

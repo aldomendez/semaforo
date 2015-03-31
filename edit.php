@@ -10,9 +10,9 @@
   <meta name="google-signin-clientid" content="1038555956525-i6lu62ufaniv4hqclfcpk6ig8o9sjbsn.apps.googleusercontent.com" />
   <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login" />
   <meta name="google-signin-requestvisibleactions" content="profile" />
-  <meta name="google-signin-cookiepolicy" content="single_host_origin" />
+  <meta name="google-signin-cookiepolicy" content="http://cymautocert/" />
   <meta name="google-signin-callback" content="signinCallback" />
-  <script src="https://apis.google.com/js/client:platform.js" async defer></script>
+  <script src="https://apis.google.com/js/client:platform.js"></script>
 </head>
 <body>
   <div class="ui one column grid page" id="container"></div>

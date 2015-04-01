@@ -40,8 +40,7 @@ function getMachines()
 		echo $json;
 	}
 	if (!$local) {
-		oci_free_statement($DB->statement);
-		oci_close($DB->conn);
+		$DB->close();
 	}
 }
 
@@ -57,8 +56,7 @@ function getSpecificMachine()
 	} else {
 		echo $DB->json();
 	}
-	oci_free_statement($DB->statement);
-	oci_close($DB->conn);
+	$DB->close();
 }
 
 function updateTables()
@@ -161,12 +159,10 @@ function upateMachines($connection){
 				$DB->exec();
 			}
 		}
-		oci_free_statement($MO->statement);
-		oci_close($MO->conn);
+		$MO->close();
 	}
 
-	oci_free_statement($DB->statement);
-	oci_close($DB->conn);
+	$DB->close();
 
 	$final = date("d-M-Y H:i:s");
 	logToFile(sprintf("[x] Completado: inicio:%s, final:%s", $inicio, $final));
@@ -218,8 +214,7 @@ function debugQuery(){
 		oci_free_statement($MO->statement);
 		oci_close($MO->conn);
 	}
-	oci_free_statement($DB->statement);
-	oci_close($DB->conn);
+	$DB->close();
 }
 
 function logToFile($content)

@@ -11,7 +11,7 @@ class Machines
     @placeHolder =
       "DB_ID": "",
       "NAME": "",
-      "DESCRIPTION": null,
+      "DESCRIPTION": "",
       "AREA": "",
       "PROCESS": "",
       "SETUP_DATE": "",
@@ -22,7 +22,9 @@ class Machines
       "LASTTICK": "",
       "LASTRUN": "",
       "CICLETIME": "",
-      "BU": "undefined"
+      "BU": "undefined",
+      min:0,
+      seg:0
   load:()->
     promise = $.getJSON 'machines.php/all'
     promise.done (data)=>

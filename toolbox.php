@@ -63,11 +63,24 @@ function getSpecificMachine()
 
 function updateTables()
 {
+	update_every(300,'mxoptix');
+	update_every(300,'mxapps');
+	update_every(600,'prodmx');
 
+}
+
+function update_every($segundos,$conexion)
+{
+	echo $conexion;
 	$inicio = date("d-M-Y H:i:s");
 	logToFile(sprintf("Llamado: , %s,",$inicio));
 	// Obtenemos la ultima fecha de actualizacion
-	$pastDateString = file_get_contents('lastUpdate.txt');
+	if (file_exists('lastUpdate.' . $conexion .'.txt')) {
+		$pastDateString = file_get_contents('lastUpdate.' . $conexion .'.txt');
+	} else {
+		// Genero una fecha en el pasado por que se supone que no he corrido ninguna vez
+		$pastDateString = date("d-M-Y H:i:s") - 10;
+	}
 	// Obtenemos una hora que pueda ser leida por el sistema
 	$past = strtotime($pastDateString);
 	// Guardamos la hora en el log (para poder ver los accesos que hemos estado teniendo)
@@ -76,35 +89,19 @@ function updateTables()
 	$actual = strtotime('now');
 	// logToFile(date("d-M-Y H:i"));
 	
-	if (($actual - $past) > 300) {
+	echo "Ejecutando: " . ($actual - $past) . PHP_EOL;
+	if (($actual - $past) > $segundos) {
 		// Si y solo si ha pasado mas de los segundos configurados
 		// Empezamos a actualizar los datos de mi tabla.
 		$date = date("d-M-Y H:i");
 		// Guardamos la fecha de la ultima actualizacion para que no se vuelva a pedir 
 		// otra actualizacion antes de que termine esta.
-		file_put_contents('lastUpdate.txt', $date);
+		file_put_contents('lastUpdate.' . $conexion .'.txt', $date);
 		// En esta parte es donde se hace la actualizacion en si
-		updateMachinesMxOptix();
-		updateMachinesMxApps();
-		updateMachinesProdMX();
+		upateMachines($conexion);
 	}
 	// Resolvemos para el navegador
 	echo "$pastDateString";
-}
-
-function updateMachinesMxOptix()
-{
-	upateMachines('mxoptix');
-}
-
-function updateMachinesMxApps()
-{
-	upateMachines('mxapps');
-}
-
-function updateMachinesProdMX()
-{
-	upateMachines('prodmx');
 }
 
 

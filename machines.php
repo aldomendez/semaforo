@@ -51,6 +51,10 @@ function semaforo(){
         file_put_contents('filecache.txt', $json);
         echo $json;
     }
+    if (!$local) {
+        oci_free_statement($DB->statement);
+        oci_close($DB->conn);
+    }
 }
 
 function index(){
@@ -69,6 +73,10 @@ function index(){
     } else {
         file_put_contents('filecache.txt', $json);
         echo $json;
+    }
+    if (!$local) {
+        oci_free_statement($DB->statement);
+        oci_close($DB->conn);
     }
 }
 
@@ -102,6 +110,8 @@ function insert() {
     echo $MO->query;
     $MO->exec();
 
+    oci_free_statement($MO->statement);
+    oci_close($MO->conn);
 }
 
 function update ($id) {
@@ -129,6 +139,9 @@ function update ($id) {
     $MO->bind_vars(':ID',$body['ID']);
     echo $MO->query;
     $MO->exec();
+
+    oci_free_statement($MO->statement);
+    oci_close($MO->conn);
 
 }
 
@@ -159,15 +172,18 @@ function debug($id){
         $MO->bind_vars(':table',$value['DBTABLE']);
         echo "Query:" . PHP_EOL;
         echo $MO->query . PHP_EOL;
+
+
+        oci_free_statement($MO->statement);
+        oci_close($MO->conn);
     }
+
+    oci_free_statement($DB->statement);
+    oci_close($DB->conn);
 }
 
 function del ($id) {
-    $filename = 'user.' . $id . ".txt";
-    // Eliminar el archivo deberia de ser facil
-    // unlink($filename);
-    $response = array('eror' => 'no podemos borrar del servidor' );
-    echo json_encode($response);
+    echo "To be defined";
 }
 
 function post() {

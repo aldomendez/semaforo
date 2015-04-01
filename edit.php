@@ -12,7 +12,7 @@
   <div class="ui one column grid page" id="container"></div>
   <script id="template" type="text/ractive"><?php include 'edit.template.php' ?></script>
   <script src="../jsLib/jquery/2.1.3/jquery.min.js"></script>
-  // <script src="../jsLib/nprogress/1.1.6/nprogress.js"></script>
+  <script src="../jsLib/nprogress/1.1.6/nprogress.js"></script>
   <script src="../jsLib/underscore/1.6.0/underscore.js"></script>
   <script src="../jsLib/ractivejs/0.6.1/ractive.min.js"></script>
   <script src="../jsLib/moment/2.9.0/moment.min.js"></script>

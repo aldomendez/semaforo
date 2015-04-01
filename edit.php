@@ -7,19 +7,6 @@
   <link rel="stylesheet" type="text/css"  href="../jsLib/SemanticUi/1.11.6/semantic.css">
   <link rel="stylesheet" type="text/css"  href="../jsLib/nprogress/1.1.6/nprogress.css">
 
-<!--   <style>
-html {
-    perspective:1200px;
-}
-body {
-    transition:transform 1s;
-}
-html:hover>body {
-    transform:rotate(180deg);
-}
-</style> -->
-
-
 </head>
 <body>
   <div class="ui one column grid page" id="container"></div>

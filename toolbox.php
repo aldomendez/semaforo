@@ -38,7 +38,11 @@ function getMachines()
 	} else {
 		file_put_contents('filecache.txt', $json);
 		echo $json;
-	}	
+	}
+	if (!$local) {
+		oci_free_statement($DB->statement);
+		oci_close($DB->conn);
+	}
 }
 
 function getSpecificMachine()
@@ -52,7 +56,9 @@ function getSpecificMachine()
 		throw new Exception("No arrojo datos la base de datos", 1);
 	} else {
 		echo $DB->json();
-	}	
+	}
+	oci_free_statement($DB->statement);
+	oci_close($DB->conn);
 }
 
 function updateTables()
@@ -158,7 +164,12 @@ function upateMachines($connection){
 				$DB->exec();
 			}
 		}
+		oci_free_statement($MO->statement);
+		oci_close($MO->conn);
 	}
+
+	oci_free_statement($DB->statement);
+	oci_close($DB->conn);
 
 	$final = date("d-M-Y H:i:s");
 	logToFile(sprintf("[x] Completado: inicio:%s, final:%s", $inicio, $final));
@@ -207,7 +218,11 @@ function debugQuery(){
 		$MO->bind_vars(':table',$value['DBTABLE']);
 		echo "Query:" . PHP_EOL;
 		echo $MO->query . PHP_EOL;
+		oci_free_statement($MO->statement);
+		oci_close($MO->conn);
 	}
+	oci_free_statement($DB->statement);
+	oci_close($DB->conn);
 }
 
 function logToFile($content)

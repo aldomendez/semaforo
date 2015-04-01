@@ -69,7 +69,6 @@ function updateTables()
 
 function update_every($segundos,$conexion)
 {
-	echo $conexion;
 	$inicio = date("d-M-Y H:i:s");
 	logToFile(sprintf("Llamado: , %s,",$inicio));
 	// Obtenemos la ultima fecha de actualizacion
@@ -87,19 +86,23 @@ function update_every($segundos,$conexion)
 	$actual = strtotime('now');
 	// logToFile(date("d-M-Y H:i"));
 	
-	echo "Ejecutando: " . ($actual - $past) . PHP_EOL;
-	if (($actual - $past) > $segundos) {
+	$lockFileName = $conexion . '.lock';
+
+	if (($actual - $past) > $segundos && !file_exists($lockFileName)) {
+		echo "Ejecutando: ". $conexion . " a los " . ($actual - $past) . "s " . PHP_EOL;
 		// Si y solo si ha pasado mas de los segundos configurados
 		// Empezamos a actualizar los datos de mi tabla.
 		$date = date("d-M-Y H:i");
 		// Guardamos la fecha de la ultima actualizacion para que no se vuelva a pedir 
 		// otra actualizacion antes de que termine esta.
 		file_put_contents('lastUpdate.' . $conexion .'.txt', $date);
+		file_put_contents($lockFileName, '1');
 		// En esta parte es donde se hace la actualizacion en si
 		upateMachines($conexion);
+		unlink($lockFileName);
 	}
 	// Resolvemos para el navegador
-	echo "$pastDateString";
+	// echo "$pastDateString";
 }
 
 

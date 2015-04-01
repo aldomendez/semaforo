@@ -122,7 +122,6 @@
           r.set('lastUpdate', data);
           console.log("'" + data + "'");
           r.set('machines.loadingMachines', true);
-          _this.getMachines();
           return setTimeout(function() {
             return _this.askToUpdateTable();
           }, 20000);
@@ -187,19 +186,6 @@
   parseDate = function(d) {
     return new Date(d.substring(0, 4), d.substring(4, 6) - 1, d.substring(6, 8), d.substring(8, 10), d.substring(10, 12), d.substring(12, 14));
   };
-
-  window.oc = $.get('dateoffset.php');
-
-  oc.done(function(data) {
-    var actualDate, serverDate;
-    serverDate = parseDate(data);
-    actualDate = new Date();
-    return window.oc = Math.floor(((serverDate - actualDate) / 1000) / 60);
-  });
-
-  oc.fail(function(data) {
-    return console.warn(data);
-  });
 
   m = new Machines;
 

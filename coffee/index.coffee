@@ -83,7 +83,7 @@ class Machines
       r.set 'lastUpdate', data
       console.log "'#{data}'"
       r.set 'machines.loadingMachines', true
-      @getMachines()
+      # @getMachines()
       # r.set 'lastUpdate',"Last Update: #{moment(data.trim()).fromNow()}"
       setTimeout ()=>
         @askToUpdateTable()
@@ -138,13 +138,13 @@ parseDate = (d) ->
     d.substring(10, 12),
     d.substring(12,14))
 
-window.oc = $.get 'dateoffset.php'
-oc.done (data)->
-  serverDate = parseDate data
-  actualDate = new Date()
-  window.oc = Math.floor(((serverDate - actualDate)/1000)/60)
-oc.fail (data)->
-  console.warn data
+# window.oc = $.get 'dateoffset.php'
+# oc.done (data)->
+#   serverDate = parseDate data
+#   actualDate = new Date()
+#   window.oc = Math.floor(((serverDate - actualDate)/1000)/60)
+# oc.fail (data)->
+#   console.warn data
 
 
 

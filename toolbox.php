@@ -98,7 +98,7 @@ function update_every($segundos,$conexion)
 		file_put_contents('lastUpdate.' . $conexion .'.txt', $date);
 		file_put_contents($lockFileName, '1');
 		// En esta parte es donde se hace la actualizacion en si
-		upateMachines($conexion);
+		upateMachines($conexion,$lockFileName);
 		unlink($lockFileName);
 	}
 	// Resolvemos para el navegador
@@ -106,7 +106,7 @@ function update_every($segundos,$conexion)
 }
 
 
-function upateMachines($connection){
+function upateMachines($connection, $lockFileName){
 	// Obtengo la lista de las maquinas dadas de alta en el sistema
 	$inicio = date("d-M-Y H:i:s");
 	// logToFile(sprintf("Inicio, %s ",$inicio));
@@ -121,7 +121,7 @@ function upateMachines($connection){
 		'prodmx' => 'Prod',
 		'dare_mrc'=>'MRC'
 	);
-
+	file_put_contents($lockFileName, $DB->rows . PHP_EOL , FILE_APPEND);
 	if ($DB->rows > 0){
 		// la coneccion se hace a la tabla especifica en la que vamos a buscar
 		$MO = new $connections[$connection]();
@@ -129,6 +129,8 @@ function upateMachines($connection){
 		// Ahora si ya puedo ir sacando los datos de cada una de las maquinas
 		// para sacar la informacion de la base de datp
 		foreach ($DB->results as $key => $value) {
+			$remaining = $DB->rows - 1;
+			file_put_contents($lockFileName, $remaining . ": " . $value['DB_ID'] . PHP_EOL , FILE_APPEND);
 			// genero el query para la busqueda de datos
 			$infoQuery = file_get_contents('sql/getInfo.sql');
 			$MO->setQuery($infoQuery);

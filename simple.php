@@ -60,13 +60,6 @@ function generatePage($objects){
     $twig = new Twig_Environment($loader);
 
     echo $twig->render('index', $workingData );
-
-
-
-
-    // print_r($objects);
-
-    // include "simple.templates/footer.php";
 }
 
 function setStatus($objects)

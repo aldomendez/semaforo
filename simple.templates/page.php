@@ -25,11 +25,41 @@
       </div>
       <div class="row">
         <div class="column">
-          {% set cardSize = sizeof(bu)  %}
-          <div class="ui {{cardSize}} cards">
-          
-            
-
+          {% set cardsNum = bu|length  %}
+          <div class="ui {{size[cardsNum]}} cards">
+            {% for manager, areas in bu %}
+            <div class="card">
+              <div class="content">
+                <div class="header"><small>Equipos de </small>{{manager}}</div>
+                <div class="ui list">
+                  {% for areaName, procesos in areas %}
+                    <div class="item">
+                      <div class="content"><b>{{areaName}}</b></div>
+                      <div class="description">
+                        <ui class="list">
+                          {% for processName, machines in procesos %}
+                          <div class="item">
+                            <div class="content">{{processName}}</div>
+                            <div class="description">
+                              {% for machineName, machine in machines %}
+                                <div class="label horizontal tiny ui {{machine.STATUS}}">
+                                  {{machine.NAME}}
+                                  {% if machine.STATUS == 'red' %}
+                                    <div class="detail"><i class="icon warning sign"></i>{{machine.DIFF}}</div>
+                                  {% endif %}
+                                </div>
+                              {% endfor %}
+                            </div>
+                          </div>
+                          {% endfor %}
+                        </ui>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
           </div>
         </div>
       </div>

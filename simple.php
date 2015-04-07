@@ -12,18 +12,28 @@ if ( $_SERVER['REMOTE_ADDR'] != '192.168.1.147'){
 
 $app = new Slim();
 
-$app->get('/', 'semaforo' );
-$app->get('/all', 'index' );
+$app->get('/', 'all' );
+$app->get('/:bu', 'byBU' );
 $app->get('/debug/:id', 'debug');
 $app->get('/:id', 'retrieve' );
 $app->put('/:id', 'update');
 $app->delete('/:id', 'del');
 $app->post('/','insert');
 
-
-function semaforo(){
-    global $local;
+function all(){
     $query = file_get_contents('sql/machines.semaforo.sql');
+    semaforo($query);
+}
+
+function byBU($bu='*')
+{
+    $query = file_get_contents('sql/machines.semaforo.sql');
+    $query.= " and bu = '" . $bu . "'";
+    semaforo($query);
+}
+
+function semaforo($query){
+    global $local;
     if($local){
         $json = file_get_contents('filecache.txt');
     } else {

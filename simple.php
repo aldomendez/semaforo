@@ -1,5 +1,7 @@
 <?php
 require '../Slim/Slim.php';
+require_once 'Twig-1.18.0/lib/Twig/Autoloader.php';
+Twig_Autoloader::register();
 
 if ( $_SERVER['REMOTE_ADDR'] != '192.168.1.147'){
     $local = false;
@@ -48,20 +50,19 @@ function semaforo(){
 function generatePage($objects){
 
     $content = '<div class="ui grid" id="container">:menu :body</div>';
-    $_page = file_get_contents("simple.templates/header.php");
-    $_menu = file_get_contents("simple.templates/menu.php");
-    $_body = file_get_contents("simple.templates/body.php");
-    $_liTags = file_get_contents('simple.templates/litags.php');
+    $_page = file_get_contents("simple.templates/page.php");
 
-    $_page = str_replace(':content', $content, $_page);
-    $_page = str_replace(':menu', $_menu, $_page);
-    $_page = str_replace(':body', $_body, $_page);
+    $size = array( 1 => 'one', 2 => 'two',  3 => 'three',  4 => 'four',  5 => 'five',  6 =>'six' );
 
-    foreach ($objects as $bu => $buVal) {
+    $workingData = array('bu'=>$objects,'size'=>$size);
 
-    }
+    $loader = new Twig_Loader_Array(array('index' => $_page));
+    $twig = new Twig_Environment($loader);
 
-    echo $_page;
+    echo $twig->render('index', $workingData );
+
+
+
 
     // print_r($objects);
 

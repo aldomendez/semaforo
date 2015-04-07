@@ -45,7 +45,7 @@ gulp.task('watch', function () {
   }).on('change', function (event) {
      compileAndPush(event);
   });  
-  gulp.watch(['*.php'], function (event) {
+  gulp.watch(['*.php','simple.templates/*.php'], function (event) {
   }).on('change', function (event) {
      copyAndReload(event);
   });  

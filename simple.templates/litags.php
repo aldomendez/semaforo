@@ -1,6 +1,6 @@
-<div class="label horizontal tiny ui red">
-CYBOND57 
+<div class="label horizontal tiny ui :STATUS">
+:NAME
 	<div class="detail">
-	<i class="icon warning sign"></i> 1060
+	<i class="icon warning sign"></i> :DIFF
 	</div>
 </div>

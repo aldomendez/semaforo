@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7272bea9-db3f-440a-95ac-bfa4352942af" name="Default" comment="" />
+    <list default="true" id="7272bea9-db3f-440a-95ac-bfa4352942af" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logs.txt" afterPath="$PROJECT_DIR$/logs.txt" />
+    </list>
     <ignored path="semaforo.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/" />
@@ -28,7 +30,7 @@
       <file leaf-file-name="toolbox.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/toolbox.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5028169" vertical-offset="731" max-vertical-offset="3961">
+            <state vertical-scroll-proportion="0.5035261" vertical-offset="731" max-vertical-offset="3961">
               <caret line="64" column="31" selection-start-line="64" selection-start-column="31" selection-end-line="64" selection-end-column="31" />
               <folding />
             </state>
@@ -261,12 +263,12 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1358" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="1358" y="-8" width="1936" height="1096" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17966281" sideWeight="0.5006258" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5955056" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20910972" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20932643" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32983193" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.12802951" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -505,7 +507,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/toolbox.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5028169" vertical-offset="731" max-vertical-offset="3961">
+        <state vertical-scroll-proportion="0.5035261" vertical-offset="731" max-vertical-offset="3961">
           <caret line="64" column="31" selection-start-line="64" selection-start-column="31" selection-end-line="64" selection-end-column="31" />
           <folding />
         </state>

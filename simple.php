@@ -33,23 +33,29 @@ function semaforo(){
     if ($json == "[]") {
         throw new Exception("No arrojo datos la base de datos", 1);
     } else {
-        // file_put_contents('filecache.txt', $json);
         
         $objects = json_decode($json, true);
         $objects = setStatus($objects);
-        $output = grouper($objects);
-        include "simple.templates/header.php";
-
-        $liTags = file_get_contents('simple.templates/litags.php');
-
-        print_r($output);
-
-        include "simple.templates/footer.php";
+        $objects = grouper($objects);
+        generatePage($objects);
     }
     if (!$local) {
         oci_free_statement($DB->statement);
         oci_close($DB->conn);
     }
+}
+
+function generatePage($objects){
+
+    include "simple.templates/header.php";
+
+    $liTags = file_get_contents('simple.templates/litags.php');
+
+
+
+    print_r($objects);
+
+    include "simple.templates/footer.php";
 }
 
 function setStatus($objects)
@@ -59,15 +65,21 @@ function setStatus($objects)
         $tick = strtotime($value['LASTTICK']);
         // Esta es solo pa prueba de que funciona
         // $objects[$key]['STATUS'] = ((($actual - $tick)/60)/60)/24;
-        if (  ($actual - $tick) < $value['CICLETIME']  ) {
+        $secondsSinceLastDevice = ($actual - $tick);
+        if (  $secondsSinceLastDevice < $value['CICLETIME']  ) {
             $status = 'green';
-        } elseif ( ($actual - $tick) < 2*$value['CICLETIME']) {
+            $diff = 0;
+        } elseif ( $secondsSinceLastDevice < 2*$value['CICLETIME']) {
             $status = 'yellow';
+            $diff = 1;
         } else {
             $status = 'red';
+            $diff = round($secondsSinceLastDevice / $value['CICLETIME'],0);
         }
         
         $objects[$key]['STATUS'] = $status;
+        $objects[$key]['DIFF'] = $diff;
+        $objects[$key]['CICLETIME_min'] = round($value['CICLETIME']/60,1);
     }
     return $objects;
 }

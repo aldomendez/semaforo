@@ -47,15 +47,25 @@ function semaforo(){
 
 function generatePage($objects){
 
-    include "simple.templates/header.php";
+    $content = '<div class="ui grid" id="container">:menu :body</div>';
+    $_page = file_get_contents("simple.templates/header.php");
+    $_menu = file_get_contents("simple.templates/menu.php");
+    $_body = file_get_contents("simple.templates/body.php");
+    $_liTags = file_get_contents('simple.templates/litags.php');
 
-    $liTags = file_get_contents('simple.templates/litags.php');
+    $_page = str_replace(':content', $content, $_page);
+    $_page = str_replace(':menu', $_menu, $_page);
+    $_page = str_replace(':body', $_body, $_page);
 
+    foreach ($objects as $bu => $buVal) {
 
+    }
 
-    print_r($objects);
+    echo $_page;
 
-    include "simple.templates/footer.php";
+    // print_r($objects);
+
+    // include "simple.templates/footer.php";
 }
 
 function setStatus($objects)

@@ -14,5 +14,7 @@
 <body>
   
     <!-- El contenido del template ira aqui -->
-    <!-- InsertTemplate -->
-    <pre>
+    :content
+      
+</body>
+</html>

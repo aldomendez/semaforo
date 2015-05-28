@@ -63,7 +63,7 @@ function updateTables()
 {
 	update_every(300,'mxoptix');
 	update_every(300,'mxapps');
-	update_every(600,'prodmx');
+	update_every(600,'prodmx'); //Original 600
 
 }
 
@@ -98,11 +98,85 @@ function update_every($segundos,$conexion)
 		file_put_contents('lastUpdate.' . $conexion .'.txt', $date);
 		file_put_contents($lockFileName, '1');
 		// En esta parte es donde se hace la actualizacion en si
-		updateMachines($conexion,$lockFileName);
+		updateMachinesTogether($conexion,$lockFileName);
 		unlink($lockFileName);
 	}
 	// Resolvemos para el navegador
 	// echo "$pastDateString";
+}
+
+
+function updateMachinesTogether($connection, $lockFileName){
+	// Obtengo la lista de las maquinas dadas de alta en el sistema
+	$inicio = date("d-M-Y H:i:s");
+	// logToFile(sprintf("Inicio, %s ",$inicio));
+	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
+	$DB = new MxApps();
+	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."'");
+	$DB->exec();
+	// echo($DB->rows);
+	$connections = array(
+		'mxoptix' => 'MxOptix',
+		'mxapps'  => 'MxApps',
+		'prodmx' => 'Prod',
+		'dare_mrc'=>'MRC'
+	);
+	file_put_contents($lockFileName, $DB->rows . PHP_EOL , FILE_APPEND);
+	if ($DB->rows > 0){
+		// la coneccion se hace a la tabla especifica en la que vamos a buscar
+		$MO = new $connections[$connection]();
+		logToFile($connections[$connection]);
+		// Ahora si ya puedo ir sacando los datos de cada una de las maquinas
+		// para sacar la informacion de la base de dato
+		echo "StartTime:" . date("d-M-Y H:i");
+
+		$subQuerys = array();
+		foreach ($DB->results as $key => $value) {
+			$remaining = $DB->rows - 1;
+			file_put_contents($lockFileName, $remaining . ": " . $value['DB_ID'] . PHP_EOL , FILE_APPEND);
+			// genero el query para la busqueda de datos
+			$infoQuery = file_get_contents('sql/getInfo.sql');
+			$MO->setQuery($infoQuery);
+			$MO->bind_vars(':db_id',$value['DB_ID']);
+			$MO->bind_vars(':id',$value['ID']);
+			$MO->bind_vars(':facility',$value['DBMACHINE']);
+			$MO->bind_vars(':device',$value['DBDEVICE']);
+			$MO->bind_vars(':test_dt',$value['DBDATE']);
+			$MO->bind_vars(':table',$value['DBTABLE']);
+			// Put this new Query in an array
+			array_push($subQuerys, $MO->query);
+		}
+		// Merge all array alements with a UNION ALL statement and assign as the new Query
+		$mergedQuerys = implode(PHP_EOL." union all ". PHP_EOL, $subQuerys);
+		file_put_contents('mergedQuerys'. "." .$connections[$connection], $mergedQuerys);
+		$MO->setQuery($mergedQuerys);
+		// Lo tengo que ejecutar con todos los querys unidos UNICAMENTE
+		$MO->exec();
+		
+
+		if ( sizeof($MO->results) > 0 ) {
+			$updateQuery = file_get_contents('sql/updateMachinesInSemaforo.sql');
+
+			foreach ($MO->results as $key => $value) {
+				$DB->setQuery($updateQuery);
+				$DB->bind_vars(':test_dt',$value['TEST_DT']);
+				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
+				$DB->bind_vars(':id',$value['FACILITY']);
+
+				echo $DB->query . PHP_EOL;
+				$DB->exec();
+				
+			}
+
+			echo "EndtTime:" . date("d-M-Y H:i");
+		}
+		$MO->close();
+	}
+
+	$DB->close();
+
+	$final = date("d-M-Y H:i:s");
+	logToFile(sprintf("[x] Completado: inicio:%s, final:%s", $inicio, $final));
 }
 
 
@@ -135,74 +209,7 @@ function updateMachines($connection, $lockFileName){
 			$infoQuery = file_get_contents('sql/getInfo.sql');
 			$MO->setQuery($infoQuery);
 			$MO->bind_vars(':db_id',$value['DB_ID']);
-			$MO->bind_vars(':facility',$value['DBMACHINE']);
-			$MO->bind_vars(':device',$value['DBDEVICE']);
-			$MO->bind_vars(':test_dt',$value['DBDATE']);
-			$MO->bind_vars(':table',$value['DBTABLE']);
-			
-
-			// logToFile(sprintf("Before, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
-			$MO->exec();
-
-			// Actualizo la informacion en la tabla nueva
-			// Solo si tengo datos nuevos
-
-			// TODO: buscar la manera de encontrar unicamente datos nuevos
-
-			if ( sizeof($MO->results) > 0 ) {
-				// if($connection == 'prodmx'){
-				// 	logToFile($MO->query);
-				// 	logToFile(print_r($MO->results,true));
-				// }
-				// genero el query para la busqueda de datos
-				// logToFile(date("d-M-Y H:i:s"));
-				$updateQuery = file_get_contents('sql/updateMachinesInSemaforo.sql');
-				$DB->setQuery($updateQuery);
-				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);
-				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
-				$DB->bind_vars(':id',$value['ID']);
-				$DB->exec();
-			}
-		}
-		$MO->close();
-	}
-
-	$DB->close();
-
-	$final = date("d-M-Y H:i:s");
-	logToFile(sprintf("[x] Completado: inicio:%s, final:%s", $inicio, $final));
-}
-
-
-function updateMachinesTogether($connection, $lockFileName){
-	// Obtengo la lista de las maquinas dadas de alta en el sistema
-	$inicio = date("d-M-Y H:i:s");
-	// logToFile(sprintf("Inicio, %s ",$inicio));
-	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
-	$DB = new MxApps();
-	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."'");
-	$DB->exec();
-	// echo($DB->rows);
-	$connections = array(
-		'mxoptix' => 'MxOptix',
-		'mxapps'  => 'MxApps',
-		'prodmx' => 'Prod',
-		'dare_mrc'=>'MRC'
-	);
-	file_put_contents($lockFileName, $DB->rows . PHP_EOL , FILE_APPEND);
-	if ($DB->rows > 0){
-		// la coneccion se hace a la tabla especifica en la que vamos a buscar
-		$MO = new $connections[$connection]();
-		logToFile($connections[$connection]);
-		// Ahora si ya puedo ir sacando los datos de cada una de las maquinas
-		// para sacar la informacion de la base de datp
-		foreach ($DB->results as $key => $value) {
-			$remaining = $DB->rows - 1;
-			file_put_contents($lockFileName, $remaining . ": " . $value['DB_ID'] . PHP_EOL , FILE_APPEND);
-			// genero el query para la busqueda de datos
-			$infoQuery = file_get_contents('sql/getInfo.sql');
-			$MO->setQuery($infoQuery);
-			$MO->bind_vars(':db_id',$value['DB_ID']);
+			$MO->bind_vars(':id',$value['ID']);
 			$MO->bind_vars(':facility',$value['DBMACHINE']);
 			$MO->bind_vars(':device',$value['DBDEVICE']);
 			$MO->bind_vars(':test_dt',$value['DBDATE']);

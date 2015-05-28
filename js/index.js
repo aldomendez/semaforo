@@ -1,6 +1,6 @@
 (function() {
   var Local, Machines, m, parseDate, r,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   $(document).ajaxStart(function() {
     return NProgress.start();
@@ -29,10 +29,10 @@
 
   Machines = (function() {
     function Machines() {
-      this.updateModelData = __bind(this.updateModelData, this);
-      this.justUpdateModel = __bind(this.justUpdateModel, this);
-      this.askToUpdateTable = __bind(this.askToUpdateTable, this);
-      this.getMachines = __bind(this.getMachines, this);
+      this.updateModelData = bind(this.updateModelData, this);
+      this.justUpdateModel = bind(this.justUpdateModel, this);
+      this.askToUpdateTable = bind(this.askToUpdateTable, this);
+      this.getMachines = bind(this.getMachines, this);
       this.queryCount = 0;
       this.loadingMachines = true;
       this.fuse = {
@@ -148,7 +148,7 @@
     };
 
     Machines.prototype.updateModelData = function(srvr) {
-      var mmnt, target, _ref;
+      var mmnt, ref, target;
       target = _.find(this.data, function(el) {
         return el.ID === srvr.ID;
       });
@@ -157,7 +157,7 @@
       target.humanized = mmnt.fromNow();
       target.CICLETIME = 1 * target.CICLETIME;
       target.diff = Math.round((this.now.diff(mmnt)) / 1000);
-      return _ref = (function() {
+      return ref = (function() {
         switch (false) {
           case !(target.diff <= target.CICLETIME):
             return ['green', 'working correctly'];
@@ -166,7 +166,7 @@
           default:
             return ['red', "" + (Math.round(target.diff / target.CICLETIME))];
         }
-      })(), target.status = _ref[0], target.desc = _ref[1], _ref;
+      })(), target.status = ref[0], target.desc = ref[1], ref;
     };
 
     Machines.prototype.refreshModel = function() {

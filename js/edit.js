@@ -230,8 +230,8 @@
   });
 
   r.on('backward', function(e) {
-    var actual, offset, _ref;
-    if ((e != null ? (_ref = e.original) != null ? _ref.preventDefault : void 0 : void 0) != null) {
+    var actual, offset, ref;
+    if ((e != null ? (ref = e.original) != null ? ref.preventDefault : void 0 : void 0) != null) {
       e.original.preventDefault();
     }
     actual = r.get('editing');
@@ -244,8 +244,8 @@
   });
 
   r.on('forward', function(e) {
-    var actual, offset, _ref;
-    if ((e != null ? (_ref = e.original) != null ? _ref.preventDefault : void 0 : void 0) != null) {
+    var actual, offset, ref;
+    if ((e != null ? (ref = e.original) != null ? ref.preventDefault : void 0 : void 0) != null) {
       e.original.preventDefault();
     }
     actual = r.get('editing');

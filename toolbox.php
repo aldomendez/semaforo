@@ -161,7 +161,7 @@ function updateMachinesTogether($connection, $lockFileName){
 				$DB->setQuery($updateQuery);
 				$DB->bind_vars(':test_dt',$value['TEST_DT']);
 				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
-				$DB->bind_vars(':id',$value['FACILITY']);
+				$DB->bind_vars(':id',$value['ID']);
 
 				echo $DB->query . PHP_EOL;
 				$DB->exec();
@@ -215,22 +215,9 @@ function updateMachines($connection, $lockFileName){
 			$MO->bind_vars(':test_dt',$value['DBDATE']);
 			$MO->bind_vars(':table',$value['DBTABLE']);
 			
-
-			// logToFile(sprintf("Before, %s, %s, %s,",date("d-M-Y H:i"),$value['NAME'],$value['DBTABLE']));
 			$MO->exec();
 
-			// Actualizo la informacion en la tabla nueva
-			// Solo si tengo datos nuevos
-
-			// TODO: buscar la manera de encontrar unicamente datos nuevos
-
 			if ( sizeof($MO->results) > 0 ) {
-				// if($connection == 'prodmx'){
-				// 	logToFile($MO->query);
-				// 	logToFile(print_r($MO->results,true));
-				// }
-				// genero el query para la busqueda de datos
-				// logToFile(date("d-M-Y H:i:s"));
 				$updateQuery = file_get_contents('sql/updateMachinesInSemaforo.sql');
 				$DB->setQuery($updateQuery);
 				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);

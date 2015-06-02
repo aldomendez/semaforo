@@ -22,7 +22,8 @@ class Machines
       options:
         keys:['AREA','PROCESS','NAME']
     @getMachines()
-    @askToUpdateTable()
+    # Now another service is updating the database
+    # @askToUpdateTable()
     @startFetching()
     @refreshModel()
     @grouped = {}
@@ -69,26 +70,6 @@ class Machines
         r.set 'machines.loadingMachines', false
         r.set 'size', @sizes[r.get('machines.grouped.length')]
         
-
-
-  askToUpdateTable:()=>
-    @now = moment()
-    coneccion = $.get "toolbox.php",
-      action: "updateTables"
-    .done (data) =>
-      if data.error then throw data.desc
-    .fail (err) =>
-      console.log err
-    .always (data) =>
-      r.set 'lastUpdate', data
-      console.log "'#{data}'"
-      r.set 'machines.loadingMachines', true
-      # @getMachines()
-      # r.set 'lastUpdate',"Last Update: #{moment(data.trim()).fromNow()}"
-      setTimeout ()=>
-        @askToUpdateTable()
-      ,20000
-
   setPopup:()->
     $(".label").popup({
       inline:false

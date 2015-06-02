@@ -31,7 +31,6 @@
     function Machines() {
       this.updateModelData = bind(this.updateModelData, this);
       this.justUpdateModel = bind(this.justUpdateModel, this);
-      this.askToUpdateTable = bind(this.askToUpdateTable, this);
       this.getMachines = bind(this.getMachines, this);
       this.queryCount = 0;
       this.loadingMachines = true;
@@ -41,7 +40,6 @@
         }
       };
       this.getMachines();
-      this.askToUpdateTable();
       this.startFetching();
       this.refreshModel();
       this.grouped = {};
@@ -98,33 +96,6 @@
             r.set('machines.loadingMachines', false);
             return r.set('size', _this.sizes[r.get('machines.grouped.length')]);
           }
-        };
-      })(this));
-    };
-
-    Machines.prototype.askToUpdateTable = function() {
-      var coneccion;
-      this.now = moment();
-      return coneccion = $.get("toolbox.php", {
-        action: "updateTables"
-      }).done((function(_this) {
-        return function(data) {
-          if (data.error) {
-            throw data.desc;
-          }
-        };
-      })(this)).fail((function(_this) {
-        return function(err) {
-          return console.log(err);
-        };
-      })(this)).always((function(_this) {
-        return function(data) {
-          r.set('lastUpdate', data);
-          console.log("'" + data + "'");
-          r.set('machines.loadingMachines', true);
-          return setTimeout(function() {
-            return _this.askToUpdateTable();
-          }, 20000);
         };
       })(this));
     };

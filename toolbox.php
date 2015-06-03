@@ -70,7 +70,7 @@ function updateTables()
 function update_every($segundos,$conexion)
 {
 	$inicio = date("d-M-Y H:i:s");
-	logToFile(sprintf("Llamado: , %s,",$inicio));
+	// echo(sprintf("Llamado: , %s,",$inicio));
 	// Obtenemos la ultima fecha de actualizacion
 	if (file_exists('lastUpdate.' . $conexion .'.txt')) {
 		$pastDateString = file_get_contents('lastUpdate.' . $conexion .'.txt');
@@ -87,6 +87,7 @@ function update_every($segundos,$conexion)
 	// logToFile(date("d-M-Y H:i"));
 
 	$lockFileName = $conexion . '.lock';
+		echo "Prueba de donde estoy ". ($actual - $past) . " " .PHP_EOL;
 
 	if (($actual - $past) > ($segundos * 2) &&!file_exists($lockFileName)) {
 		// Si ya pasaron 2 ciclos y no se ha ejecutado el query resetea el LOCK
@@ -119,7 +120,7 @@ function update_every($segundos,$conexion)
 function updateMachinesTogether($connection, $lockFileName){
 	// Obtengo la lista de las maquinas dadas de alta en el sistema
 	$inicio = date("d-M-Y H:i:s");
-	// logToFile(sprintf("Inicio, %s ",$inicio));
+	logToFile(sprintf("Inicio, %s ",$inicio));
 	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
 	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."'");

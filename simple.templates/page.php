@@ -8,25 +8,31 @@
 </head>
   <style>
   .ui.big.labels .label, .ui.big.label {
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+  }
+  .titleRed {
+    background-color: rgb(170,38,47);
+    font-size: 22px !important;
+  }
+  .titleBlack {
+    background-color: rgb(39,40,34);
+    color: white;
+    font-size: 22px !important;
   }
 </style>
 <body>
-  <div class="ui grid page" id="container">
-    <div class="row">
-      <div class="column">
-        <div class="ui menu">
-          <a href="http://cymautocert/osaapp/semaforo-dev/simple.php" class="item"><i class="home icon"></i>Avago</a>
-      
-        </div>
-      </div>
+  <div class="ui tall stacked padded grid segment" id="container">
+    <div class="ui grid">
+      <column class='twelve wide column titleRed'>&nbsp;</column>
+      <column class='four wide column titleBlack'>Go Beyond The Standards</column>
     </div>
+    <div class="ui hidden divider"></div>
     <div class="row">
       <div class="column">
         {% set cardsNum = bu|length  %}
         <div class="ui {{size[bu|length]}} cards">
           {% for manager, areas in bu %}
-          <div class="card">
+          <!-- <div class="card"> -->
             <div class="content">
               <h1 class="header"><a href="simple.php/{{manager}}"><small>Equipos de </small>{{manager}}</a></h1>
               <div class="ui list">
@@ -56,7 +62,7 @@
                 {% endfor %}
               </div>
             </div>
-          </div>
+          <!-- </div> -->
           {% endfor %}
         </div>
       </div>

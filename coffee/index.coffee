@@ -1,18 +1,10 @@
+###
+No quiero esto por que resulta un poco incomodo para mi estar viendo esto todo el rato.
 $(document).ajaxStart ()->
   NProgress.start()
 $(document).ajaxStop ()->
   NProgress.done()
-
-
-class Local
-  constructor: () ->
-    if localStorege? then throw "No se cuenta con localStorege"
-  set:()->
-
-  get:()->
-
-  remove:()->
-  
+###
 
 class Machines
   constructor: () ->
@@ -26,10 +18,10 @@ class Machines
     # @askToUpdateTable()
     @startFetching()
     @refreshModel()
-    @grouped = {}
-    setTimeout ()=>
+    @grouped={}
+    ###setTimeout ()=>
       location.href = location.href
-    ,450000 # 7.5 min
+    ,450000 # 7.5 min###
     @sizes=['one','one','two','three','four','five','seven','eight','nine']
   getMachines: ()=>
     @now = moment()
@@ -43,19 +35,20 @@ class Machines
       # Agregamos datos que se muestran al usuario pero que no vienen desde la base de datos
       data.map @updateModelData
       
-      # Aunque no funciona, generamos el filtro para las busquedas
-      # Lo voy a dejar de lado hasta que sepa como es que lo voy a usar
-      # @fuse.search = new Fuse @data, @fuse.options
 
-      # Este bloque genera 3 niveles de agrupamiento por BU, area y por proceso
-      # @grouped = 
-      @grouped = _.map _.groupBy(@data, 'BU'), (el, key1)->
-        group = _.groupBy el, "AREA"
-        group = _.map group,(el,key2)->
-          _g = _.groupBy el, 'PROCESS'
-          return {key:key2, data:_g}
-        return {key:key1, data:group}
-      # console.table data
+
+      @data.map (target,i)=>
+        if !@grouped[target.BU]? then @grouped[target.BU] = {}
+        if !@grouped[target.BU][target.AREA]? then @grouped[target.BU][target.AREA] = {}
+        if !@grouped[target.BU][target.AREA][target.PROCESS]? then @grouped[target.BU][target.AREA][target.PROCESS] = []
+        element = _.find @grouped[target.BU][target.AREA][target.PROCESS], (el)-> return el.ID is target.ID
+        if !element?
+          @grouped[target.BU][target.AREA][target.PROCESS].push target
+        else
+          element = target
+      # console.log @grouped
+
+
     .fail (err) =>
       console.log 'todo ok'
     .always (data) =>

@@ -22,17 +22,17 @@
     {{#each machines.grouped :groupNum}}
       <div class="{{color[key]}} card">
         <div class="content">
-          <div class="header"><small>Equipos de </small>{{key}}</div>
+          <div class="header"><small>Equipos de </small>{{groupNum}}</div>
           <div class="ui list">
-          {{#data :i}}
+          {{#machines.grouped[groupNum] :i}}
             <div class="item">
-              <div class="content"><b>{{this.key}}</b></div>
+              <div class="content"><b>{{i}}</b></div>
               <div class="description">
                 
 <div class="ui list">
-            {{#this.data :i}}
+            {{#machines.grouped[groupNum][i] :j}}
               <div class="item">
-                <div class="content"><b>{{i}}</b></div>
+                <div class="content"><b>{{j}}</b></div>
                  <div class="description">
                   {{#each this}}
                   

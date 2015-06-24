@@ -12,7 +12,8 @@ SELECT id,
        to_char(lasttick, 'dd-mon-yyyy hh24:mi') lasttick,
        to_char(lastrun, 'dd-mon-yyyy hh24:mi') lastrun,
        cicletime,
-       bu
+       bu,
+       sysdate
 FROM semaforo a
 WHERE lasttick = (SELECT Max(lasttick) FROM semaforo 
   WHERE db_id=a.db_id)

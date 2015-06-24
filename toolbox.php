@@ -63,14 +63,14 @@ function updateTables()
 {
 	update_every(300,'mxoptix');
 	update_every(300,'mxapps');
-	update_every(600,'prodmx'); //Original 600
+	update_every(600,'prodmx'); //10 Min
 
 }
 
 function update_every($segundos,$conexion)
 {
 	$inicio = date("d-M-Y H:i:s");
-	// echo(sprintf("Llamado: , %s,",$inicio));
+	logToFile(sprintf("Llamado: , %s,",$inicio));
 	// Obtenemos la ultima fecha de actualizacion
 	if (file_exists('lastUpdate.' . $conexion .'.txt')) {
 		$pastDateString = file_get_contents('lastUpdate.' . $conexion .'.txt');
@@ -85,8 +85,8 @@ function update_every($segundos,$conexion)
 
 	$actual = strtotime('now');
 	// logToFile(date("d-M-Y H:i"));
+	
 	$lockFileName = $conexion . '.lock';
-		echo "Prueba de donde estoy ". ($actual - $past) . " " .PHP_EOL;
 
 	if (($actual - $past) > $segundos && !file_exists($lockFileName)) {
 		echo "Ejecutando: ". $conexion . " a los " . ($actual - $past) . "s " . PHP_EOL;
@@ -98,7 +98,11 @@ function update_every($segundos,$conexion)
 		file_put_contents('lastUpdate.' . $conexion .'.txt', $date);
 		file_put_contents($lockFileName, '1');
 		// En esta parte es donde se hace la actualizacion en si
-		updateMachinesTogether($conexion,$lockFileName);
+		if($conexion == 'prodmx'){
+			updateMachines($conexion,$lockFileName);
+		}else {
+			updateMachinesTogether($conexion,$lockFileName);
+		}
 		unlink($lockFileName);
 	}
 	// Resolvemos para el navegador
@@ -109,7 +113,7 @@ function update_every($segundos,$conexion)
 function updateMachinesTogether($connection, $lockFileName){
 	// Obtengo la lista de las maquinas dadas de alta en el sistema
 	$inicio = date("d-M-Y H:i:s");
-	logToFile(sprintf("Inicio, %s ",$inicio));
+	// logToFile(sprintf("Inicio, %s ",$inicio));
 	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
 	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."'");
@@ -131,11 +135,11 @@ function updateMachinesTogether($connection, $lockFileName){
 		echo "StartTime:" . date("d-M-Y H:i");
 
 		$subQuerys = array();
+		$infoQuery = file_get_contents('sql/getInfo.sql');
 		foreach ($DB->results as $key => $value) {
 			$remaining = $DB->rows - 1;
 			file_put_contents($lockFileName, $remaining . ": " . $value['DB_ID'] . PHP_EOL , FILE_APPEND);
 			// genero el query para la busqueda de datos
-			$infoQuery = file_get_contents('sql/getInfo.sql');
 			$MO->setQuery($infoQuery);
 			$MO->bind_vars(':db_id',$value['DB_ID']);
 			$MO->bind_vars(':id',$value['ID']);

@@ -61,7 +61,7 @@ class Machines
         r.update()
         @setPopup()
         r.set 'machines.loadingMachines', false
-        r.set 'size', @sizes[r.get('machines.grouped.length')]
+        r.set 'size', @sizes[_.size(r.get('machines.grouped'))]
         
   setPopup:()->
     $(".label").popup({

@@ -82,7 +82,7 @@ $(document).ajaxStop ()->
             r.update();
             _this.setPopup();
             r.set('machines.loadingMachines', false);
-            return r.set('size', _this.sizes[r.get('machines.grouped.length')]);
+            return r.set('size', _this.sizes[_.size(r.get('machines.grouped'))]);
           }
         };
       })(this));

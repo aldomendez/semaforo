@@ -1,31 +1,15 @@
+
+/*
+No quiero esto por que resulta un poco incomodo para mi estar viendo esto todo el rato.
+$(document).ajaxStart ()->
+  NProgress.start()
+$(document).ajaxStop ()->
+  NProgress.done()
+ */
+
 (function() {
-  var Local, Machines, m, parseDate, r,
+  var Machines, m, parseDate, r,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-  $(document).ajaxStart(function() {
-    return NProgress.start();
-  });
-
-  $(document).ajaxStop(function() {
-    return NProgress.done();
-  });
-
-  Local = (function() {
-    function Local() {
-      if (typeof localStorege !== "undefined" && localStorege !== null) {
-        throw "No se cuenta con localStorege";
-      }
-    }
-
-    Local.prototype.set = function() {};
-
-    Local.prototype.get = function() {};
-
-    Local.prototype.remove = function() {};
-
-    return Local;
-
-  })();
 
   Machines = (function() {
     function Machines() {
@@ -43,11 +27,11 @@
       this.startFetching();
       this.refreshModel();
       this.grouped = {};
-      setTimeout((function(_this) {
-        return function() {
-          return location.href = location.href;
-        };
-      })(this), 450000);
+
+      /*setTimeout ()=>
+        location.href = location.href
+      ,450000 # 7.5 min
+       */
       this.sizes = ['one', 'one', 'two', 'three', 'four', 'five', 'seven', 'eight', 'nine'];
     }
 
@@ -63,21 +47,25 @@
             _this.data = data;
           }
           data.map(_this.updateModelData);
-          return _this.grouped = _.map(_.groupBy(_this.data, 'BU'), function(el, key1) {
-            var group;
-            group = _.groupBy(el, "AREA");
-            group = _.map(group, function(el, key2) {
-              var _g;
-              _g = _.groupBy(el, 'PROCESS');
-              return {
-                key: key2,
-                data: _g
-              };
+          return _this.data.map(function(target, i) {
+            var element;
+            if (_this.grouped[target.BU] == null) {
+              _this.grouped[target.BU] = {};
+            }
+            if (_this.grouped[target.BU][target.AREA] == null) {
+              _this.grouped[target.BU][target.AREA] = {};
+            }
+            if (_this.grouped[target.BU][target.AREA][target.PROCESS] == null) {
+              _this.grouped[target.BU][target.AREA][target.PROCESS] = [];
+            }
+            element = _.find(_this.grouped[target.BU][target.AREA][target.PROCESS], function(el) {
+              return el.ID === target.ID;
             });
-            return {
-              key: key1,
-              data: group
-            };
+            if (element == null) {
+              return _this.grouped[target.BU][target.AREA][target.PROCESS].push(target);
+            } else {
+              return element = target;
+            }
           });
         };
       })(this)).fail((function(_this) {
@@ -94,7 +82,7 @@
             r.update();
             _this.setPopup();
             r.set('machines.loadingMachines', false);
-            return r.set('size', _this.sizes[r.get('machines.grouped.length')]);
+            return r.set('size', _this.sizes[_.size(r.get('machines.grouped'))]);
           }
         };
       })(this));

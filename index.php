@@ -13,7 +13,7 @@
     </style>
   </head>
   <body>
-    <app></app>
+    <app :machines="machines"></app>
     <script src="js/indexMain.bundle.js"></script>
   </body>
 </html>

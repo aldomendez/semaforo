@@ -58,6 +58,16 @@ gulp.task('watch', function () {
         livereload()
      })
   });  
+  gulp.watch(['coffee/*.vue'], function (event) {
+  }).on('change', function (event) {
+     // compileAndPush(event);
+     gutil.log('starting webpack');
+     devCompiler.run(function (err, stats) {
+        if(err) throw new gutil.PluginError("webpack:", err)
+        gutil.log("[webpack:vue]:", stats.toString({colors:true}));
+        livereload()
+     })
+  });  
   gulp.watch(['*.php','simple.templates/*.php'], function (event) {
   }).on('change', function (event) {
      copyAndReload(event);

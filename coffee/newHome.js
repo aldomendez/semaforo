@@ -1,4 +1,13 @@
+import Vue from 'vue'
 
+Vue.use(require('vue-resource'))
+
+
+
+
+
+
+/*
 class Machines
   constructor: () ->
     @queryCount = 0
@@ -143,3 +152,4 @@ r.observe 'filter', (query)->
 
 
 window.r = r
+*/

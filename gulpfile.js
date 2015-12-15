@@ -48,13 +48,14 @@ gulp.task('watch', function () {
     me gustaria que pudiera decirle cueles son las carpetas que 
     tiene que omitir.
   */
-  gulp.watch(['coffee/newHome.coffee'], function (event) {
+  gulp.watch(['coffee/newHome.js'], function (event) {
   }).on('change', function (event) {
      // compileAndPush(event);
      gutil.log('starting webpack');
      devCompiler.run(function (err, stats) {
-       if(err) throw new gutil.PluginError("webpack:", err)
+        if(err) throw new gutil.PluginError("webpack:", err)
         gutil.log("[webpack]:", stats.toString({colors:true}));
+        livereload()
      })
   });  
   gulp.watch(['*.php','simple.templates/*.php'], function (event) {

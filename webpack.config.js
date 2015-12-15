@@ -2,7 +2,7 @@ var webpack = require('webpack')
 
 module.exports = {
   entry: {
-    indexMain:'./coffee/newHome.coffee'
+    indexMain:'./coffee/newHome.js'
   },
   output: {
     path: './js',

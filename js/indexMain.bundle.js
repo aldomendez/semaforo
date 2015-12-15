@@ -46,19 +46,19 @@
 
 	'use strict';
 
-	var _vue = __webpack_require__(1);
+	var _vue = __webpack_require__(2);
 
 	var _vue2 = _interopRequireDefault(_vue);
 
-	var _underscore = __webpack_require__(3);
+	var _underscore = __webpack_require__(4);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _app = __webpack_require__(4);
+	var _appV = __webpack_require__(5);
 
-	var _app2 = _interopRequireDefault(_app);
+	var _appV2 = _interopRequireDefault(_appV);
 
-	var _tags = __webpack_require__(6);
+	var _tags = __webpack_require__(7);
 
 	var _tags2 = _interopRequireDefault(_tags);
 
@@ -66,40 +66,48 @@
 
 	// import moment from 'moment'
 
-	_vue2.default.use(__webpack_require__(10));
+	_vue2.default.use(__webpack_require__(11));
 	// import fuse   from 'fuse.js'
 
 	_vue2.default.filter('count', function (list) {
-	  return _underscore2.default.size(list);
+		return _underscore2.default.size(list);
 	});
 
 	_vue2.default.filter('numToString', function (number) {
-	  return ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'][number];
+		// regresa la version en texto de un numero
+		return ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'][number];
 	});
 
 	_vue2.default.filter('groupBy', function (list, iteratee) {
-	  return _underscore2.default.groupBy(list, iteratee);
+		return _underscore2.default.groupBy(list, iteratee);
+	});
+
+	_vue2.default.filter('replace', function (val, pattern) {
+		return pattern.replace(/\$1/, val);
 	});
 
 	window.v = new _vue2.default({
-	  el: 'body',
-	  data: {
-	    machines: null
-	  },
-	  components: {
-	    app: _app2.default,
-	    tag: _tags2.default
-	  },
-	  ready: function vueReady() {
-	    this.$http.get("./filecache.txt", function (data) {
-	      console.log(data);
-	      this.$set('machines', _underscore2.default.filter(data, { AREA: 'Engines' }));
-	    });
-	  }
+		el: 'body',
+		data: {
+			machines: null
+		},
+		components: {
+			app: _appV2.default,
+			tag: _tags2.default
+		},
+		ready: function vueReady() {
+			this.$http.get("./filecache.txt", function (data) {
+				console.log(data);
+				// this.$set('machines', _.filter(data,{AREA:'LR4-Shim'}))
+				// this.$set('machines', _.filter(data,{AREA:'4x25'}))
+				this.$set('machines', data);
+			});
+		}
 	});
 
 /***/ },
-/* 1 */
+/* 1 */,
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/*!
@@ -9499,10 +9507,10 @@
 	}
 
 	module.exports = Vue;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -9599,7 +9607,7 @@
 
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscore.js 1.8.3
@@ -11153,18 +11161,18 @@
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(5)
+	module.exports = __webpack_require__(6)
 
 	if (module.exports.__esModule) module.exports = module.exports.default
-	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(9)
+	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(10)
 	if (false) {(function () {  module.hot.accept()
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
 	  if (!hotAPI.compatible) return
-	  var id = "C:\\xampp\\htdocs\\semaforo\\coffee\\app.vue"
+	  var id = "C:\\xampp\\htdocs\\semaforo\\coffee\\app.v2.vue"
 	  if (!module.hot.data) {
 	    hotAPI.createRecord(id, module.exports)
 	  } else {
@@ -11173,7 +11181,7 @@
 	})()}
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11182,7 +11190,7 @@
 	  value: true
 	});
 
-	var _tags = __webpack_require__(6);
+	var _tags = __webpack_require__(7);
 
 	var _tags2 = _interopRequireDefault(_tags);
 
@@ -11204,31 +11212,28 @@
 	//     <div class="ui menu"><a href="#" class="item"><i class="home icon"></i>home</a></div>
 	//   </div>
 	// </div>
-	//   <div class="row">
-	//     <div class="column">
-	//       <div class="ui {{machines | groupBy 'BU' | count | numToString}} cards">
-	//         <div class="color card" v-for="(index, elements) in machines| groupBy 'BU'">
-	//           <div class="column">
-	//             <div class="header"><small>Equipos de</small>{{index}}</div>
+	//   <div class="ui equal width grid">
+	//     <div class="column" v-for="(index, elements) in machines| groupBy 'BU'">
+	//       <div class="ui reised segment">
+
+	//       <h2 class="ui ribbon label orange"><small>Equipos de </small>{{index}}</h2>
+	//       <div class="ui list">
+	//         <div class="item" v-for="(index, areas) in elements |groupBy 'AREA'">
+	//           <div class="content"><b>{{index}}</b></div>
+	//           <div class="description">
 	//             <div class="ui list">
-	//               <div class="item" v-for="(index, areas) in elements |groupBy 'AREA'">
+	//               <div class="item" v-for="(index, process) in areas | groupBy 'PROCESS'">
 	//                 <div class="content"><b>{{index}}</b></div>
 	//                 <div class="description">
-	//                   <div class="ui list">
-	//                     <div class="item" v-for="(index, process) in areas | groupBy 'PROCESS'">
-	//                       <div class="content"><b>{{index}}</b></div>
-	//                       <div class="description">
-	//                         <template v-for="machine in process">
-	//                           <tag :machine="machine"></tag>
-	//                         </template>
-	//                       </div>
-	//                     </div>
-	//                   </div>
+	//                   <template v-for="machine in process">
+	//                     <tag :machine="machine"></tag>
+	//                   </template>
 	//                 </div>
 	//               </div>
 	//             </div>
 	//           </div>
 	//         </div>
+	//       </div>
 	//       </div>
 	//     </div>
 	//   </div>
@@ -11237,13 +11242,13 @@
 	// <script>
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(7)
+	module.exports = __webpack_require__(8)
 
 	if (module.exports.__esModule) module.exports = module.exports.default
-	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(8)
+	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(9)
 	if (false) {(function () {  module.hot.accept()
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
@@ -11257,7 +11262,7 @@
 	})()}
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -11269,9 +11274,11 @@
 
 	// 	<div class="label horizontal tiny ui blue">
 
-	// 		<i class="icon warning"></i>
-
 	// 		{{machine.NAME}}
+
+	// 		<!-- <i class="icon warning"></i> -->
+
+	// 		<div class="detail">5</div>
 
 	// 	</div>
 
@@ -11284,19 +11291,19 @@
 	// </script>
 
 /***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"label horizontal tiny ui blue\">\r\n\t\t<i class=\"icon warning\"></i>\r\n\t\t{{machine.NAME}}\r\n\t</div>";
-
-/***/ },
 /* 9 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"ui grid\">\n  <div class=\"column\">\n    <div class=\"ui menu\"><a href=\"#\" class=\"item\"><i class=\"home icon\"></i>home</a></div>\n  </div>\n</div>\n  <div class=\"row\">\n    <div class=\"column\">\n      <div class=\"ui {{machines | groupBy 'BU' | count | numToString}} cards\">\n        <div class=\"color card\" v-for=\"(index, elements) in machines| groupBy 'BU'\">\n          <div class=\"column\">\n            <div class=\"header\"><small>Equipos de</small>{{index}}</div>\n            <div class=\"ui list\">\n              <div class=\"item\" v-for=\"(index, areas) in elements |groupBy 'AREA'\">\n                <div class=\"content\"><b>{{index}}</b></div>\n                <div class=\"description\">\n                  <div class=\"ui list\">\n                    <div class=\"item\" v-for=\"(index, process) in areas | groupBy 'PROCESS'\">\n                      <div class=\"content\"><b>{{index}}</b></div>\n                      <div class=\"description\">\n                        <template v-for=\"machine in process\">\n                          <tag :machine=\"machine\"></tag>\n                        </template>\n                      </div>\n                    </div>\n                  </div>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>";
+	module.exports = "<div class=\"label horizontal tiny ui blue\">\r\n\t\t{{machine.NAME}}\r\n\t\t<!-- <i class=\"icon warning\"></i> -->\r\n\t\t<div class=\"detail\">5</div>\r\n\t</div>";
 
 /***/ },
 /* 10 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"ui grid\">\n  <div class=\"column\">\n    <div class=\"ui menu\"><a href=\"#\" class=\"item\"><i class=\"home icon\"></i>home</a></div>\n  </div>\n</div>\n  <div class=\"ui equal width grid\">\n    <div class=\"column\" v-for=\"(index, elements) in machines| groupBy 'BU'\">\n      <div class=\"ui reised segment\">\n\n      <h2 class=\"ui ribbon label orange\"><small>Equipos de </small>{{index}}</h2>\n      <div class=\"ui list\">\n        <div class=\"item\" v-for=\"(index, areas) in elements |groupBy 'AREA'\">\n          <div class=\"content\"><b>{{index}}</b></div>\n          <div class=\"description\">\n            <div class=\"ui list\">\n              <div class=\"item\" v-for=\"(index, process) in areas | groupBy 'PROCESS'\">\n                <div class=\"content\"><b>{{index}}</b></div>\n                <div class=\"description\">\n                  <template v-for=\"machine in process\">\n                    <tag :machine=\"machine\"></tag>\n                  </template>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n      </div>\n    </div>\n  </div>";
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11305,11 +11312,11 @@
 
 	function install(Vue) {
 
-	    var _ = __webpack_require__(11)(Vue);
+	    var _ = __webpack_require__(12)(Vue);
 
-	    Vue.url = __webpack_require__(12)(_);
-	    Vue.http = __webpack_require__(13)(_);
-	    Vue.resource = __webpack_require__(17)(_);
+	    Vue.url = __webpack_require__(13)(_);
+	    Vue.http = __webpack_require__(14)(_);
+	    Vue.resource = __webpack_require__(18)(_);
 
 	    Object.defineProperties(Vue.prototype, {
 
@@ -11341,7 +11348,7 @@
 	module.exports = install;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/**
@@ -11427,7 +11434,7 @@
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	/**
@@ -11590,16 +11597,16 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Service for sending network requests.
 	 */
 
-	var xhr = __webpack_require__(14);
-	var jsonp = __webpack_require__(16);
-	var Promise = __webpack_require__(15);
+	var xhr = __webpack_require__(15);
+	var jsonp = __webpack_require__(17);
+	var Promise = __webpack_require__(16);
 
 	module.exports = function (_) {
 
@@ -11756,14 +11763,14 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * XMLHttp request.
 	 */
 
-	var Promise = __webpack_require__(15);
+	var Promise = __webpack_require__(16);
 	var XDomain = window.XDomainRequest;
 
 	module.exports = function (_, options) {
@@ -11813,7 +11820,7 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	/**
@@ -12029,14 +12036,14 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * JSONP request.
 	 */
 
-	var Promise = __webpack_require__(15);
+	var Promise = __webpack_require__(16);
 
 	module.exports = function (_, options) {
 
@@ -12085,7 +12092,7 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	/**

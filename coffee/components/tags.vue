@@ -1,7 +1,8 @@
 <template>
 	<div class="label horizontal tiny ui blue">
-		<i class="icon warning"></i>
 		{{machine.NAME}}
+		<!-- <i class="icon warning"></i> -->
+		<div class="detail">5</div>
 	</div>
 </template>
 

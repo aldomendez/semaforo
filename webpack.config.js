@@ -42,8 +42,8 @@ module.exports = {
     plugins: ['transform-runtime']
   },
   plugins:[
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /es|us/),
-    new webpack.optimize.UglifyJsPlugin({minimize: true})
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /es|us/)/*,
+    new webpack.optimize.UglifyJsPlugin({minimize: true})*/
   ]
 }
 /*

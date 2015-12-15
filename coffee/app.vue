@@ -7,18 +7,20 @@
   <div class="row">
     <div class="column">
       <div class="ui {{machines | groupBy 'BU' | count | numToString}} cards">
-        <div class="color card" v-for="elements in machines| groupBy 'BU'">
+        <div class="color card" v-for="(index, elements) in machines| groupBy 'BU'">
           <div class="column">
-            <div class="header"><small>Equipos de</small>{{elements[0].BU}}</div>
+            <div class="header"><small>Equipos de</small>{{index}}</div>
             <div class="ui list">
-              <div class="item" v-for="areas in elements |groupBy 'AREA'">
-                <div class="content"><b>{{areas[0].AREA}}</b></div>
+              <div class="item" v-for="(index, areas) in elements |groupBy 'AREA'">
+                <div class="content"><b>{{index}}</b></div>
                 <div class="description">
                   <div class="ui list">
-                    <div class="item" v-for="process in areas | groupBy 'PROCESS'">
-                      <div class="content"><b>{{process[0].PROCESS}}</b></div>
+                    <div class="item" v-for="(index, process) in areas | groupBy 'PROCESS'">
+                      <div class="content"><b>{{index}}</b></div>
                       <div class="description">
-                        <div class="label horizontal tiny ui status" v-for="machine in process">{{machine.NAME}}</div>
+                        <template v-for="machine in process">
+                          <tag :machine="machine"></tag>
+                        </template>
                       </div>
                     </div>
                   </div>
@@ -34,11 +36,14 @@
 
 
 <script>
-
+import Tags    from './components/tags.vue'
 export default {
   props:['machines'],
   ready:function appVueReady () {
     console.log(this.machines)
   },
-  components: {}
+  components: {
+    tag:Tags
+  }
 }
+</script>

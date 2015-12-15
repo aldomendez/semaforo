@@ -3,6 +3,7 @@ import Vue    from 'vue'
 import _      from 'underscore'
 // import moment from 'moment'
 import App    from './app.vue'
+import Tags    from './components/tags.vue'
 
 Vue.use(require('vue-resource'))
 
@@ -24,12 +25,13 @@ window.v = new Vue({
   	machines : null
   },
   components: {
-    app: App
+    app: App,
+    tag: Tags
   },
   ready: function vueReady () {
 	this.$http.get("./filecache.txt", function(data){
 		console.log(data)
-		this.$set('machines', data)
+		this.$set('machines', _.filter(data,{AREA:'Engines'}))
 	});
   }
 })

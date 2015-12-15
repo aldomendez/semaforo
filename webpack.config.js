@@ -40,7 +40,10 @@ module.exports = {
   babel: {
     presets: ['es2015', 'stage-0'],
     plugins: ['transform-runtime']
-  }
+  },
+  plugins:[
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /es|us/)
+  ]
 }
 /*
 if (process.env.NODE_ENV === 'production') {

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>Semaforo</title>
-  <link rel="stylesheet" type="text/css"  href="../jsLib/SemanticUi/1.11.6/semantic.css">
+  <link rel="stylesheet" type="text/css"  href="../jsLib/SemanticUi/2.1.6/semantic.css">
   <link rel="stylesheet" type="text/css"  href="../jsLib/nprogress/1.1.6/nprogress.css">
 </head>
   <style>
@@ -23,6 +23,6 @@
   <script src="../jsLib/ractivejs/0.7.1/ractive.js"></script>
   <script src="../jsLib/moment/2.9.0/moment.min.js"></script>
   <script src="../jsLib/fuse.js/fuse.min.js"></script>
-  <script type="text/javascript" src="js/index.js"></script>
+  <script type="text/javascript" src="js/indexMain.bundle.js"></script>
 </body>
 </html>

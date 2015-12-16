@@ -8,7 +8,7 @@
     <div class="column" v-for="(index, elements) in machines| groupBy 'BU'">
       <div class="ui reised segment">
 
-      <h2 class="ui ribbon label orange"><small>Equipos de </small>{{index}}</h2>
+      <h2 class="ui ribbon label"><small>Equipos de </small>{{index}}</h2>
       <div class="ui list">
         <div class="item" v-for="(index, areas) in elements |groupBy 'AREA'">
           <div class="content"><b>{{index}}</b></div>
@@ -37,7 +37,7 @@ import Tags from './components/tags.vue'
 export default {
   props:['machines'],
   ready:function appVueReady () {
-    console.log(this.machines)
+    // console.log(this.machines)
   },
   components: {
     tag:Tags

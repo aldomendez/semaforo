@@ -24,6 +24,10 @@ Vue.filter('replace', function (val, pattern){
 	return pattern.replace(/\$1/, val);
 })
 
+Vue.filter('toMinutes',function (val) {
+  return Math.round(val/60)
+})
+
 window.v = new Vue({
   el: 'body',
   data:{
@@ -34,8 +38,8 @@ window.v = new Vue({
     tag: Tags
   },
   ready: function vueReady () {
-	this.$http.get("./filecache.txt", function(data){
-		console.log(data)
+	this.$http.get("./machines.php", function(data){
+		// console.log(data)
 		// this.$set('machines', _.filter(data,{AREA:'LR4-Shim'}))
 		// this.$set('machines', _.filter(data,{AREA:'4x25'}))
 		this.$set('machines', data)

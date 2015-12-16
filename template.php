@@ -42,7 +42,7 @@
                     <div class="detail"><i class="icon warning sign"></i>{{desc}}</div>
                     {{/if}}
                   </div>
-                  <div class="ui special popup">
+                  <div class="ui special popup top center">
                     <div class="header">{{NAME}}</div>
                     last seen: {{humanized}}
                     <br>

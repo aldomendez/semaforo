@@ -24,7 +24,7 @@ function serverPath (path) {
 copyAndReload = function copyAndReload (event) {
   console.log('Sended to: ',serverPath(event.path));
   gulp.src(event.path)
-       // .pipe(gulp.dest(DEST + serverPath(event.path)))
+       .pipe(gulp.dest(DEST + serverPath(event.path)))
        .pipe(wait(1200))
        .pipe(livereload());
 }
@@ -36,7 +36,7 @@ compileAndPush = function compileAndPush (event) {
   gulp.src(path)
     .pipe(coffee()).on('error',gutil.log)
     .pipe(gulp.dest('./js'))
-    // .pipe(gulp.dest(DEST + serverPath(event.path)))
+    .pipe(gulp.dest(DEST + serverPath(event.path)))
     .pipe(wait(1200))
     .pipe(livereload());
 }

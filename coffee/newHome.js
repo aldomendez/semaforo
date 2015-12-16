@@ -2,7 +2,6 @@ import Vue    from 'vue'
 // import fuse   from 'fuse.js'
 import _      from 'underscore'
 import App    from './app.v2.vue'
-import Tags   from './components/tags.vue'
 
 
 Vue.use(require('vue-resource'))
@@ -34,15 +33,22 @@ window.v = new Vue({
   	machines : null
   },
   components: {
-    app: App,
-    tag: Tags
+    app: App
+  },
+  methods:{
+    updateFromDatabase:function (){
+      this.$http.get("./machines.php", function(data){
+        // console.log(data)
+        // this.$set('machines', _.filter(data,{AREA:'LR4-Shim'}))
+        // this.$set('machines', _.filter(data,{AREA:'4x25'}))
+        this.$set('machines', data)
+      });
+    }
   },
   ready: function vueReady () {
-	this.$http.get("./machines.php", function(data){
-		// console.log(data)
-		// this.$set('machines', _.filter(data,{AREA:'LR4-Shim'}))
-		// this.$set('machines', _.filter(data,{AREA:'4x25'}))
-		this.$set('machines', data)
-	});
+    this.updateFromDatabase()
+    setInterval(()=>{
+      this.updateFromDatabase()
+    },60000)
   }
 })

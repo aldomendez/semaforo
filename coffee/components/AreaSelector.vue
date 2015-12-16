@@ -1,6 +1,6 @@
 <template>
 <div class="ui simple dropdown item">
-  dropdown
+  BU
   <i class="dropdown icon"></i>
   <div class="menu">
     <div class="item" v-for="(name, element) in machines | groupBy 'BU'">{{name}}</div>

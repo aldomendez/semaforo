@@ -46,26 +46,23 @@
 
 	'use strict';
 
-	var _vue = __webpack_require__(2);
+	var _vue = __webpack_require__(1);
 
 	var _vue2 = _interopRequireDefault(_vue);
 
-	var _underscore = __webpack_require__(4);
+	var _underscore = __webpack_require__(3);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _appV = __webpack_require__(5);
+	var _appV = __webpack_require__(4);
 
 	var _appV2 = _interopRequireDefault(_appV);
 
-	var _tags = __webpack_require__(7);
-
-	var _tags2 = _interopRequireDefault(_tags);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	_vue2.default.use(__webpack_require__(18));
 	// import fuse   from 'fuse.js'
+
+	_vue2.default.use(__webpack_require__(17));
 
 	_vue2.default.filter('count', function (list) {
 	  return _underscore2.default.size(list);
@@ -94,22 +91,30 @@
 	    machines: null
 	  },
 	  components: {
-	    app: _appV2.default,
-	    tag: _tags2.default
+	    app: _appV2.default
+	  },
+	  methods: {
+	    updateFromDatabase: function updateFromDatabase() {
+	      this.$http.get("./machines.php", function (data) {
+	        // console.log(data)
+	        // this.$set('machines', _.filter(data,{AREA:'LR4-Shim'}))
+	        // this.$set('machines', _.filter(data,{AREA:'4x25'}))
+	        this.$set('machines', data);
+	      });
+	    }
 	  },
 	  ready: function vueReady() {
-	    this.$http.get("./machines.php", function (data) {
-	      // console.log(data)
-	      // this.$set('machines', _.filter(data,{AREA:'LR4-Shim'}))
-	      // this.$set('machines', _.filter(data,{AREA:'4x25'}))
-	      this.$set('machines', data);
-	    });
+	    var _this = this;
+
+	    this.updateFromDatabase();
+	    setInterval(function () {
+	      _this.updateFromDatabase();
+	    }, 60000);
 	  }
 	});
 
 /***/ },
-/* 1 */,
-/* 2 */
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/*!
@@ -9509,10 +9514,10 @@
 	}
 
 	module.exports = Vue;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -9609,7 +9614,7 @@
 
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscore.js 1.8.3
@@ -11163,13 +11168,13 @@
 
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(6)
+	module.exports = __webpack_require__(5)
 
 	if (module.exports.__esModule) module.exports = module.exports.default
-	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(17)
+	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(16)
 	if (false) {(function () {  module.hot.accept()
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
@@ -11183,7 +11188,7 @@
 	})()}
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11192,11 +11197,11 @@
 	  value: true
 	});
 
-	var _tags = __webpack_require__(7);
+	var _tags = __webpack_require__(6);
 
 	var _tags2 = _interopRequireDefault(_tags);
 
-	var _AreaSelector = __webpack_require__(14);
+	var _AreaSelector = __webpack_require__(13);
 
 	var _AreaSelector2 = _interopRequireDefault(_AreaSelector);
 
@@ -11288,13 +11293,13 @@
 	// </script>
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(8)
+	module.exports = __webpack_require__(7)
 
 	if (module.exports.__esModule) module.exports = module.exports.default
-	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(13)
+	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(12)
 	if (false) {(function () {  module.hot.accept()
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
@@ -11308,7 +11313,7 @@
 	})()}
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11317,7 +11322,7 @@
 	  value: true
 	});
 
-	var _moment = __webpack_require__(9);
+	var _moment = __webpack_require__(8);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
@@ -11383,7 +11388,7 @@
 	// <script>
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
@@ -11654,7 +11659,7 @@
 	                module && module.exports) {
 	            try {
 	                oldLocale = globalLocale._abbr;
-	                __webpack_require__(11)("./" + name);
+	                __webpack_require__(10)("./" + name);
 	                // because defineLocale currently also sets the global locale, we
 	                // want to undo that for lazy loaded locales
 	                locale_locales__getSetGlobalLocale(oldLocale);
@@ -14581,10 +14586,10 @@
 	    return _moment;
 
 	}));
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)(module)))
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -14600,12 +14605,12 @@
 
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./es": 12,
-		"./es.js": 12
+		"./es": 11,
+		"./es.js": 11
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -14618,11 +14623,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 11;
+	webpackContext.id = 10;
 
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -14630,7 +14635,7 @@
 	//! author : Julio Napurí : https://github.com/julionc
 
 	(function (global, factory) {
-	    true ? factory(__webpack_require__(9)) :
+	    true ? factory(__webpack_require__(8)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -14705,19 +14710,19 @@
 	}));
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"label horizontal tiny ui {{color}} visible\">\r\n\t\t<i class=\"icon warning\" v-if=\"qtyLeft > 2\"></i>\r\n    {{machine.NAME}}\r\n\t\t<div class=\"detail\" v-if=\"qtyLeft > 0\">{{qtyLeft}}</div>\r\n\t</div>\r\n  <div class=\"ui special popup top center\">\r\n    <div class=\"header\">{{NAME}}</div>\r\n    last seen {{humanized}}\r\n    <br>Process:{{PROCESS}}\r\n    <br>Devices not made:{{qtyLeft}}\r\n    <br>CycleTime:{{machine.CICLETIME | toMinutes}} min\r\n  </div>";
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(15)
+	module.exports = __webpack_require__(14)
 
 	if (module.exports.__esModule) module.exports = module.exports.default
-	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(16)
+	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(15)
 	if (false) {(function () {  module.hot.accept()
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
@@ -14731,7 +14736,7 @@
 	})()}
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -14743,7 +14748,7 @@
 
 	// <div class="ui simple dropdown item">
 
-	//   dropdown
+	//   BU
 
 	//   <i class="dropdown icon"></i>
 
@@ -14769,19 +14774,19 @@
 	// </script>
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"ui simple dropdown item\">\r\n  dropdown\r\n  <i class=\"dropdown icon\"></i>\r\n  <div class=\"menu\">\r\n    <div class=\"item\" v-for=\"(name, element) in machines | groupBy 'BU'\">{{name}}</div>\r\n  </div>\r\n</div>";
+	module.exports = "<div class=\"ui simple dropdown item\">\r\n  BU\r\n  <i class=\"dropdown icon\"></i>\r\n  <div class=\"menu\">\r\n    <div class=\"item\" v-for=\"(name, element) in machines | groupBy 'BU'\">{{name}}</div>\r\n  </div>\r\n</div>";
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports) {
 
 	module.exports = "<div class=\"ui grid\">\r\n  <div class=\"column\">\r\n    <div class=\"ui menu\">\r\n      <a href=\"#\" class=\"item\"><i class=\"home icon\"></i>home</a>\r\n      <div class=\"right menu\">\r\n        <areaselector :machines=\"machines\"></areaselector>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n  <div class=\"ui equal width grid\">\r\n    <div class=\"column\" v-for=\"(index, elements) in machines| groupBy 'BU'\">\r\n      <div class=\"ui reised segment\">\r\n\r\n      <h2 class=\"ui ribbon label\"><small>Equipos de </small>{{index}}</h2>\r\n      <div class=\"ui list\">\r\n        <div class=\"item\" v-for=\"(index, areas) in elements |groupBy 'AREA'\">\r\n          <div class=\"content\"><b>{{index}}</b></div>\r\n          <div class=\"description\">\r\n            <div class=\"ui list\">\r\n              <div class=\"item\" v-for=\"(index, process) in areas | groupBy 'PROCESS'\">\r\n                <div class=\"content\"><b>{{index}}</b></div>\r\n                <div class=\"description\">\r\n                  <template v-for=\"machine in process\">\r\n                    <tag :machine=\"machine\"></tag>\r\n                  </template>\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n      </div>\r\n    </div>\r\n  </div>";
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14790,11 +14795,11 @@
 
 	function install(Vue) {
 
-	    var _ = __webpack_require__(19)(Vue);
+	    var _ = __webpack_require__(18)(Vue);
 
-	    Vue.url = __webpack_require__(20)(_);
-	    Vue.http = __webpack_require__(21)(_);
-	    Vue.resource = __webpack_require__(25)(_);
+	    Vue.url = __webpack_require__(19)(_);
+	    Vue.http = __webpack_require__(20)(_);
+	    Vue.resource = __webpack_require__(24)(_);
 
 	    Object.defineProperties(Vue.prototype, {
 
@@ -14826,7 +14831,7 @@
 	module.exports = install;
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports) {
 
 	/**
@@ -14912,7 +14917,7 @@
 
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports) {
 
 	/**
@@ -15075,16 +15080,16 @@
 
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Service for sending network requests.
 	 */
 
-	var xhr = __webpack_require__(22);
-	var jsonp = __webpack_require__(24);
-	var Promise = __webpack_require__(23);
+	var xhr = __webpack_require__(21);
+	var jsonp = __webpack_require__(23);
+	var Promise = __webpack_require__(22);
 
 	module.exports = function (_) {
 
@@ -15241,14 +15246,14 @@
 
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * XMLHttp request.
 	 */
 
-	var Promise = __webpack_require__(23);
+	var Promise = __webpack_require__(22);
 	var XDomain = window.XDomainRequest;
 
 	module.exports = function (_, options) {
@@ -15298,7 +15303,7 @@
 
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports) {
 
 	/**
@@ -15514,14 +15519,14 @@
 
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * JSONP request.
 	 */
 
-	var Promise = __webpack_require__(23);
+	var Promise = __webpack_require__(22);
 
 	module.exports = function (_, options) {
 
@@ -15570,7 +15575,7 @@
 
 
 /***/ },
-/* 25 */
+/* 24 */
 /***/ function(module, exports) {
 
 	/**

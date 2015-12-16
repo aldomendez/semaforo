@@ -1,9 +1,9 @@
 import Vue    from 'vue'
 // import fuse   from 'fuse.js'
 import _      from 'underscore'
-// import moment from 'moment'
 import App    from './app.v2.vue'
-import Tags    from './components/tags.vue'
+import Tags   from './components/tags.vue'
+
 
 Vue.use(require('vue-resource'))
 

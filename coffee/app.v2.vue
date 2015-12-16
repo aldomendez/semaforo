@@ -1,7 +1,12 @@
 <template>
 <div class="ui grid">
   <div class="column">
-    <div class="ui menu"><a href="#" class="item"><i class="home icon"></i>home</a></div>
+    <div class="ui menu">
+      <a href="#" class="item"><i class="home icon"></i>home</a>
+      <div class="right menu">
+        <areaselector :machines="machines"></areaselector>
+      </div>
+    </div>
   </div>
 </div>
   <div class="ui equal width grid">
@@ -34,13 +39,15 @@
 
 <script>
 import Tags from './components/tags.vue'
+import AreaSelector    from './components/AreaSelector.vue'
 export default {
   props:['machines'],
   ready:function appVueReady () {
     // console.log(this.machines)
   },
   components: {
-    tag:Tags
+    tag:Tags,
+    areaselector:AreaSelector
   }
 }
 </script>

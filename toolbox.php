@@ -61,13 +61,14 @@ function getSpecificMachine()
 
 function updateTables()
 {
-	update_every(300,'mxoptix');
-	update_every(300,'mxapps');
-	update_every(600,'prodmx'); //10 Min
+	echo "<pre>";
+	update_every(300,'mxoptix'); //5min
+	update_every(300,'mxapps');  //5min
+	update_every(600,'prodmx');  //10 Min
 
 }
 
-function update_every($segundos,$conexion)
+function update_every($segundos, $conexion)
 {
 	$inicio = date("d-M-Y H:i:s");
 	logToFile(sprintf("Llamado: , %s,",$inicio));
@@ -88,14 +89,15 @@ function update_every($segundos,$conexion)
 
 	$lockFileName = $conexion . '.lock';
 
-	if (($actual - $past) > ($segundos * 2) &&!file_exists($lockFileName)) {
+	if (($actual - $past) > ($segundos * 2) && file_exists($lockFileName)) {
+		echo "Borrando archivo LOCK" . PHP_EOL;
 		// Si ya pasaron 2 ciclos y no se ha ejecutado el query resetea el LOCK
 		// para que se pueda ejecutar el query de nuevo.
 		unlink($lockFileName);
 	}
 
 	if (($actual - $past) > $segundos && !file_exists($lockFileName)) {
-		echo "Ejecutando: ". $conexion . " a los " . ($actual - $past) . "s " . PHP_EOL;
+		echo "Ejecutando: ". $conexion . " en " . ($actual - $past) . "s " . PHP_EOL;
 		// Si y solo si ha pasado mas de los segundos configurados
 		// Empezamos a actualizar los datos de mi tabla.
 		$date = date("d-M-Y H:i");
@@ -112,7 +114,7 @@ function update_every($segundos,$conexion)
 		unlink($lockFileName);
 	}
 	// Resolvemos para el navegador
-	// echo "$pastDateString";
+	echo "$conexion $pastDateString" . PHP_EOL;
 }
 
 
@@ -122,7 +124,7 @@ function updateMachinesTogether($connection, $lockFileName){
 	// logToFile(sprintf("Inicio, %s ",$inicio));
 	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
-	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."'");
+	$DB->setQuery("select * from semeforo where dbconnection = '".$connection."' and lastrun < SYSDATE - 10/(24*60) -- 10min");
 	$DB->exec();
 	// echo($DB->rows);
 	$connections = array(
@@ -138,7 +140,7 @@ function updateMachinesTogether($connection, $lockFileName){
 		logToFile($connections[$connection]);
 		// Ahora si ya puedo ir sacando los datos de cada una de las maquinas
 		// para sacar la informacion de la base de dato
-		echo "StartTime:" . date("d-M-Y H:i");
+		echo "StartTime:" . date("d-M-Y H:i") . PHP_EOL;
 
 		$subQuerys = array();
 		$infoQuery = file_get_contents('sql/getInfo.sql');
@@ -196,7 +198,7 @@ function updateMachines($connection, $lockFileName){
 	// logToFile(sprintf("Inicio, %s ",$inicio));
 	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
-	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."'");
+	$DB->setQuery("select * from semeforo where dbconnection = '".$connection."' and lastrun < SYSDATE - 10/(24*60) -- 10min");
 	$DB->exec();
 	// echo($DB->rows);
 	$connections = array(
@@ -213,8 +215,8 @@ function updateMachines($connection, $lockFileName){
 		// Ahora si ya puedo ir sacando los datos de cada una de las maquinas
 		// para sacar la informacion de la base de datp
 		foreach ($DB->results as $key => $value) {
-			$remaining = $DB->rows - 1;
-			file_put_contents($lockFileName, $remaining . ": " . $value['DB_ID'] . PHP_EOL , FILE_APPEND);
+			$id = $value['DB_ID'];
+			file_put_contents($lockFileName, $id . ": " . $value['DB_ID'] . PHP_EOL , FILE_APPEND);
 			// genero el query para la busqueda de datos
 			$infoQuery = file_get_contents('sql/getInfo.sql');
 			$MO->setQuery($infoQuery);
@@ -263,7 +265,7 @@ function debugQuery(){
         Todos los querys que esten registrados en la base de datos para esta maquina
 */
 	$DB_ID = $_GET['DB_ID'];
-	echo "DB_ID: $DB_ID".PHP_EOL;
+	echo "<pre>DB_ID: $DB_ID".PHP_EOL;
 	$query = "select * from semaforo where db_id = '" . $DB_ID . "'";
 	$DB = new MxApps();
 	$DB->setQuery($query);

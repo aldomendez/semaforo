@@ -1,5 +1,5 @@
 import Vue    from 'vue'
-// import fuse   from 'fuse.js'
+import fuse   from 'fuse.js'
 import _      from 'underscore'
 import App    from './app.v2.vue'
 

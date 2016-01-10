@@ -7,6 +7,9 @@
     <title>Semaforo</title>
     </head>
       <style>
+      body {
+        margin:0px 30px;
+      }
       .ui.tiny.labels .label, .ui.tiny.label {
         margin-bottom: 3px;
       }

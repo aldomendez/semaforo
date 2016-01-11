@@ -122,7 +122,7 @@ function updateMachinesTogether($connection, $lockFileName){
 	// logToFile(sprintf("Inicio, %s ",$inicio));
 	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
-	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."'");
+	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."' and active = 1");
 	$DB->exec();
 	// echo($DB->rows);
 	$connections = array(
@@ -196,7 +196,7 @@ function updateMachines($connection, $lockFileName){
 	// logToFile(sprintf("Inicio, %s ",$inicio));
 	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
-	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."'");
+	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."' and active = 1");
 	$DB->exec();
 	// echo($DB->rows);
 	$connections = array(

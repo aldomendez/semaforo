@@ -63,7 +63,7 @@ function updateTables()
 {
 	update_every(300,'mxoptix');
 	update_every(300,'mxapps');
-	update_every(600,'prodmx'); //10 Min
+	update_every(300,'prodmx'); //10 Min
 
 }
 
@@ -196,7 +196,7 @@ function updateMachines($connection, $lockFileName){
 	// logToFile(sprintf("Inicio, %s ",$inicio));
 	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
-	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."' and active = 1");
+	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."' and active = 1 and lastrun < SYSDATE - 10/(24*60) ORDER BY lastrun asc");
 	$DB->exec();
 	// echo($DB->rows);
 	$connections = array(
@@ -227,14 +227,20 @@ function updateMachines($connection, $lockFileName){
 			
 			$MO->exec();
 
-			if ( sizeof($MO->results) > 0 ) {
-				$updateQuery = file_get_contents('sql/updateMachinesInSemaforo.sql');
-				$DB->setQuery($updateQuery);
-				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);
-				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
-				$DB->bind_vars(':id',$value['ID']);
-				$DB->exec();
-			}
+ 			if ( sizeof($MO->results) > 0 ) {
+     				$updateQuery = file_get_contents('sql/updateMachinesInSemaforo.sql');
+     				$DB->setQuery($updateQuery);
+     				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);
+     				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
+     				$DB->bind_vars(':id',$value['ID']);
+     				$DB->exec();
+    			} else {
+    				$updateQuery = file_get_contents('sql/updateLastrunInSemaforo.sql');
+    				$DB->setQuery($updateQuery);
+    				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
+    				$DB->bind_vars(':id',$value['ID']);
+           			$DB->exec();
+ 			}
 		}
 		$MO->close();
 	}

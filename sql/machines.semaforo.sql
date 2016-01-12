@@ -16,3 +16,4 @@ SELECT id,
 FROM semaforo a
 WHERE lasttick = (SELECT Max(lasttick) FROM semaforo 
   WHERE db_id=a.db_id)
+and active = 1

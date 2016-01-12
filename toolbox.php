@@ -59,28 +59,15 @@ function getSpecificMachine()
 	$DB->close();
 }
 
-function shutdown($filename)
-{
-	unlink("$filename\prodmx.lock");
-	unlink("$filename\mxapps.lock");
-	unlink("$filename\mxoptix.lock");
-	echo $filename;
-	echo getcwd();
-}
-
 function updateTables()
 {
-	$addr = dirname(__FILE__);
-	register_shutdown_function('shutdown', $addr);
-	echo "<pre>";
-
-	update_every(300,'mxoptix'); //5min
-	update_every(300,'mxapps');  //5min
-	update_every(300,'prodmx');  //5Min
+	update_every(300,'mxoptix');
+	update_every(300,'mxapps');
+	update_every(600,'prodmx'); //10 Min
 
 }
 
-function update_every($segundos, $conexion)
+function update_every($segundos,$conexion)
 {
 	$inicio = date("d-M-Y H:i:s");
 	logToFile(sprintf("Llamado: , %s,",$inicio));
@@ -101,14 +88,14 @@ function update_every($segundos, $conexion)
 
 	$lockFileName = $conexion . '.lock';
 
-	if (($actual - $past) > ($segundos * 2) && file_exists($lockFileName)) {
-		echo "Borrando archivo LOCK" . PHP_EOL;
+	if (($actual - $past) > ($segundos * 2) &&!file_exists($lockFileName)) {
 		// Si ya pasaron 2 ciclos y no se ha ejecutado el query resetea el LOCK
 		// para que se pueda ejecutar el query de nuevo.
 		unlink($lockFileName);
 	}
 
 	if (($actual - $past) > $segundos && !file_exists($lockFileName)) {
+		echo "Ejecutando: ". $conexion . " a los " . ($actual - $past) . "s " . PHP_EOL;
 		// Si y solo si ha pasado mas de los segundos configurados
 		// Empezamos a actualizar los datos de mi tabla.
 		$date = date("d-M-Y H:i");
@@ -122,16 +109,10 @@ function update_every($segundos, $conexion)
 		}else {
 			updateMachinesTogether($conexion,$lockFileName);
 		}
-		// echo "$lockFileName" . PHP_EOL;
 		unlink($lockFileName);
 	}
 	// Resolvemos para el navegador
-	echo "$conexion $pastDateString" . PHP_EOL;
-	// Esta linea sirve para borrar la bandera de cuando fue la ultima
-	// vez que se actualizo la base de datos, solamente sirve durante el desarrollo
-	// para no tener que estar borrando la informacion de manera manual.
-	// Al quietarlo se forza la actualizacion de la informacion
-	unlink('lastUpdate.' . $conexion .'.txt');
+	// echo "$pastDateString";
 }
 
 
@@ -141,7 +122,7 @@ function updateMachinesTogether($connection, $lockFileName){
 	// logToFile(sprintf("Inicio, %s ",$inicio));
 	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
-	$DB->setQuery("select * from semeforo where dbconnection = '".$connection."' and lastrun < SYSDATE - 10/(24*60) -- 10min");
+	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."' and active = 1");
 	$DB->exec();
 	// echo($DB->rows);
 	$connections = array(
@@ -157,7 +138,7 @@ function updateMachinesTogether($connection, $lockFileName){
 		logToFile($connections[$connection]);
 		// Ahora si ya puedo ir sacando los datos de cada una de las maquinas
 		// para sacar la informacion de la base de dato
-		echo "StartTime:" . date("d-M-Y H:i") . PHP_EOL;
+		echo "StartTime:" . date("d-M-Y H:i");
 
 		$subQuerys = array();
 		$infoQuery = file_get_contents('sql/getInfo.sql');
@@ -210,18 +191,14 @@ function updateMachinesTogether($connection, $lockFileName){
 
 
 function updateMachines($connection, $lockFileName){
-	echo "Ejecutando updateMachines" . PHP_EOL;
 	// Obtengo la lista de las maquinas dadas de alta en el sistema
 	$inicio = date("d-M-Y H:i:s");
 	// logToFile(sprintf("Inicio, %s ",$inicio));
 	$machinesQuery = file_get_contents('sql/machines.pull.data.sql');
 	$DB = new MxApps();
-	// El query es para que saque todas las maquinas que no se han actualizado desde los ultimos 10min
-	$DB->setQuery("select * from semaforo where dbconnection = '".$connection."' and lastrun < SYSDATE - 10/(24*60) ORDER BY lastrun asc");
-	// echo "select * from semaforo where dbconnection = '".$connection."' and lastrun < SYSDATE - 10/(24*60)";
+	$DB->setQuery($machinesQuery . " where dbconnection = '".$connection."' and active = 1");
 	$DB->exec();
-	echo("Numero de registros para procesar [" . count($DB->results) . "] " . PHP_EOL);
-	// print_r($DB->results);
+	// echo($DB->rows);
 	$connections = array(
 		'mxoptix' => 'MxOptix',
 		'mxapps'  => 'MxApps',
@@ -236,8 +213,8 @@ function updateMachines($connection, $lockFileName){
 		// Ahora si ya puedo ir sacando los datos de cada una de las maquinas
 		// para sacar la informacion de la base de datp
 		foreach ($DB->results as $key => $value) {
-			$id = $value['DB_ID'];
-			file_put_contents($lockFileName, $id . ": " . $value['DB_ID'] . PHP_EOL , FILE_APPEND);
+			$remaining = $DB->rows - 1;
+			file_put_contents($lockFileName, $remaining . ": " . $value['DB_ID'] . PHP_EOL , FILE_APPEND);
 			// genero el query para la busqueda de datos
 			$infoQuery = file_get_contents('sql/getInfo.sql');
 			$MO->setQuery($infoQuery);
@@ -251,17 +228,9 @@ function updateMachines($connection, $lockFileName){
 			$MO->exec();
 
 			if ( sizeof($MO->results) > 0 ) {
-				echo "Saved result" . $value['ID'] . PHP_EOL;
 				$updateQuery = file_get_contents('sql/updateMachinesInSemaforo.sql');
 				$DB->setQuery($updateQuery);
 				$DB->bind_vars(':test_dt',$MO->results[0]['TEST_DT']);
-				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
-				$DB->bind_vars(':id',$value['ID']);
-				$DB->exec();
-			} else {
-				echo "Updated lastrun " . $value['ID'] . PHP_EOL;
-				$updateQuery = file_get_contents('sql/updateLastrunInSemaforo.sql');
-				$DB->setQuery($updateQuery);
 				$DB->bind_vars(':update-date',$date = date("d-M-Y H:i"));
 				$DB->bind_vars(':id',$value['ID']);
 				$DB->exec();
@@ -294,7 +263,7 @@ function debugQuery(){
         Todos los querys que esten registrados en la base de datos para esta maquina
 */
 	$DB_ID = $_GET['DB_ID'];
-	echo "<pre>DB_ID: $DB_ID".PHP_EOL;
+	echo "DB_ID: $DB_ID".PHP_EOL;
 	$query = "select * from semaforo where db_id = '" . $DB_ID . "'";
 	$DB = new MxApps();
 	$DB->setQuery($query);

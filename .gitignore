@@ -1,9 +1,10 @@
 node_modules
 .idea
-mergedQuerys.MxApps
-mergedQuerys.MxOptix
 lastUpdate.mxapps.txt
 lastUpdate.mxoptix.txt
 lastUpdate.prodmx.txt
-lastUpdate.txt
+filecache.txt
 logs.txt
+mergedQuerys.MxOptix
+*.lock
+lastUpdate.txt

@@ -4,29 +4,24 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>Semaforo</title>
-  <link rel="stylesheet" type="text/css"  href="http://cymautocert/osaapp/jsLib/SemanticUi/1.11.6/semantic.css">
+  <link rel="stylesheet" type="text/css"  href="http://cymautocert/osaapp/jsLib/SemanticUi/2.1.6/semantic.min.css">
 </head>
   <style>
   .ui.big.labels .label, .ui.big.label {
     margin-bottom: 6px;
   }
-  .titleRed {
-    background-color: rgb(170,38,47);
+  .titleHeader {
+    background-color: rgb(23,133,197);
     font-size: 22px !important;
-  }
-  .titleBlack {
-    background-color: rgb(39,40,34);
     color: white;
-    font-size: 22px !important;
   }
+
 </style>
 <body>
-  <div class="ui tall stacked padded grid segment" id="container">
-    <div class="ui grid">
-      <column class='twelve wide column titleRed'>&nbsp;</column>
-      <column class='four wide column titleBlack'>Go Beyond The Standards</column>
-    </div>
-    <div class="ui hidden divider"></div>
+  <div class="ui padded grid">
+    <div class='column titleHeader'><h1>FIT - Semaforo</h1></div>
+  </div>
+  <div class="ui one column padded grid">
     <div class="row">
       <div class="column">
         {% set cardsNum = bu|length  %}

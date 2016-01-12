@@ -65,6 +65,7 @@ function updateTables()
 	update_every(300,'mxapps');
 	update_every(300,'prodmx'); //10 Min
 
+
 }
 
 function update_every($segundos,$conexion)

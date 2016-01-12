@@ -3,6 +3,13 @@ var coffee = require('gulp-coffee');
 var gutil = require('gulp-util');
 var livereload = require('gulp-livereload');
 var wait = require('gulp-wait');
+var webpack = require('webpack');
+var webpackconfig = require('./webpack.config.js');
+
+// Create a single instance of webpack to allow caching
+
+devCompiler = webpack(webpackconfig);
+
 
 var DEST = '\\\\cymautocert\\osaapp\\semaforo-dev';
 var BASE = __dirname;
@@ -41,9 +48,15 @@ gulp.task('watch', function () {
     me gustaria que pudiera decirle cueles son las carpetas que 
     tiene que omitir.
   */
-  gulp.watch(['coffee/**.coffee'], function (event) {
+  gulp.watch(['coffee/*.vue','coffee/components/*.vue','coffee/newHome.js'], function (event) {
   }).on('change', function (event) {
-     compileAndPush(event);
+     // compileAndPush(event);
+     gutil.log('starting webpack');
+     devCompiler.run(function (err, stats) {
+        if(err) throw new gutil.PluginError("webpack:", err)
+        gutil.log("[webpack:vue]:", stats.toString({colors:true}));
+        livereload()
+     })
   });  
   gulp.watch(['*.php','simple.templates/*.php'], function (event) {
   }).on('change', function (event) {
